@@ -3,15 +3,14 @@
 import { useState, useEffect } from 'react'
 import { useSession, signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { Leaf, BarChart3, Target, Share2, LogOut, User } from 'lucide-react'
+import { Leaf, LogOut, User, BarChart3 } from 'lucide-react'
 import CarbonCalculator from '@/components/CarbonCalculator'
 import CarbonChart from '@/components/CarbonChart'
 import Recommendations from '@/components/Recommendations'
 import TodoList from '@/components/TodoList'
 import ShareButton from '@/components/ShareButton'
-import SessionProvider from '@/components/SessionProvider'
 
-function DashboardContent() {
+export default function Dashboard() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const [currentResult, setCurrentResult] = useState<any>(null)
@@ -19,6 +18,9 @@ function DashboardContent() {
   const [loading, setLoading] = useState(false)
   const [activeTab, setActiveTab] = useState('calculator')
   const [newTodo, setNewTodo] = useState<any>(null)
+  const [userName, setUserName] = useState('')
+  
+  const userId = session?.user?.email || 'demo-user'
 
   useEffect(() => {
     if (status === 'loading') return
@@ -26,13 +28,44 @@ function DashboardContent() {
       router.push('/auth/signin')
       return
     }
+    fetchHistoricalData()
+    fetchUserName()
+    loadLastResult()
   }, [session, status, router])
 
-  const fetchHistoricalData = async () => {
-    if (!session?.user?.id) return
-    
+  const loadLastResult = async () => {
     try {
-      const response = await fetch(`/api/carbon?userId=${session.user.id}&days=30`)
+      const response = await fetch(`/api/carbon?userId=${userId}&days=1`)
+      const result = await response.json()
+      if (result.success && result.data.length > 0) {
+        const lastEntry = result.data[0]
+        setCurrentResult({
+          total: lastEntry.totalCO2,
+          breakdown: lastEntry.breakdown
+        })
+        setActiveTab('results')
+      }
+    } catch (error) {
+      console.error('Failed to load last result:', error)
+    }
+  }
+
+  const fetchUserName = async () => {
+    try {
+      const response = await fetch(`/api/profile?email=${session?.user?.email}`)
+      const result = await response.json()
+      if (result.success) {
+        setUserName(result.data.name)
+      }
+    } catch (error) {
+      console.error('Failed to fetch user name:', error)
+      setUserName(session?.user?.name || 'User')
+    }
+  }
+
+  const fetchHistoricalData = async () => {
+    try {
+      const response = await fetch(`/api/carbon?userId=${userId}&days=30`)
       const result = await response.json()
       if (result.success) {
         setHistoricalData(result.data)
@@ -43,31 +76,22 @@ function DashboardContent() {
   }
 
   const handleCalculate = async (data: any) => {
-    if (!session?.user?.id) return
-    
     setLoading(true)
     try {
-      console.log('Sending calculation data:', data)
       const response = await fetch('/api/carbon', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, userId: session.user.id })
+        body: JSON.stringify({ ...data, userId })
       })
       
       const result = await response.json()
-      console.log('Calculation result:', result)
-      
       if (result.success) {
         setCurrentResult(result.data)
         setActiveTab('results')
         fetchHistoricalData()
-      } else {
-        console.error('Calculation failed:', result.error)
-        alert('Calculation failed: ' + result.error)
       }
     } catch (error) {
       console.error('Calculation failed:', error)
-      alert('Calculation failed. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -78,19 +102,10 @@ function DashboardContent() {
     setActiveTab('todos')
   }
 
-  useEffect(() => {
-    if (session?.user?.id) {
-      fetchHistoricalData()
-    }
-  }, [session?.user?.id])
-
   if (status === 'loading') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center">
-        <div className="text-center">
-          <Leaf className="w-12 h-12 text-green-600 mx-auto mb-4 animate-spin" />
-          <p className="text-gray-600">Loading...</p>
-        </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
       </div>
     )
   }
@@ -100,10 +115,10 @@ function DashboardContent() {
   }
 
   const tabs = [
-    { id: 'calculator', label: 'Calculator', icon: BarChart3 },
+    { id: 'calculator', label: 'Calculator', icon: Leaf },
     { id: 'results', label: 'Results', icon: Leaf },
-    { id: 'recommendations', label: 'AI Tips', icon: Target },
-    { id: 'todos', label: 'Action Plan', icon: Target }
+    { id: 'recommendations', label: 'AI Tips', icon: Leaf },
+    { id: 'todos', label: 'Action Plan', icon: Leaf }
   ]
 
   return (
@@ -116,24 +131,32 @@ function DashboardContent() {
               <Leaf className="w-8 h-8 text-green-600 mr-3" />
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">Carbon Calculator</h1>
-                <p className="text-sm text-gray-600">Welcome back, {session.user?.name}</p>
+                <p className="text-sm text-gray-600">Welcome, {userName || session.user?.name || session.user?.email}</p>
               </div>
             </div>
             
             <div className="flex items-center space-x-4">
               {currentResult && <ShareButton carbonData={currentResult} />}
-              
-              <div className="flex items-center space-x-2">
-                <User className="w-5 h-5 text-gray-600" />
-                <span className="text-gray-700">{session.user?.name}</span>
-              </div>
-              
               <button
-                onClick={() => signOut({ callbackUrl: '/' })}
-                className="flex items-center text-gray-600 hover:text-gray-900"
+                onClick={() => router.push('/history')}
+                className="flex items-center text-gray-600 hover:text-gray-900 p-2 rounded-lg hover:bg-gray-100"
+                title="View History"
               >
-                <LogOut className="w-5 h-5 mr-1" />
-                Sign Out
+                <BarChart3 className="w-5 h-5" />
+              </button>
+              <button
+                onClick={() => router.push('/profile')}
+                className="flex items-center text-gray-600 hover:text-gray-900 p-2 rounded-lg hover:bg-gray-100"
+                title="Profile"
+              >
+                <User className="w-5 h-5" />
+              </button>
+              <button
+                onClick={() => signOut({ callbackUrl: '/auth/signin' })}
+                className="flex items-center text-gray-600 hover:text-gray-900 p-2 rounded-lg hover:bg-gray-100"
+                title="Sign Out"
+              >
+                <LogOut className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -180,13 +203,7 @@ function DashboardContent() {
         )}
 
         {activeTab === 'results' && currentResult && (
-          <div>
-            <div className="mb-4 p-4 bg-green-50 rounded-lg">
-              <h3 className="text-lg font-semibold text-green-800 mb-2">Your Carbon Footprint</h3>
-              <p className="text-2xl font-bold text-green-600">{currentResult.total?.toFixed(2)} kg CO2</p>
-            </div>
-            <CarbonChart data={currentResult} historicalData={historicalData} />
-          </div>
+          <CarbonChart data={currentResult} historicalData={historicalData} />
         )}
 
         {activeTab === 'results' && !currentResult && (
@@ -204,36 +221,13 @@ function DashboardContent() {
         )}
 
         {activeTab === 'recommendations' && (
-          <Recommendations userId={session.user?.id || ''} onAddTodo={handleAddTodo} />
+          <Recommendations userId={userId} onAddTodo={handleAddTodo} />
         )}
 
         {activeTab === 'todos' && (
-          <TodoList userId={session.user?.id || ''} newTodo={newTodo} />
+          <TodoList userId={userId} newTodo={newTodo} />
         )}
       </main>
-
-      {/* Footer */}
-      <footer className="bg-white border-t mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center">
-            <div className="flex items-center justify-center mb-4">
-              <Leaf className="w-6 h-6 text-green-600 mr-2" />
-              <span className="text-lg font-semibold">Carbon Calculator</span>
-            </div>
-            <p className="text-gray-600 mb-4">
-              Every small action counts towards a sustainable future. Track your progress and make a difference! 🌱
-            </p>
-          </div>
-        </div>
-      </footer>
     </div>
-  )
-}
-
-export default function Dashboard() {
-  return (
-    <SessionProvider>
-      <DashboardContent />
-    </SessionProvider>
   )
 }

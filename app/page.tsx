@@ -1,11 +1,33 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect } from 'react'
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 import { Leaf, Calculator, TrendingUp, Users, Star, ChevronRight, CheckCircle, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 
 export default function LandingPage() {
-  const [email, setEmail] = useState('')
+  const { data: session, status } = useSession()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (status === 'loading') return
+    if (session) {
+      router.push('/dashboard')
+    }
+  }, [session, status, router])
+
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+      </div>
+    )
+  }
+
+  if (session) {
+    return null // Will redirect to dashboard
+  }
 
   const features = [
     {
@@ -22,46 +44,6 @@ export default function LandingPage() {
       icon: Users,
       title: 'Social Impact',
       description: 'Share your progress and inspire others with beautiful infographics and social media integration.'
-    }
-  ]
-
-  const testimonials = [
-    {
-      name: 'Sarah Johnson',
-      role: 'Environmental Advocate',
-      content: 'This app helped me reduce my carbon footprint by 30% in just 3 months. The AI recommendations are spot-on!',
-      rating: 5
-    },
-    {
-      name: 'Mike Chen',
-      role: 'Sustainability Manager',
-      content: 'Perfect for tracking our team\'s environmental impact. The visualizations make it easy to see progress.',
-      rating: 5
-    },
-    {
-      name: 'Emma Davis',
-      role: 'Climate Activist',
-      content: 'Love how simple it is to use. Finally, a carbon calculator that doesn\'t feel overwhelming!',
-      rating: 5
-    }
-  ]
-
-  const faqs = [
-    {
-      question: 'How accurate are the carbon calculations?',
-      answer: 'Our calculations use scientifically-backed emission factors from reputable sources like the EPA and IPCC, ensuring high accuracy for your carbon footprint tracking.'
-    },
-    {
-      question: 'Is my data secure and private?',
-      answer: 'Yes, we use industry-standard encryption and secure MongoDB storage. Your personal data is never shared with third parties.'
-    },
-    {
-      question: 'Can I track multiple family members?',
-      answer: 'Currently, each account tracks one user. We\'re working on family plan features for future releases.'
-    },
-    {
-      question: 'How does the AI recommendation system work?',
-      answer: 'We use Google Gemini AI to analyze your usage patterns and provide personalized, actionable recommendations based on your specific lifestyle and carbon footprint.'
     }
   ]
 
@@ -138,111 +120,6 @@ export default function LandingPage() {
                 </div>
               )
             })}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Loved by Climate Champions
-            </h2>
-            <p className="text-xl text-gray-600">
-              See what our users are saying about their carbon reduction journey
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-white p-8 rounded-xl shadow-sm">
-                <div className="flex mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
-                  ))}
-                </div>
-                <p className="text-gray-600 mb-6">"{testimonial.content}"</p>
-                <div>
-                  <div className="font-semibold text-gray-900">{testimonial.name}</div>
-                  <div className="text-sm text-gray-500">{testimonial.role}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Benefits */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-4xl font-bold text-gray-900 mb-6">
-                Become the Best Version of Yourself
-              </h2>
-              <p className="text-xl text-gray-600 mb-8">
-                Transform your lifestyle with data-driven insights and make a meaningful impact on the environment while saving money.
-              </p>
-              <div className="space-y-4">
-                {[
-                  'Reduce your carbon footprint by up to 40%',
-                  'Save money on energy and transportation costs',
-                  'Get personalized AI recommendations',
-                  'Track progress with beautiful visualizations',
-                  'Share achievements with your community'
-                ].map((benefit, index) => (
-                  <div key={index} className="flex items-center">
-                    <CheckCircle className="w-6 h-6 text-green-600 mr-3" />
-                    <span className="text-gray-700">{benefit}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="bg-gradient-to-br from-green-100 to-blue-100 p-8 rounded-2xl">
-              <div className="text-center">
-                <Leaf className="w-24 h-24 text-green-600 mx-auto mb-6" />
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                  Join 10,000+ Users
-                </h3>
-                <p className="text-gray-600 mb-6">
-                  Making a positive impact on our planet, one day at a time.
-                </p>
-                <div className="grid grid-cols-2 gap-4 text-center">
-                  <div>
-                    <div className="text-3xl font-bold text-green-600">2.5M</div>
-                    <div className="text-sm text-gray-600">kg CO2 Saved</div>
-                  </div>
-                  <div>
-                    <div className="text-3xl font-bold text-green-600">95%</div>
-                    <div className="text-sm text-gray-600">User Satisfaction</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Frequently Asked Questions
-            </h2>
-            <p className="text-xl text-gray-600">
-              Everything you need to know about carbon tracking
-            </p>
-          </div>
-          
-          <div className="space-y-6">
-            {faqs.map((faq, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">{faq.question}</h3>
-                <p className="text-gray-600">{faq.answer}</p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
