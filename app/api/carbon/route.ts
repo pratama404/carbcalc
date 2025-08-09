@@ -2,14 +2,19 @@ import { NextRequest, NextResponse } from 'next/server'
 import { calculateCarbonFootprint } from '@/lib/carbonCalculator'
 import { localDB } from '@/lib/localData'
 
-// Force local storage for now to bypass MongoDB issues
-let useLocal = true
+let useLocal = false
 
 async function tryMongoDB() {
-  // Temporarily disabled MongoDB to debug
-  console.log('Using local storage for debugging')
-  useLocal = true
-  return null
+  try {
+    const dbConnect = (await import('@/lib/mongodb')).default
+    const CarbonEntry = (await import('@/models/CarbonEntry')).default
+    await dbConnect()
+    return { dbConnect, CarbonEntry }
+  } catch (error) {
+    console.log('MongoDB unavailable, using local storage')
+    useLocal = true
+    return null
+  }
 }
 
 export async function POST(request: NextRequest) {

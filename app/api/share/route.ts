@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
     // Generate share image
     const imageBuffer = await generateShareImage(carbonData)
     
-    return new NextResponse(imageBuffer, {
+    return new NextResponse(imageBuffer as any, {
       headers: {
         'Content-Type': 'image/png',
         'Content-Length': imageBuffer.length.toString(),

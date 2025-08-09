@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
       const carbonEntries = await mongo.CarbonEntry.find({ userId: email })
       const totalEntries = carbonEntries.length
       const avgCO2 = totalEntries > 0 ? 
-        carbonEntries.reduce((sum, entry) => sum + entry.totalCO2, 0) / totalEntries : 0
+        carbonEntries.reduce((sum: number, entry: any) => sum + entry.totalCO2, 0) / totalEntries : 0
 
       return NextResponse.json({
         success: true,
@@ -55,7 +55,7 @@ export async function GET(request: NextRequest) {
       const carbonEntries = localDB.carbonEntries.find({ userId: email })
       const totalEntries = carbonEntries.length
       const avgCO2 = totalEntries > 0 ? 
-        carbonEntries.reduce((sum, entry) => sum + entry.totalCO2, 0) / totalEntries : 0
+        carbonEntries.reduce((sum: number, entry: any) => sum + entry.totalCO2, 0) / totalEntries : 0
 
       return NextResponse.json({
         success: true,
