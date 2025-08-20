@@ -88,7 +88,7 @@ export default function CarbonixChallenge() {
 
   const fetchChallenges = async () => {
     try {
-      const response = await fetch('/api/challenges?userId=demo-user')
+      const response = await fetch('/api/challenges?userId=demo-user&userRole=user')
       const result = await response.json()
       if (result.success) {
         setChallenges(result.data)

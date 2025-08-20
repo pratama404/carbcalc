@@ -11,7 +11,8 @@ import TodoList from '@/components/TodoList'
 import ShareButton from '@/components/ShareButton'
 import AirQualityDashboard from '@/components/AirQualityDashboard'
 import CarbonixChallenge from '@/components/CarbonixChallenge'
-import ProfileDashboard from '@/components/ProfileDashboard'
+import Link from 'next/link'
+import DashboardOverview from '@/components/DashboardOverview'
 import ArticleManagement from '@/components/ArticleManagement'
 import AdminValidation from '@/components/AdminValidation'
 import SessionProvider from '@/components/SessionProvider'
@@ -23,10 +24,10 @@ function DashboardContent() {
   const [currentResult, setCurrentResult] = useState<any>(null)
   const [historicalData, setHistoricalData] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
-  const [activeTab, setActiveTab] = useState('calculator')
+  const [activeTab, setActiveTab] = useState('overview')
   const [newTodo, setNewTodo] = useState<any>(null)
   const [userName, setUserName] = useState('')
-  const [userRole, setUserRole] = useState<'user' | 'premium' | 'government' | 'admin'>('user')
+  const [userRole, setUserRole] = useState<'user' | 'premium' | 'government' | 'admin'>('admin')
   
   const userId = session?.user?.email || 'demo-user'
 
@@ -130,7 +131,7 @@ function DashboardContent() {
     { id: 'articles', label: 'Articles', icon: FileText, feature: 'articles' },
     { id: 'recommendations', label: 'AI Tips', icon: Target, feature: 'carbon-calculator' },
     { id: 'todos', label: 'Action Plan', icon: Target, feature: 'carbon-calculator' },
-    { id: 'profile', label: 'Profile', icon: User, feature: 'carbon-calculator' }
+    { id: 'overview', label: 'Overview', icon: BarChart3, feature: 'carbon-calculator' }
   ]
 
   const adminTabs = [
@@ -257,9 +258,7 @@ function DashboardContent() {
           <CarbonixChallenge />
         )}
 
-        {activeTab === 'profile' && (
-          <ProfileDashboard />
-        )}
+
 
         {activeTab === 'articles' && (
           <ArticleManagement userRole={userRole} />
@@ -267,6 +266,10 @@ function DashboardContent() {
 
         {activeTab === 'validation' && userRole === 'admin' && (
           <AdminValidation />
+        )}
+
+        {activeTab === 'overview' && (
+          <DashboardOverview userId={userId} />
         )}
       </main>
     </div>

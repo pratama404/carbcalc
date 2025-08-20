@@ -11,7 +11,6 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     { resource: 'carbon', action: 'read' },
     { resource: 'challenges', action: 'create' },
     { resource: 'challenges', action: 'read' },
-    { resource: 'articles', action: 'read' },
     { resource: 'air-quality', action: 'read' },
     { resource: 'profile', action: 'read' },
     { resource: 'profile', action: 'update' }
@@ -21,21 +20,17 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     { resource: 'carbon', action: 'read' },
     { resource: 'challenges', action: 'create' },
     { resource: 'challenges', action: 'read' },
-    { resource: 'articles', action: 'read' },
+    { resource: 'air-quality', action: 'read' },
+    { resource: 'profile', action: 'read' },
+    { resource: 'profile', action: 'update' }
+  ],
+  government: [
+    { resource: 'carbon', action: 'create' },
+    { resource: 'carbon', action: 'read' },
     { resource: 'air-quality', action: 'read' },
     { resource: 'profile', action: 'read' },
     { resource: 'profile', action: 'update' },
-    { resource: 'analytics', action: 'read' }, // Premium feature
-    { resource: 'advanced-reports', action: 'read' } // Premium feature
-  ],
-  government: [
-    { resource: 'carbon', action: 'read' },
-    { resource: 'challenges', action: 'read' },
-    { resource: 'articles', action: 'read' },
-    { resource: 'air-quality', action: 'read' },
-    { resource: 'analytics', action: 'read' },
-    { resource: 'system-reports', action: 'read' }, // Government access
-    { resource: 'user-data', action: 'read' } // Read-only access to aggregated data
+    { resource: 'users', action: 'read' }
   ],
   admin: [
     { resource: 'carbon', action: 'create' },
@@ -55,9 +50,7 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     { resource: 'profile', action: 'update' },
     { resource: 'users', action: 'read' },
     { resource: 'users', action: 'update' },
-    { resource: 'analytics', action: 'read' },
-    { resource: 'system-reports', action: 'read' },
-    { resource: 'validation', action: 'create' }, // Validate challenges
+    { resource: 'validation', action: 'create' },
     { resource: 'validation', action: 'update' }
   ]
 }
@@ -69,15 +62,13 @@ export function hasPermission(userRole: UserRole, resource: string, action: stri
 
 export function canAccessFeature(userRole: UserRole, feature: string): boolean {
   const featurePermissions: Record<string, UserRole[]> = {
-    'carbon-calculator': ['user', 'premium', 'admin'],
+    'carbon-calculator': ['user', 'premium', 'government', 'admin'],
     'air-quality': ['user', 'premium', 'government', 'admin'],
     'challenges': ['user', 'premium', 'admin'],
-    'articles': ['user', 'premium', 'government', 'admin'],
+    'articles': ['admin'],
     'article-management': ['admin'],
     'challenge-validation': ['admin'],
-    'analytics': ['premium', 'government', 'admin'],
-    'user-management': ['admin'],
-    'system-reports': ['government', 'admin']
+    'user-management': ['government', 'admin']
   }
 
   return featurePermissions[feature]?.includes(userRole) || false

@@ -1,121 +1,96 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { localDB } from '@/lib/localData'
-
-let useLocal = false
-
-async function tryMongoDB() {
-  try {
-    const dbConnect = (await import('@/lib/mongodb')).default
-    const User = (await import('@/models/User')).default
-    const CarbonEntry = (await import('@/models/CarbonEntry')).default
-    await dbConnect()
-    return { dbConnect, User, CarbonEntry }
-  } catch (error) {
-    console.log('MongoDB unavailable, using local storage')
-    useLocal = true
-    return null
-  }
-}
+import dbConnect from '@/lib/mongodb'
+import User from '@/models/User'
+import CarbonEntry from '@/models/CarbonEntry'
+import Challenge from '@/models/Challenge'
 
 export async function GET(request: NextRequest) {
   try {
+    await dbConnect()
+    
     const { searchParams } = new URL(request.url)
-    const email = searchParams.get('email')
+    const userId = searchParams.get('userId')
     
-    if (!email) {
-      return NextResponse.json({ success: false, error: 'Email required' }, { status: 400 })
+    if (!userId) {
+      return NextResponse.json({ error: 'User ID required' }, { status: 400 })
     }
 
-    const mongo = await tryMongoDB()
-    
-    if (mongo && !useLocal) {
-      const user = await mongo.User.findOne({ email })
-      if (!user) {
-        return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 })
+    const user = await User.findOne({ email: userId }).select('-password')
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 })
+    }
+
+    // Calculate carbon footprint stats
+    const thisMonth = new Date()
+    thisMonth.setDate(1)
+    const lastMonth = new Date(thisMonth)
+    lastMonth.setMonth(lastMonth.getMonth() - 1)
+
+    const [thisMonthEntries, lastMonthEntries, totalChallenges] = await Promise.all([
+      CarbonEntry.find({ userId, createdAt: { $gte: thisMonth } }),
+      CarbonEntry.find({ userId, createdAt: { $gte: lastMonth, $lt: thisMonth } }),
+      Challenge.countDocuments({ userId, status: 'approved' })
+    ])
+
+    const thisMonthTotal = thisMonthEntries.reduce((sum, entry) => sum + entry.totalCO2, 0)
+    const lastMonthTotal = lastMonthEntries.reduce((sum, entry) => sum + entry.totalCO2, 0)
+    const totalCO2 = await CarbonEntry.aggregate([
+      { $match: { userId } },
+      { $group: { _id: null, total: { $sum: '$totalCO2' } } }
+    ])
+
+    const profile = {
+      ...user.toObject(),
+      carbonFootprint: {
+        total: totalCO2[0]?.total || 0,
+        thisMonth: thisMonthTotal,
+        lastMonth: lastMonthTotal,
+        trend: thisMonthTotal < lastMonthTotal ? 'down' : thisMonthTotal > lastMonthTotal ? 'up' : 'stable'
+      },
+      achievements: {
+        challengesCompleted: totalChallenges,
+        carbonSaved: user.achievements?.carbonSaved || 0,
+        treesPlanted: user.achievements?.treesPlanted || 0,
+        wasteRecycled: user.achievements?.wasteRecycled || 0
       }
-
-      const carbonEntries = await mongo.CarbonEntry.find({ userId: email })
-      const totalEntries = carbonEntries.length
-      const avgCO2 = totalEntries > 0 ? 
-        carbonEntries.reduce((sum: number, entry: any) => sum + entry.totalCO2, 0) / totalEntries : 0
-
-      return NextResponse.json({
-        success: true,
-        data: {
-          name: user.name,
-          email: user.email,
-          joinDate: user.joinDate,
-          bio: user.bio || '',
-          location: user.location || '',
-          totalEntries,
-          avgCO2: Math.round(avgCO2 * 10) / 10
-        }
-      })
-    } else {
-      const carbonEntries = localDB.carbonEntries.find({ userId: email })
-      const totalEntries = carbonEntries.length
-      const avgCO2 = totalEntries > 0 ? 
-        carbonEntries.reduce((sum: number, entry: any) => sum + entry.totalCO2, 0) / totalEntries : 0
-
-      return NextResponse.json({
-        success: true,
-        data: {
-          name: 'Demo User',
-          email: email,
-          joinDate: new Date(),
-          bio: '',
-          location: '',
-          totalEntries,
-          avgCO2: Math.round(avgCO2 * 10) / 10
-        }
-      })
     }
+
+    return NextResponse.json({
+      success: true,
+      data: profile
+    })
   } catch (error) {
-    console.error('Get profile error:', error)
-    return NextResponse.json(
-      { success: false, error: 'Failed to get profile' },
-      { status: 500 }
-    )
+    console.error('Profile fetch error:', error)
+    return NextResponse.json({ error: 'Failed to fetch profile' }, { status: 500 })
   }
 }
 
 export async function PUT(request: NextRequest) {
   try {
-    const { email, name, bio, location } = await request.json()
+    await dbConnect()
     
-    if (!email) {
-      return NextResponse.json({ success: false, error: 'Email required' }, { status: 400 })
+    const { userId, updates } = await request.json()
+    
+    if (!userId) {
+      return NextResponse.json({ error: 'User ID required' }, { status: 400 })
     }
 
-    const mongo = await tryMongoDB()
-    
-    if (mongo && !useLocal) {
-      const user = await mongo.User.findOneAndUpdate(
-        { email },
-        { name, bio, location },
-        { new: true, upsert: true }
-      )
-
-      return NextResponse.json({
-        success: true,
-        data: {
-          name: user.name,
-          email: user.email,
-          bio: user.bio,
-          location: user.location
-        }
-      })
-    } else {
-      return NextResponse.json({
-        success: true,
-        data: { name, email, bio, location }
-      })
-    }
-  } catch (error) {
-    console.error('Update profile error:', error)
-    return NextResponse.json(
-      { success: false, error: 'Failed to update profile' },
-      { status: 500 }
+    const user = await User.findOneAndUpdate(
+      { email: userId },
+      { $set: updates },
+      { new: true, select: '-password' }
     )
+    
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 })
+    }
+
+    return NextResponse.json({
+      success: true,
+      data: user
+    })
+  } catch (error) {
+    console.error('Profile update error:', error)
+    return NextResponse.json({ error: 'Failed to update profile' }, { status: 500 })
   }
 }

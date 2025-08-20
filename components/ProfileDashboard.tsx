@@ -75,51 +75,27 @@ export default function ProfileDashboard() {
   const [isEditing, setIsEditing] = useState(false)
   const [loading, setLoading] = useState(true)
 
-  // Mock profile data (replace with API call)
+  const fetchProfile = async () => {
+    if (!session?.user?.email) return
+    
+    try {
+      setLoading(true)
+      const response = await fetch(`/api/profile?userId=${session.user.email}`)
+      const result = await response.json()
+      
+      if (result.success) {
+        setProfile(result.data)
+      }
+    } catch (error) {
+      console.error('Failed to fetch profile:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
     if (session?.user) {
-      setProfile({
-        name: session.user.name || 'User',
-        email: session.user.email || '',
-        role: 'Eco Enthusiast',
-        ecoPoints: 1250,
-        badges: [
-          {
-            type: 'public_transport_buddy',
-            name: 'Public Transport Buddy',
-            description: 'Used public transport 10 times',
-            earnedAt: '2024-01-15',
-            icon: '🚌'
-          },
-          {
-            type: 'recycling_hero',
-            name: 'Recycling Hero',
-            description: 'Recycled 50kg of waste',
-            earnedAt: '2024-01-20',
-            icon: '♻️'
-          },
-          {
-            type: 'carbon_ambassador',
-            name: 'Carbon Ambassador',
-            description: 'Saved 100kg CO2 equivalent',
-            earnedAt: '2024-02-01',
-            icon: '🌱'
-          }
-        ],
-        carbonFootprint: {
-          total: 2.4,
-          thisMonth: 2.1,
-          lastMonth: 2.7,
-          trend: 'down'
-        },
-        achievements: {
-          challengesCompleted: 12,
-          carbonSaved: 156.8,
-          treesPlanted: 8,
-          wasteRecycled: 45.2
-        }
-      })
-      setLoading(false)
+      fetchProfile()
     }
   }, [session])
 

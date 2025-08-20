@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
+import dbConnect from '@/lib/mongodb'
+import Challenge from '@/models/Challenge'
+import User from '@/models/User'
 
 // Challenge templates with carbon impact calculations
 const CHALLENGE_TEMPLATES = {
@@ -42,7 +45,13 @@ const CHALLENGE_TEMPLATES = {
 
 export async function POST(request: NextRequest) {
   try {
+    await dbConnect()
+    
     const { type, evidence, quantity = 1, userId } = await request.json()
+    
+    if (!userId) {
+      return NextResponse.json({ error: 'User ID required' }, { status: 400 })
+    }
     
     if (!CHALLENGE_TEMPLATES[type as keyof typeof CHALLENGE_TEMPLATES]) {
       return NextResponse.json({ error: 'Invalid challenge type' }, { status: 400 })
@@ -50,22 +59,18 @@ export async function POST(request: NextRequest) {
 
     const template = CHALLENGE_TEMPLATES[type as keyof typeof CHALLENGE_TEMPLATES]
     
-    // For local storage (replace with MongoDB when ready)
-    const challenge = {
-      _id: Date.now().toString(),
-      userId: userId || 'anonymous',
+    const challenge = new Challenge({
+      userId,
       type,
       title: template.title,
       description: template.description,
       carbonImpact: template.carbonImpact * quantity,
       ecoPoints: template.ecoPoints * quantity,
       status: 'pending',
-      evidence,
-      createdAt: new Date()
-    }
+      evidence
+    })
 
-    // Store in local storage for now
-    // TODO: Replace with MongoDB when schema is fixed
+    await challenge.save()
     
     return NextResponse.json({
       success: true,
@@ -79,41 +84,35 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
+    await dbConnect()
+    
     const { searchParams } = new URL(request.url)
-    const userId = searchParams.get('userId') || 'anonymous'
+    const userId = searchParams.get('userId')
     const status = searchParams.get('status')
+    const userRole = searchParams.get('userRole')
 
-    // Mock data for now
-    const challenges = [
-      {
-        _id: '1',
-        userId,
-        type: 'tree_planting',
-        title: 'Plant Trees',
-        carbonImpact: 22,
-        ecoPoints: 50,
-        status: 'approved',
-        createdAt: new Date(Date.now() - 86400000)
-      },
-      {
-        _id: '2',
-        userId,
-        type: 'cycling',
-        title: 'Cycle to Work',
-        carbonImpact: 5.2,
-        ecoPoints: 30,
-        status: 'pending',
-        createdAt: new Date()
+    let query: any = {}
+    
+    // Role-based filtering
+    if (userRole === 'admin') {
+      // Admins can see all challenges
+      if (status) query.status = status
+    } else {
+      // Users can only see their own challenges
+      if (!userId) {
+        return NextResponse.json({ error: 'User ID required' }, { status: 400 })
       }
-    ]
+      query.userId = userId
+      if (status) query.status = status
+    }
 
-    const filteredChallenges = status 
-      ? challenges.filter(c => c.status === status)
-      : challenges
+    const challenges = await Challenge.find(query)
+      .sort({ createdAt: -1 })
+      .populate('userId', 'name email')
 
     return NextResponse.json({
       success: true,
-      data: filteredChallenges
+      data: challenges
     })
   } catch (error) {
     console.error('Challenge fetch error:', error)

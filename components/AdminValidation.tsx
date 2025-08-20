@@ -35,70 +35,62 @@ export default function AdminValidation() {
   const [loading, setLoading] = useState(true)
   const [processingId, setProcessingId] = useState<string | null>(null)
 
-  // Mock data for pending challenges
-  useEffect(() => {
-    const mockChallenges: PendingChallenge[] = [
-      {
-        _id: '1',
-        userId: 'user1',
-        userName: 'John Doe',
-        type: 'tree_planting',
-        title: 'Plant Trees',
-        description: 'Community tree planting initiative',
-        carbonImpact: 22,
-        ecoPoints: 50,
-        status: 'pending',
-        evidence: {
-          photos: [],
-          description: 'Planted 3 oak trees in the local park with the community group. Each tree was properly spaced and watered.',
-          location: 'Central Park, Downtown'
-        },
-        createdAt: new Date().toISOString()
-      },
-      {
-        _id: '2',
-        userId: 'user2',
-        userName: 'Sarah Smith',
-        type: 'cycling',
-        title: 'Cycle to Work',
-        description: 'Daily cycling commute',
-        carbonImpact: 5.2,
-        ecoPoints: 30,
-        status: 'pending',
-        evidence: {
-          photos: [],
-          description: 'Cycled to work for the entire week instead of driving. Total distance: 25km.',
-          location: 'Home to Office Route'
-        },
-        createdAt: new Date(Date.now() - 86400000).toISOString()
+  const fetchPendingChallenges = async () => {
+    try {
+      setLoading(true)
+      const response = await fetch('/api/challenges?status=pending&userRole=admin')
+      const result = await response.json()
+      
+      if (result.success) {
+        const formattedChallenges = result.data.map((challenge: any) => ({
+          ...challenge,
+          userName: challenge.userId?.name || challenge.userId || 'Unknown User',
+          createdAt: challenge.createdAt
+        }))
+        setPendingChallenges(formattedChallenges)
       }
-    ]
-    
-    setPendingChallenges(mockChallenges)
-    setLoading(false)
+    } catch (error) {
+      console.error('Failed to fetch pending challenges:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchPendingChallenges()
   }, [])
 
   const handleValidation = async (challengeId: string, action: 'approve' | 'reject', notes?: string) => {
     setProcessingId(challengeId)
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      const response = await fetch('/api/challenges/validate', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          challengeId,
+          action,
+          reviewNotes: notes,
+          reviewerId: 'admin-user'
+        })
+      })
       
-      setPendingChallenges(prev => 
-        prev.map(challenge => 
-          challenge._id === challengeId 
-            ? { ...challenge, status: action === 'approve' ? 'approved' : 'rejected' }
-            : challenge
-        ).filter(challenge => challenge.status === 'pending')
-      )
+      const result = await response.json()
       
-      // Show success message
-      const challenge = pendingChallenges.find(c => c._id === challengeId)
-      if (challenge) {
-        alert(`Challenge "${challenge.title}" by ${challenge.userName} has been ${action}d!`)
+      if (result.success) {
+        setPendingChallenges(prev => 
+          prev.filter(challenge => challenge._id !== challengeId)
+        )
+        
+        const challenge = pendingChallenges.find(c => c._id === challengeId)
+        if (challenge) {
+          alert(`Challenge "${challenge.title}" by ${challenge.userName} has been ${action}d!`)
+        }
+      } else {
+        alert('Failed to process validation: ' + result.error)
       }
     } catch (error) {
+      console.error('Validation error:', error)
       alert('Failed to process validation')
     } finally {
       setProcessingId(null)
