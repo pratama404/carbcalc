@@ -243,7 +243,7 @@ export default function CarbonChart({ data, historicalData }: Props) {
           display: true,
           text: 'CO₂ Emissions (kg)',
           font: {
-            weight: 'bold'
+            weight: 'bold' as const
           }
         },
         grid: {
