@@ -5,6 +5,8 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { Leaf, Calculator, TrendingUp, Users, Star, ChevronRight, CheckCircle, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
+import Header from '@/components/Header'
+import Footer from '@/components/Footer'
 
 export default function LandingPage() {
   const { data: session, status } = useSession()
@@ -49,25 +51,7 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div className="flex items-center">
-              <Leaf className="w-8 h-8 text-green-600 mr-3" />
-              <span className="text-2xl font-bold text-gray-900">CarbCalc</span>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Link href="/auth/signin" className="text-gray-600 hover:text-gray-900">
-                Sign In
-              </Link>
-              <Link href="/auth/signup" className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
-                Get Started
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-green-50 to-blue-50 py-20">
@@ -140,27 +124,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <div className="flex items-center justify-center mb-6">
-              <Leaf className="w-8 h-8 text-green-400 mr-3" />
-              <span className="text-2xl font-bold">CarbCalc</span>
-            </div>
-            <p className="text-gray-400 mb-6">
-              Making carbon tracking simple, accurate, and actionable for everyone.
-            </p>
-            <div className="flex justify-center space-x-8 text-sm text-gray-400">
-              <span>Built with Next.js</span>
-              <span>•</span>
-              <span>Powered by Gemini AI</span>
-              <span>•</span>
-              <span>MongoDB Database</span>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }

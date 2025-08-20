@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useSession, signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { Leaf, LogOut, User, BarChart3, Wind, Award, Target } from 'lucide-react'
+import { Leaf, LogOut, User, BarChart3, Wind, Award, Target, FileText, Shield } from 'lucide-react'
 import CarbonCalculator from '@/components/CarbonCalculator'
 import CarbonChart from '@/components/CarbonChart'
 import Recommendations from '@/components/Recommendations'
@@ -12,7 +12,10 @@ import ShareButton from '@/components/ShareButton'
 import AirQualityDashboard from '@/components/AirQualityDashboard'
 import CarbonixChallenge from '@/components/CarbonixChallenge'
 import ProfileDashboard from '@/components/ProfileDashboard'
+import ArticleManagement from '@/components/ArticleManagement'
+import AdminValidation from '@/components/AdminValidation'
 import SessionProvider from '@/components/SessionProvider'
+import { canAccessFeature } from '@/lib/rbac'
 
 function DashboardContent() {
   const { data: session, status } = useSession()
@@ -23,6 +26,7 @@ function DashboardContent() {
   const [activeTab, setActiveTab] = useState('calculator')
   const [newTodo, setNewTodo] = useState<any>(null)
   const [userName, setUserName] = useState('')
+  const [userRole, setUserRole] = useState<'user' | 'premium' | 'government' | 'admin'>('user')
   
   const userId = session?.user?.email || 'demo-user'
 
@@ -118,14 +122,24 @@ function DashboardContent() {
     return null
   }
 
+  const baseTabs = [
+    { id: 'calculator', label: 'Calculator', icon: BarChart3, feature: 'carbon-calculator' },
+    { id: 'results', label: 'Results', icon: Leaf, feature: 'carbon-calculator' },
+    { id: 'air-quality', label: 'Air Quality', icon: Wind, feature: 'air-quality' },
+    { id: 'challenges', label: 'Challenges', icon: Award, feature: 'challenges' },
+    { id: 'articles', label: 'Articles', icon: FileText, feature: 'articles' },
+    { id: 'recommendations', label: 'AI Tips', icon: Target, feature: 'carbon-calculator' },
+    { id: 'todos', label: 'Action Plan', icon: Target, feature: 'carbon-calculator' },
+    { id: 'profile', label: 'Profile', icon: User, feature: 'carbon-calculator' }
+  ]
+
+  const adminTabs = [
+    { id: 'validation', label: 'Validation', icon: Shield, feature: 'challenge-validation' }
+  ]
+
   const tabs = [
-    { id: 'calculator', label: 'Calculator', icon: BarChart3 },
-    { id: 'results', label: 'Results', icon: Leaf },
-    { id: 'air-quality', label: 'Air Quality', icon: Wind },
-    { id: 'challenges', label: 'Challenges', icon: Award },
-    { id: 'recommendations', label: 'AI Tips', icon: Target },
-    { id: 'todos', label: 'Action Plan', icon: Target },
-    { id: 'profile', label: 'Profile', icon: User }
+    ...baseTabs.filter(tab => canAccessFeature(userRole, tab.feature)),
+    ...(userRole === 'admin' ? adminTabs.filter(tab => canAccessFeature(userRole, tab.feature)) : [])
   ]
 
   return (
@@ -245,6 +259,14 @@ function DashboardContent() {
 
         {activeTab === 'profile' && (
           <ProfileDashboard />
+        )}
+
+        {activeTab === 'articles' && (
+          <ArticleManagement userRole={userRole} />
+        )}
+
+        {activeTab === 'validation' && userRole === 'admin' && (
+          <AdminValidation />
         )}
       </main>
     </div>

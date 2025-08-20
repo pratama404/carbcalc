@@ -18,11 +18,63 @@ export interface AirQualityForecast {
 }
 
 export const AQI_LEVELS = {
-  1: { label: 'Good', color: 'bg-green-500', textColor: 'text-green-700', bgColor: 'bg-green-50' },
-  2: { label: 'Fair', color: 'bg-yellow-500', textColor: 'text-yellow-700', bgColor: 'bg-yellow-50' },
-  3: { label: 'Moderate', color: 'bg-orange-500', textColor: 'text-orange-700', bgColor: 'bg-orange-50' },
-  4: { label: 'Poor', color: 'bg-red-500', textColor: 'text-red-700', bgColor: 'bg-red-50' },
-  5: { label: 'Very Poor', color: 'bg-purple-500', textColor: 'text-purple-700', bgColor: 'bg-purple-50' }
+  1: { 
+    label: 'Good', 
+    color: 'bg-green-500', 
+    textColor: 'text-green-700', 
+    bgColor: 'bg-green-50',
+    description: 'Air quality is satisfactory for most people'
+  },
+  2: { 
+    label: 'Moderate', 
+    color: 'bg-yellow-500', 
+    textColor: 'text-yellow-700', 
+    bgColor: 'bg-yellow-50',
+    description: 'Acceptable for most, sensitive individuals may experience minor issues'
+  },
+  3: { 
+    label: 'Unhealthy for Sensitive Groups', 
+    color: 'bg-orange-500', 
+    textColor: 'text-orange-700', 
+    bgColor: 'bg-orange-50',
+    description: 'Sensitive groups may experience health effects'
+  },
+  4: { 
+    label: 'Unhealthy', 
+    color: 'bg-red-500', 
+    textColor: 'text-red-700', 
+    bgColor: 'bg-red-50',
+    description: 'Everyone may experience health effects'
+  },
+  5: { 
+    label: 'Very Unhealthy', 
+    color: 'bg-purple-500', 
+    textColor: 'text-purple-700', 
+    bgColor: 'bg-purple-50',
+    description: 'Health alert: everyone may experience serious health effects'
+  }
+}
+
+// Calculate unified AQI based on dominant pollutant
+function calculateUnifiedAQI(components: any): number {
+  const { pm2_5, pm10, co, no2, so2, o3 } = components
+  
+  // AQI breakpoints for different pollutants (simplified)
+  const getAQI = (concentration: number, breakpoints: number[]) => {
+    for (let i = 0; i < breakpoints.length; i++) {
+      if (concentration <= breakpoints[i]) return i + 1
+    }
+    return 5
+  }
+  
+  const pm25AQI = getAQI(pm2_5, [12, 35.4, 55.4, 150.4])
+  const pm10AQI = getAQI(pm10, [54, 154, 254, 354])
+  const coAQI = getAQI(co / 1000, [4.4, 9.4, 12.4, 15.4]) // Convert to mg/m³
+  const no2AQI = getAQI(no2, [53, 100, 360, 649])
+  const so2AQI = getAQI(so2, [35, 75, 185, 304])
+  const o3AQI = getAQI(o3, [54, 70, 85, 105])
+  
+  return Math.max(pm25AQI, pm10AQI, coAQI, no2AQI, so2AQI, o3AQI)
 }
 
 export async function getAirQuality(lat: number, lon: number): Promise<AirQualityData | null> {
@@ -39,9 +91,10 @@ export async function getAirQuality(lat: number, lon: number): Promise<AirQualit
     )
     
     const weatherData = await weatherResponse.json()
+    const unifiedAQI = calculateUnifiedAQI(data.list[0].components)
     
     return {
-      aqi: data.list[0].main.aqi,
+      aqi: unifiedAQI,
       pm25: data.list[0].components.pm2_5,
       pm10: data.list[0].components.pm10,
       co: data.list[0].components.co,
