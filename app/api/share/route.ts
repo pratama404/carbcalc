@@ -14,8 +14,9 @@ export async function POST(request: NextRequest) {
     })
     
     const buffer = canvas.toBuffer('image/png')
+    const arrayBuffer = buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength)
     
-    return new NextResponse(buffer, {
+    return new NextResponse(arrayBuffer, {
       headers: {
         'Content-Type': 'image/png',
         'Content-Length': buffer.length.toString(),
