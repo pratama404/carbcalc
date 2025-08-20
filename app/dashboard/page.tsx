@@ -3,14 +3,18 @@
 import { useState, useEffect } from 'react'
 import { useSession, signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { Leaf, LogOut, User, BarChart3 } from 'lucide-react'
+import { Leaf, LogOut, User, BarChart3, Wind, Award, Target } from 'lucide-react'
 import CarbonCalculator from '@/components/CarbonCalculator'
 import CarbonChart from '@/components/CarbonChart'
 import Recommendations from '@/components/Recommendations'
 import TodoList from '@/components/TodoList'
 import ShareButton from '@/components/ShareButton'
+import AirQualityDashboard from '@/components/AirQualityDashboard'
+import CarbonixChallenge from '@/components/CarbonixChallenge'
+import ProfileDashboard from '@/components/ProfileDashboard'
+import SessionProvider from '@/components/SessionProvider'
 
-export default function Dashboard() {
+function DashboardContent() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const [currentResult, setCurrentResult] = useState<any>(null)
@@ -115,10 +119,13 @@ export default function Dashboard() {
   }
 
   const tabs = [
-    { id: 'calculator', label: 'Calculator', icon: Leaf },
+    { id: 'calculator', label: 'Calculator', icon: BarChart3 },
     { id: 'results', label: 'Results', icon: Leaf },
-    { id: 'recommendations', label: 'AI Tips', icon: Leaf },
-    { id: 'todos', label: 'Action Plan', icon: Leaf }
+    { id: 'air-quality', label: 'Air Quality', icon: Wind },
+    { id: 'challenges', label: 'Challenges', icon: Award },
+    { id: 'recommendations', label: 'AI Tips', icon: Target },
+    { id: 'todos', label: 'Action Plan', icon: Target },
+    { id: 'profile', label: 'Profile', icon: User }
   ]
 
   return (
@@ -227,7 +234,27 @@ export default function Dashboard() {
         {activeTab === 'todos' && (
           <TodoList userId={userId} newTodo={newTodo} />
         )}
+
+        {activeTab === 'air-quality' && (
+          <AirQualityDashboard />
+        )}
+
+        {activeTab === 'challenges' && (
+          <CarbonixChallenge />
+        )}
+
+        {activeTab === 'profile' && (
+          <ProfileDashboard />
+        )}
       </main>
     </div>
+  )
+}
+
+export default function Dashboard() {
+  return (
+    <SessionProvider>
+      <DashboardContent />
+    </SessionProvider>
   )
 }

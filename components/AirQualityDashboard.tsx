@@ -1,0 +1,206 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { MapPin, Thermometer, Droplets, Wind, Calendar, RefreshCw } from 'lucide-react'
+import { AirQualityData, AirQualityForecast, AQI_LEVELS } from '@/lib/airQuality'
+
+export default function AirQualityDashboard() {
+  const [airQuality, setAirQuality] = useState<AirQualityData | null>(null)
+  const [forecast, setForecast] = useState<AirQualityForecast[]>([])
+  const [location, setLocation] = useState({ lat: 0, lon: 0 })
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  const getCurrentLocation = () => {
+    setLoading(true)
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords
+          setLocation({ lat: latitude, lon: longitude })
+          fetchAirQuality(latitude, longitude)
+        },
+        (error) => {
+          setError('Unable to get your location')
+          setLoading(false)
+        }
+      )
+    } else {
+      setError('Geolocation is not supported')
+      setLoading(false)
+    }
+  }
+
+  const fetchAirQuality = async (lat: number, lon: number) => {
+    try {
+      setLoading(true)
+      const [currentResponse, forecastResponse] = await Promise.all([
+        fetch(`/api/air-quality?lat=${lat}&lon=${lon}`),
+        fetch(`/api/air-quality?lat=${lat}&lon=${lon}&forecast=true`)
+      ])
+
+      const currentData = await currentResponse.json()
+      const forecastData = await forecastResponse.json()
+
+      if (currentData.success) {
+        setAirQuality(currentData.data)
+      }
+      if (forecastData.success) {
+        setForecast(forecastData.data)
+      }
+    } catch (error) {
+      setError('Failed to fetch air quality data')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    getCurrentLocation()
+  }, [])
+
+  const getAQILevel = (aqi: number) => {
+    return AQI_LEVELS[aqi as keyof typeof AQI_LEVELS] || AQI_LEVELS[1]
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold text-gray-900">Air Quality Dashboard</h2>
+        <button
+          onClick={getCurrentLocation}
+          disabled={loading}
+          className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+        >
+          <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          Refresh
+        </button>
+      </div>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg">
+          {error}
+        </div>
+      )}
+
+      {loading && !airQuality && (
+        <div className="text-center py-8">
+          <RefreshCw className="w-8 h-8 text-blue-600 mx-auto mb-4 animate-spin" />
+          <p className="text-gray-600">Loading air quality data...</p>
+        </div>
+      )}
+
+      {airQuality && (
+        <div className="grid md:grid-cols-2 gap-6">
+          {/* Current Air Quality */}
+          <div className="bg-white p-6 rounded-xl shadow-sm border">
+            <div className="flex items-center mb-4">
+              <MapPin className="w-5 h-5 text-gray-600 mr-2" />
+              <h3 className="text-lg font-semibold">{airQuality.location}</h3>
+            </div>
+
+            <div className={`p-4 rounded-lg mb-4 ${getAQILevel(airQuality.aqi).bgColor}`}>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">Air Quality Index</p>
+                  <p className="text-3xl font-bold">{airQuality.aqi}</p>
+                </div>
+                <div className={`px-3 py-1 rounded-full text-sm font-medium ${getAQILevel(airQuality.aqi).color} text-white`}>
+                  {getAQILevel(airQuality.aqi).label}
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex items-center">
+                <Thermometer className="w-4 h-4 text-red-500 mr-2" />
+                <div>
+                  <p className="text-xs text-gray-600">Temperature</p>
+                  <p className="font-semibold">{airQuality.temperature.toFixed(1)}°C</p>
+                </div>
+              </div>
+              <div className="flex items-center">
+                <Droplets className="w-4 h-4 text-blue-500 mr-2" />
+                <div>
+                  <p className="text-xs text-gray-600">Humidity</p>
+                  <p className="font-semibold">{airQuality.humidity}%</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Pollutant Details */}
+          <div className="bg-white p-6 rounded-xl shadow-sm border">
+            <h3 className="text-lg font-semibold mb-4 flex items-center">
+              <Wind className="w-5 h-5 mr-2" />
+              Pollutant Levels
+            </h3>
+            
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">PM2.5</span>
+                <span className="font-semibold">{airQuality.pm25.toFixed(1)} μg/m³</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">PM10</span>
+                <span className="font-semibold">{airQuality.pm10.toFixed(1)} μg/m³</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">CO</span>
+                <span className="font-semibold">{airQuality.co.toFixed(1)} μg/m³</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">NO₂</span>
+                <span className="font-semibold">{airQuality.no2.toFixed(1)} μg/m³</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">SO₂</span>
+                <span className="font-semibold">{airQuality.so2.toFixed(1)} μg/m³</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">O₃</span>
+                <span className="font-semibold">{airQuality.o3.toFixed(1)} μg/m³</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Forecast */}
+      {forecast.length > 0 && (
+        <div className="bg-white p-6 rounded-xl shadow-sm border">
+          <h3 className="text-lg font-semibold mb-4 flex items-center">
+            <Calendar className="w-5 h-5 mr-2" />
+            5-Day Forecast
+          </h3>
+          
+          <div className="grid grid-cols-5 gap-4">
+            {forecast.map((day, index) => (
+              <div key={index} className="text-center">
+                <p className="text-xs text-gray-600 mb-2">{day.date}</p>
+                <div className={`w-12 h-12 rounded-full mx-auto mb-2 flex items-center justify-center text-white text-sm font-bold ${getAQILevel(day.aqi).color}`}>
+                  {day.aqi}
+                </div>
+                <p className="text-xs text-gray-600">{day.main}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* AQI Legend */}
+      <div className="bg-white p-6 rounded-xl shadow-sm border">
+        <h3 className="text-lg font-semibold mb-4">Air Quality Index Guide</h3>
+        <div className="grid grid-cols-5 gap-2">
+          {Object.entries(AQI_LEVELS).map(([level, info]) => (
+            <div key={level} className={`p-3 rounded-lg text-center ${info.bgColor}`}>
+              <div className={`w-8 h-8 rounded-full mx-auto mb-2 ${info.color}`}></div>
+              <p className="text-xs font-medium">{info.label}</p>
+              <p className="text-xs text-gray-600">AQI {level}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
