@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+export const runtime = 'nodejs'
+
 export async function POST(request: NextRequest) {
   try {
     const { carbonData, airQualityData, shareMode, transparent, format } = await request.json()
@@ -14,9 +16,8 @@ export async function POST(request: NextRequest) {
     })
     
     const buffer = canvas.toBuffer('image/png')
-    const arrayBuffer = buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength)
     
-    return new NextResponse(arrayBuffer, {
+    return new NextResponse(buffer, {
       headers: {
         'Content-Type': 'image/png',
         'Content-Length': buffer.length.toString(),

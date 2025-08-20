@@ -37,24 +37,38 @@ export default function ShareButton({ carbonData, airQualityData }: Props) {
           airQualityData,
           shareMode,
           transparent,
-          format: 'instagram'
+          format: 'png'
         })
       })
 
       if (response.ok) {
         const blob = await response.blob()
+        
+        // Validate PNG format
+        if (blob.type !== 'image/png') {
+          throw new Error('Invalid image format. Only PNG is supported.')
+        }
+        
         const url = URL.createObjectURL(blob)
+        const filename = `carbcalc-${shareMode}-${transparent ? 'transparent-' : ''}${new Date().toISOString().split('T')[0]}.png`
         
         const a = document.createElement('a')
         a.href = url
-        a.download = `environmental-impact-${shareMode}-${new Date().toISOString().split('T')[0]}.png`
+        a.download = filename
         document.body.appendChild(a)
         a.click()
         document.body.removeChild(a)
-        URL.revokeObjectURL(url)
+        
+        // Clean up
+        setTimeout(() => URL.revokeObjectURL(url), 1000)
+        
+        alert(`✅ PNG image downloaded: ${filename}`)
+      } else {
+        throw new Error('Failed to generate image')
       }
     } catch (error) {
       console.error('Failed to generate share image:', error)
+      alert('❌ Failed to generate PNG image. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -143,9 +157,8 @@ Track your environmental impact! 👇
   }
 
   const shareToInstagram = () => {
-    // Instagram doesn't support direct sharing via URL, so we'll generate the image for manual sharing
-    generateShareImage()
-    alert('Image downloaded! You can now share it on Instagram.')
+    generateShareImage(false)
+    alert('PNG image downloaded! Perfect for Instagram sharing.')
   }
 
   const copyToClipboard = () => {
