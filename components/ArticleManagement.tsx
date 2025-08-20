@@ -296,7 +296,7 @@ function ArticleFormModal({
     try {
       const url = '/api/articles'
       const method = isEditing ? 'PUT' : 'POST'
-      const body = {
+      const body: any = {
         ...formData,
         tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean),
         userRole

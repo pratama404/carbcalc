@@ -156,7 +156,7 @@ export default function CarbonChart({ data, historicalData }: Props) {
           usePointStyle: true,
           font: {
             size: 12,
-            weight: 'bold'
+            weight: 'bold' as const
           }
         }
       },
@@ -315,7 +315,7 @@ export default function CarbonChart({ data, historicalData }: Props) {
         <div className="bg-white p-6 rounded-xl shadow-sm border">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold">Breakdown by Category</h3>
-            <Info className="w-5 h-5 text-gray-400" title="Click on chart segments for details" />
+            <Info className="w-5 h-5 text-gray-400" />
           </div>
           <div className="h-80">
             <Doughnut data={breakdownData} options={doughnutOptions} />
@@ -352,7 +352,7 @@ export default function CarbonChart({ data, historicalData }: Props) {
                       <div>
                         <h4 className="font-semibold capitalize flex items-center">
                           {category}
-                          {isHighest && <Award className="w-4 h-4 ml-2 text-orange-500" title="Highest impact" />}
+                          {isHighest && <Award className="w-4 h-4 ml-2 text-orange-500" />}
                         </h4>
                         <p className="text-sm text-gray-600">{percentage.toFixed(1)}% of total</p>
                       </div>
