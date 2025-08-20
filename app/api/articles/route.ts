@@ -1,77 +1,68 @@
 import { NextRequest, NextResponse } from 'next/server'
-
-// Mock articles data
-const MOCK_ARTICLES = [
-  {
-    _id: '1',
-    title: '10 Simple Ways to Reduce Your Carbon Footprint',
-    content: 'Reducing your carbon footprint doesn\'t have to be complicated...',
-    excerpt: 'Discover easy daily habits that can significantly reduce your environmental impact.',
-    author: 'Dr. Sarah Green',
-    authorId: 'admin1',
-    category: 'tips',
-    tags: ['carbon', 'lifestyle', 'environment'],
-    featured: true,
-    published: true,
-    publishedAt: new Date('2024-01-15'),
-    readTime: 5,
-    views: 1250,
-    createdAt: new Date('2024-01-15')
-  },
-  {
-    _id: '2',
-    title: 'The Future of Renewable Energy',
-    content: 'Renewable energy technologies are advancing rapidly...',
-    excerpt: 'Explore the latest developments in solar, wind, and other renewable energy sources.',
-    author: 'Prof. Mike Chen',
-    authorId: 'admin2',
-    category: 'technology',
-    tags: ['renewable', 'solar', 'wind'],
-    featured: false,
-    published: true,
-    publishedAt: new Date('2024-01-20'),
-    readTime: 8,
-    views: 890,
-    createdAt: new Date('2024-01-20')
-  }
-]
+import dbConnect from '@/lib/mongodb'
+import Article from '@/models/Article'
 
 export async function GET(request: NextRequest) {
   try {
+    await dbConnect()
+    
     const { searchParams } = new URL(request.url)
     const category = searchParams.get('category')
     const featured = searchParams.get('featured') === 'true'
+    const articleId = searchParams.get('id')
 
-    let articles = MOCK_ARTICLES.filter(article => article.published)
+    // Get single article
+    if (articleId) {
+      const article = await Article.findById(articleId)
+      if (!article) {
+        return NextResponse.json({ error: 'Article not found' }, { status: 404 })
+      }
+      
+      // Increment views
+      await Article.findByIdAndUpdate(articleId, { $inc: { views: 1 } })
+      
+      return NextResponse.json({
+        success: true,
+        data: article
+      })
+    }
 
+    // Build query
+    let query: any = { published: true }
+    
     if (category) {
-      articles = articles.filter(article => article.category === category)
+      query.category = category
+    }
+    
+    if (featured) {
+      query.featured = true
     }
 
-    if (featured) {
-      articles = articles.filter(article => article.featured)
-    }
+    const articles = await Article.find(query)
+      .sort({ publishedAt: -1, createdAt: -1 })
+      .select('-content') // Exclude full content for list view
 
     return NextResponse.json({
       success: true,
-      data: articles.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+      data: articles
     })
   } catch (error) {
+    console.error('Articles fetch error:', error)
     return NextResponse.json({ error: 'Failed to fetch articles' }, { status: 500 })
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
+    await dbConnect()
+    
     const { title, content, excerpt, category, tags, featured, userRole } = await request.json()
 
-    // Role-based access control
     if (userRole !== 'admin') {
       return NextResponse.json({ error: 'Unauthorized - Admin access required' }, { status: 403 })
     }
 
-    const article = {
-      _id: Date.now().toString(),
+    const article = new Article({
       title,
       content,
       excerpt,
@@ -82,19 +73,84 @@ export async function POST(request: NextRequest) {
       featured: featured || false,
       published: true,
       publishedAt: new Date(),
-      readTime: Math.ceil(content.split(' ').length / 200), // Estimate reading time
-      views: 0,
-      createdAt: new Date()
-    }
+      readTime: Math.ceil(content.split(' ').length / 200),
+      views: 0
+    })
 
-    // In real implementation, save to database
-    MOCK_ARTICLES.push(article)
+    await article.save()
 
     return NextResponse.json({
       success: true,
       data: article
     })
   } catch (error) {
+    console.error('Article creation error:', error)
     return NextResponse.json({ error: 'Failed to create article' }, { status: 500 })
+  }
+}
+
+export async function PUT(request: NextRequest) {
+  try {
+    await dbConnect()
+    
+    const { id, title, content, excerpt, category, tags, featured, userRole } = await request.json()
+
+    if (userRole !== 'admin') {
+      return NextResponse.json({ error: 'Unauthorized - Admin access required' }, { status: 403 })
+    }
+
+    const article = await Article.findByIdAndUpdate(
+      id,
+      {
+        title,
+        content,
+        excerpt,
+        category,
+        tags: tags || [],
+        featured: featured || false,
+        readTime: Math.ceil(content.split(' ').length / 200)
+      },
+      { new: true }
+    )
+
+    if (!article) {
+      return NextResponse.json({ error: 'Article not found' }, { status: 404 })
+    }
+
+    return NextResponse.json({
+      success: true,
+      data: article
+    })
+  } catch (error) {
+    console.error('Article update error:', error)
+    return NextResponse.json({ error: 'Failed to update article' }, { status: 500 })
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    await dbConnect()
+    
+    const { searchParams } = new URL(request.url)
+    const id = searchParams.get('id')
+    const userRole = searchParams.get('userRole')
+
+    if (userRole !== 'admin') {
+      return NextResponse.json({ error: 'Unauthorized - Admin access required' }, { status: 403 })
+    }
+
+    const article = await Article.findByIdAndDelete(id)
+
+    if (!article) {
+      return NextResponse.json({ error: 'Article not found' }, { status: 404 })
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: 'Article deleted successfully'
+    })
+  } catch (error) {
+    console.error('Article deletion error:', error)
+    return NextResponse.json({ error: 'Failed to delete article' }, { status: 500 })
   }
 }

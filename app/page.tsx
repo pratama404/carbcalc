@@ -7,8 +7,9 @@ import { Leaf, Calculator, TrendingUp, Users, Star, ChevronRight, CheckCircle, A
 import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import SessionProvider from '@/components/SessionProvider'
 
-export default function LandingPage() {
+function LandingContent() {
   const { data: session, status } = useSession()
   const router = useRouter()
 
@@ -126,5 +127,13 @@ export default function LandingPage() {
 
       <Footer />
     </div>
+  )
+}
+
+export default function LandingPage() {
+  return (
+    <SessionProvider>
+      <LandingContent />
+    </SessionProvider>
   )
 }

@@ -37,11 +37,11 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 bg-white shadow-sm border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-14 sm:h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <Leaf className="w-8 h-8 text-green-600 mr-3" />
-            <span className="text-2xl font-bold text-gray-900">CarbCalc</span>
+            <Leaf className="w-6 h-6 sm:w-8 sm:h-8 text-green-600 mr-2 sm:mr-3" />
+            <span className="text-xl sm:text-2xl font-bold text-gray-900">CarbCalc</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -86,16 +86,16 @@ export default function Header() {
           </nav>
 
           {/* CTA Buttons */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-2 lg:space-x-4">
             <Link
               href="/auth/signin"
-              className="text-gray-700 hover:text-green-600 font-medium"
+              className="text-gray-700 hover:text-green-600 font-medium text-sm lg:text-base px-2 lg:px-0"
             >
               Sign In
             </Link>
             <Link
               href="/auth/signup"
-              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 font-medium"
+              className="bg-green-600 text-white px-3 lg:px-4 py-2 rounded-lg hover:bg-green-700 font-medium text-sm lg:text-base"
             >
               Get Started
             </Link>

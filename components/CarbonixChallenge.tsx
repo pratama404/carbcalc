@@ -34,6 +34,7 @@ export default function CarbonixChallenge() {
     location: ''
   })
   const [loading, setLoading] = useState(false)
+  const [uploading, setUploading] = useState(false)
 
   const availableChallenges = [
     {
@@ -96,6 +97,48 @@ export default function CarbonixChallenge() {
     } catch (error) {
       console.error('Failed to fetch challenges:', error)
     }
+  }
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files
+    if (!files || files.length === 0) return
+
+    setUploading(true)
+    const uploadedUrls: string[] = []
+
+    try {
+      for (const file of Array.from(files)) {
+        const formData = new FormData()
+        formData.append('file', file)
+
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData
+        })
+
+        const result = await response.json()
+        if (result.success) {
+          uploadedUrls.push(result.url)
+        }
+      }
+
+      setEvidence(prev => ({
+        ...prev,
+        photos: [...prev.photos, ...uploadedUrls]
+      }))
+    } catch (error) {
+      console.error('Upload failed:', error)
+      alert('Failed to upload images. Please try again.')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const removePhoto = (index: number) => {
+    setEvidence(prev => ({
+      ...prev,
+      photos: prev.photos.filter((_, i) => i !== index)
+    }))
   }
 
   const submitChallenge = async () => {
@@ -296,13 +339,57 @@ export default function CarbonixChallenge() {
               
               <div>
                 <label className="block text-sm font-medium mb-2">Photos (Optional)</label>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                  <Camera className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                  <p className="text-sm text-gray-600">Upload photos as evidence</p>
-                  <button className="mt-2 text-blue-600 text-sm hover:underline">
-                    Choose Files
-                  </button>
+                
+                {/* Photo Upload Area */}
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                    id="photo-upload"
+                    disabled={uploading}
+                  />
+                  <label htmlFor="photo-upload" className="cursor-pointer">
+                    {uploading ? (
+                      <div className="flex items-center justify-center">
+                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mr-2"></div>
+                        <span className="text-sm text-gray-600">Uploading...</span>
+                      </div>
+                    ) : (
+                      <>
+                        <Camera className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                        <p className="text-sm text-gray-600 mb-1">Upload photos as evidence</p>
+                        <p className="text-xs text-gray-500 mb-2">Max 5MB per image, JPG/PNG only</p>
+                        <span className="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition-colors">
+                          Choose Files
+                        </span>
+                      </>
+                    )}
+                  </label>
                 </div>
+                
+                {/* Uploaded Photos Preview */}
+                {evidence.photos.length > 0 && (
+                  <div className="mt-4 grid grid-cols-2 gap-3">
+                    {evidence.photos.map((photo, index) => (
+                      <div key={index} className="relative group">
+                        <img
+                          src={photo}
+                          alt={`Evidence ${index + 1}`}
+                          className="w-full h-24 object-cover rounded-lg border"
+                        />
+                        <button
+                          onClick={() => removePhoto(index)}
+                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
             
@@ -315,10 +402,10 @@ export default function CarbonixChallenge() {
               </button>
               <button
                 onClick={submitChallenge}
-                disabled={loading || !evidence.description}
+                disabled={loading || uploading || !evidence.description}
                 className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
               >
-                {loading ? 'Submitting...' : 'Submit'}
+                {loading ? 'Submitting...' : uploading ? 'Uploading...' : 'Submit'}
               </button>
             </div>
           </div>

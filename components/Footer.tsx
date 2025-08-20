@@ -41,26 +41,26 @@ export default function Footer() {
   return (
     <footer className="bg-gray-900 text-white">
       {/* Main Footer Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           
           {/* Section 1: Motto + Social Media */}
-          <div className="lg:col-span-1">
-            <div className="flex items-center mb-6">
-              <Leaf className="w-8 h-8 text-green-400 mr-3" />
-              <span className="text-2xl font-bold">CarbCalc</span>
+          <div className="sm:col-span-2 lg:col-span-1">
+            <div className="flex items-center mb-4 sm:mb-6">
+              <Leaf className="w-6 h-6 sm:w-8 sm:h-8 text-green-400 mr-2 sm:mr-3" />
+              <span className="text-xl sm:text-2xl font-bold">CarbCalc</span>
             </div>
             
-            <p className="text-lg font-medium text-green-400 mb-4">
+            <p className="text-base sm:text-lg font-medium text-green-400 mb-3 sm:mb-4">
               "Empowering Climate Action – One Step at a Time"
             </p>
             
-            <p className="text-gray-300 mb-6 leading-relaxed">
+            <p className="text-sm sm:text-base text-gray-300 mb-4 sm:mb-6 leading-relaxed">
               Join millions of users worldwide in tracking, reducing, and offsetting their carbon footprint. 
               Together, we can make a meaningful impact on our planet's future.
             </p>
             
-            <div className="flex space-x-4">
+            <div className="flex space-x-3 sm:space-x-4">
               {socialLinks.map((social) => {
                 const Icon = social.icon
                 return (
@@ -71,7 +71,7 @@ export default function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Icon className="w-5 h-5" />
+                    <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
                   </Link>
                 )
               })}
