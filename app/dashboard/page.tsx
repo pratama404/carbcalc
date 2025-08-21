@@ -148,54 +148,70 @@ function DashboardContent() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+      <header className="bg-gradient-to-r from-green-600 to-blue-600 text-white shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-4 sm:py-6 space-y-4 sm:space-y-0">
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center py-6 lg:py-8 space-y-4 lg:space-y-0">
             <div className="flex items-center">
-              <Leaf className="w-6 h-6 sm:w-8 sm:h-8 text-green-600 mr-2 sm:mr-3" />
+              <div className="bg-white bg-opacity-20 rounded-full p-3 mr-4">
+                <Leaf className="w-8 h-8 lg:w-10 lg:h-10 text-white" />
+              </div>
               <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Carbon Calculator</h1>
-                <p className="text-xs sm:text-sm text-gray-600 truncate max-w-[200px] sm:max-w-none">Welcome, {userName || session.user?.name || session.user?.email}</p>
+                <h1 className="text-2xl lg:text-4xl font-bold text-white mb-1">
+                  Carbon Calculator
+                </h1>
+                <p className="text-green-100 text-sm lg:text-base">
+                  Welcome back, {userName || session.user?.name || 'User'}
+                </p>
+                <p className="text-green-200 text-xs lg:text-sm opacity-90">
+                  Track, analyze, and reduce your carbon footprint
+                </p>
               </div>
             </div>
             
-            <div className="flex items-center space-x-2 sm:space-x-4">
-              {currentResult && <div className="hidden sm:block"><ShareButton carbonData={currentResult} /></div>}
+            <div className="flex items-center space-x-3 lg:space-x-4">
+              {currentResult && (
+                <div className="hidden sm:block">
+                  <ShareButton carbonData={currentResult} />
+                </div>
+              )}
               <button
                 onClick={() => router.push('/history')}
-                className="flex items-center text-gray-600 hover:text-gray-900 p-1.5 sm:p-2 rounded-lg hover:bg-gray-100"
+                className="flex items-center bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-3 py-2 lg:px-4 lg:py-3 rounded-lg transition-all duration-200"
                 title="View History"
               >
-                <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5" />
+                <BarChart3 className="w-5 h-5 lg:w-6 lg:h-6 mr-2" />
+                <span className="hidden sm:inline text-sm lg:text-base">History</span>
               </button>
               <button
                 onClick={() => router.push('/profile')}
-                className="flex items-center text-gray-600 hover:text-gray-900 p-1.5 sm:p-2 rounded-lg hover:bg-gray-100"
+                className="flex items-center bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-3 py-2 lg:px-4 lg:py-3 rounded-lg transition-all duration-200"
                 title="Profile"
               >
-                <User className="w-4 h-4 sm:w-5 sm:h-5" />
+                <User className="w-5 h-5 lg:w-6 lg:h-6 mr-2" />
+                <span className="hidden sm:inline text-sm lg:text-base">Profile</span>
               </button>
               <button
                 onClick={() => signOut({ callbackUrl: '/auth/signin' })}
-                className="flex items-center text-gray-600 hover:text-gray-900 p-1.5 sm:p-2 rounded-lg hover:bg-gray-100"
+                className="flex items-center bg-red-500 bg-opacity-80 hover:bg-opacity-100 text-white px-3 py-2 lg:px-4 lg:py-3 rounded-lg transition-all duration-200"
                 title="Sign Out"
               >
-                <LogOut className="w-4 h-4 sm:w-5 sm:h-5" />
+                <LogOut className="w-5 h-5 lg:w-6 lg:h-6 mr-2" />
+                <span className="hidden sm:inline text-sm lg:text-base">Sign Out</span>
               </button>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Navigation Tabs */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:mt-8">
-        <div className="bg-white rounded-lg shadow-sm">
+      {/* Navigation Menu Bar */}
+      <div className="bg-white border-b border-gray-200 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Mobile Dropdown */}
-          <div className="block sm:hidden">
+          <div className="block lg:hidden py-4">
             <select 
               value={activeTab} 
               onChange={(e) => setActiveTab(e.target.value)}
-              className="w-full p-3 border-0 rounded-lg text-sm font-medium bg-white focus:ring-2 focus:ring-green-500"
+              className="w-full p-4 border border-gray-300 rounded-lg text-base font-medium bg-white focus:ring-2 focus:ring-green-500 focus:border-green-500"
             >
               {tabs.map(tab => (
                 <option key={tab.id} value={tab.id}>{tab.label}</option>
@@ -203,22 +219,43 @@ function DashboardContent() {
             </select>
           </div>
           
-          {/* Desktop Tabs */}
-          <div className="hidden sm:flex space-x-1 p-1">
+          {/* Desktop Menu Bar */}
+          <div className="hidden lg:flex space-x-0 overflow-x-auto">
             {tabs.map(tab => {
               const Icon = tab.icon
               return (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center px-3 lg:px-4 py-2 rounded-md text-xs lg:text-sm font-medium transition-colors whitespace-nowrap ${
+                  className={`flex flex-col items-center px-6 py-4 text-sm font-medium transition-all duration-200 border-b-2 whitespace-nowrap min-w-[120px] ${
+                    activeTab === tab.id
+                      ? 'border-green-500 text-green-600 bg-green-50'
+                      : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300 hover:bg-gray-50'
+                  }`}
+                >
+                  <Icon className="w-6 h-6 mb-2" />
+                  <span>{tab.label}</span>
+                </button>
+              )
+            })}
+          </div>
+          
+          {/* Tablet Menu */}
+          <div className="hidden sm:flex lg:hidden space-x-1 py-2 overflow-x-auto">
+            {tabs.map(tab => {
+              const Icon = tab.icon
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
                     activeTab === tab.id
                       ? 'bg-green-600 text-white'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                   }`}
                 >
-                  <Icon className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
-                  <span className="hidden md:inline">{tab.label}</span>
+                  <Icon className="w-4 h-4 mr-2" />
+                  <span>{tab.label}</span>
                 </button>
               )
             })}
@@ -245,15 +282,12 @@ function DashboardContent() {
         {activeTab === 'results' && currentResult && (
           <div className="space-y-8">
             <CarbonChart data={currentResult} historicalData={historicalData} />
-            <div className="grid lg:grid-cols-2 gap-8">
-              <AirQualityAnalysis carbonData={currentResult} />
-              <ReportExporter 
-                userData={{ name: userName, email: session?.user?.email || '' }}
-                carbonData={currentResult}
-                historicalData={historicalData}
-                recommendations={['Use public transport', 'Reduce energy consumption', 'Choose sustainable food options']}
-              />
-            </div>
+            <ReportExporter 
+              userData={{ name: userName, email: session?.user?.email || '' }}
+              carbonData={currentResult}
+              historicalData={historicalData}
+              recommendations={['Use public transport', 'Reduce energy consumption', 'Choose sustainable food options']}
+            />
           </div>
         )}
 
@@ -280,7 +314,31 @@ function DashboardContent() {
         )}
 
         {activeTab === 'air-quality' && (
-          <AirQualityDashboard />
+          <div className="space-y-8">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                Air Quality Analysis
+              </h2>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                Monitor air quality in your area and understand how your carbon footprint impacts local air pollution.
+              </p>
+            </div>
+            {currentResult ? (
+              <AirQualityAnalysis carbonData={currentResult} />
+            ) : (
+              <div className="text-center py-12">
+                <Wind className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-600 mb-2">No Carbon Data Available</h3>
+                <p className="text-gray-500">Calculate your carbon footprint first to see air quality impact analysis.</p>
+                <button
+                  onClick={() => setActiveTab('calculator')}
+                  className="mt-4 bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700"
+                >
+                  Start Calculating
+                </button>
+              </div>
+            )}
+          </div>
         )}
 
         {activeTab === 'challenges' && (
