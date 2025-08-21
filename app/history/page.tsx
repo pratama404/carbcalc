@@ -5,8 +5,9 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft, Calendar, TrendingDown, TrendingUp, BarChart3 } from 'lucide-react'
 import CarbonChart from '@/components/CarbonChart'
+import SessionProvider from '@/components/SessionProvider'
 
-export default function History() {
+function HistoryContent() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const [historicalData, setHistoricalData] = useState<any[]>([])
@@ -128,5 +129,13 @@ export default function History() {
         )}
       </main>
     </div>
+  )
+}
+
+export default function History() {
+  return (
+    <SessionProvider>
+      <HistoryContent />
+    </SessionProvider>
   )
 }

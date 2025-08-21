@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import { MapPin, Thermometer, Droplets, Wind, Calendar, RefreshCw, Info, X, AlertTriangle } from 'lucide-react'
-import { AirQualityData, AirQualityForecast, AQI_LEVELS } from '@/lib/airQuality'
+import { AQI_LEVELS } from '@/lib/airQuality'
 
 export default function AirQualityDashboard() {
-  const [airQuality, setAirQuality] = useState<AirQualityData | null>(null)
-  const [forecast, setForecast] = useState<AirQualityForecast[]>([])
+  const [airQuality, setAirQuality] = useState<any>(null)
+  const [forecast, setForecast] = useState<any[]>([])
   const [location, setLocation] = useState({ lat: 0, lon: 0 })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -83,11 +83,11 @@ export default function AirQualityDashboard() {
   }
 
   const getAQILevel = (aqi: number) => {
-    if (aqi <= 50) return { ...AQI_LEVELS[1], level: 1 }
-    if (aqi <= 100) return { ...AQI_LEVELS[2], level: 2 }
-    if (aqi <= 150) return { ...AQI_LEVELS[3], level: 3 }
-    if (aqi <= 200) return { ...AQI_LEVELS[4], level: 4 }
-    return { ...AQI_LEVELS[5], level: 5 }
+    if (aqi <= 50) return { ...AQI_LEVELS.GOOD, level: 1 }
+    if (aqi <= 100) return { ...AQI_LEVELS.MODERATE, level: 2 }
+    if (aqi <= 150) return { ...AQI_LEVELS.UNHEALTHY_SENSITIVE, level: 3 }
+    if (aqi <= 200) return { ...AQI_LEVELS.UNHEALTHY, level: 4 }
+    return { ...AQI_LEVELS.VERY_UNHEALTHY, level: 5 }
   }
 
   const getRecommendations = (aqiLevel: number) => {
@@ -230,13 +230,13 @@ export default function AirQualityDashboard() {
             
             <div className="grid md:grid-cols-2 gap-8 items-center">
               <div className="text-center">
-                <div className={`inline-block p-6 sm:p-8 rounded-2xl mb-4 ${aqiLevel.bgColor} relative`}>
+                <div className={`inline-block p-6 sm:p-8 rounded-2xl mb-4 bg-gray-100 relative`}>
                   <div className="text-5xl sm:text-6xl font-bold mb-2">{currentAQI}</div>
-                  <div className={`px-4 py-2 rounded-full text-lg font-semibold ${aqiLevel.color} text-white mb-2`}>
+                  <div className={`px-4 py-2 rounded-full text-lg font-semibold bg-green-500 text-white mb-2`}>
                     {aqiLevel.label}
                   </div>
                   <p className="text-sm text-gray-600 max-w-xs">
-                    {aqiLevel.description}
+                    Air Quality Level
                   </p>
                   <button
                     onClick={() => setShowRecommendations(true)}
@@ -335,8 +335,8 @@ export default function AirQualityDashboard() {
         <h3 className="text-lg font-semibold mb-4">Air Quality Index Guide</h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
           {Object.entries(AQI_LEVELS).map(([level, info]) => (
-            <div key={level} className={`p-3 rounded-lg text-center ${info.bgColor}`}>
-              <div className={`w-8 h-8 rounded-full mx-auto mb-2 ${info.color}`}></div>
+            <div key={level} className={`p-3 rounded-lg text-center bg-gray-100`}>
+              <div className={`w-8 h-8 rounded-full mx-auto mb-2 bg-gray-400`}></div>
               <p className="text-xs font-medium">{info.label}</p>
               <p className="text-xs text-gray-600">AQI {level}</p>
             </div>

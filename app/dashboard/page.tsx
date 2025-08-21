@@ -11,6 +11,8 @@ import TodoList from '@/components/TodoList'
 import ShareButton from '@/components/ShareButton'
 import AirQualityDashboard from '@/components/AirQualityDashboard'
 import CarbonixChallenge from '@/components/CarbonixChallenge'
+import AirQualityAnalysis from '@/components/AirQualityAnalysis'
+import ReportExporter from '@/components/ReportExporter'
 import Link from 'next/link'
 import DashboardOverview from '@/components/DashboardOverview'
 import ArticleManagement from '@/components/ArticleManagement'
@@ -241,7 +243,18 @@ function DashboardContent() {
         )}
 
         {activeTab === 'results' && currentResult && (
-          <CarbonChart data={currentResult} historicalData={historicalData} />
+          <div className="space-y-8">
+            <CarbonChart data={currentResult} historicalData={historicalData} />
+            <div className="grid lg:grid-cols-2 gap-8">
+              <AirQualityAnalysis carbonData={currentResult} />
+              <ReportExporter 
+                userData={{ name: userName, email: session?.user?.email || '' }}
+                carbonData={currentResult}
+                historicalData={historicalData}
+                recommendations={['Use public transport', 'Reduce energy consumption', 'Choose sustainable food options']}
+              />
+            </div>
+          </div>
         )}
 
         {activeTab === 'results' && !currentResult && (

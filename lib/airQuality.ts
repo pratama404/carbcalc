@@ -1,133 +1,97 @@
-export interface AirQualityData {
-  aqi: number
-  pm25: number
-  pm10: number
-  co: number
-  no2: number
-  so2: number
-  o3: number
-  temperature: number
-  humidity: number
-  location: string
-}
-
-export interface AirQualityForecast {
-  date: string
-  aqi: number
-  main: string
-}
-
+// Air Quality Index calculation and analysis
 export const AQI_LEVELS = {
-  1: { 
-    label: 'Good', 
-    color: 'bg-green-500', 
-    textColor: 'text-green-700', 
-    bgColor: 'bg-green-50',
-    description: 'Air quality is satisfactory for most people'
-  },
-  2: { 
-    label: 'Moderate', 
-    color: 'bg-yellow-500', 
-    textColor: 'text-yellow-700', 
-    bgColor: 'bg-yellow-50',
-    description: 'Acceptable for most, sensitive individuals may experience minor issues'
-  },
-  3: { 
-    label: 'Unhealthy for Sensitive Groups', 
-    color: 'bg-orange-500', 
-    textColor: 'text-orange-700', 
-    bgColor: 'bg-orange-50',
-    description: 'Sensitive groups may experience health effects'
-  },
-  4: { 
-    label: 'Unhealthy', 
-    color: 'bg-red-500', 
-    textColor: 'text-red-700', 
-    bgColor: 'bg-red-50',
-    description: 'Everyone may experience health effects'
-  },
-  5: { 
-    label: 'Very Unhealthy', 
-    color: 'bg-purple-500', 
-    textColor: 'text-purple-700', 
-    bgColor: 'bg-purple-50',
-    description: 'Health alert: everyone may experience serious health effects'
+  GOOD: { min: 0, max: 50, color: '#00E400', label: 'Good' },
+  MODERATE: { min: 51, max: 100, color: '#FFFF00', label: 'Moderate' },
+  UNHEALTHY_SENSITIVE: { min: 101, max: 150, color: '#FF7E00', label: 'Unhealthy for Sensitive Groups' },
+  UNHEALTHY: { min: 151, max: 200, color: '#FF0000', label: 'Unhealthy' },
+  VERY_UNHEALTHY: { min: 201, max: 300, color: '#8F3F97', label: 'Very Unhealthy' },
+  HAZARDOUS: { min: 301, max: 500, color: '#7E0023', label: 'Hazardous' }
+}
+
+export function calculateAQI(pollutants: {
+  pm25?: number
+  pm10?: number
+  o3?: number
+  no2?: number
+  so2?: number
+  co?: number
+}) {
+  const aqiValues: number[] = []
+
+  // PM2.5 AQI calculation
+  if (pollutants.pm25) {
+    aqiValues.push(calculatePollutantAQI(pollutants.pm25, [
+      [0, 12, 0, 50],
+      [12.1, 35.4, 51, 100],
+      [35.5, 55.4, 101, 150],
+      [55.5, 150.4, 151, 200],
+      [150.5, 250.4, 201, 300],
+      [250.5, 500.4, 301, 500]
+    ]))
+  }
+
+  // PM10 AQI calculation
+  if (pollutants.pm10) {
+    aqiValues.push(calculatePollutantAQI(pollutants.pm10, [
+      [0, 54, 0, 50],
+      [55, 154, 51, 100],
+      [155, 254, 101, 150],
+      [255, 354, 151, 200],
+      [355, 424, 201, 300],
+      [425, 604, 301, 500]
+    ]))
+  }
+
+  const maxAQI = Math.max(...aqiValues)
+  return {
+    aqi: Math.round(maxAQI),
+    level: getAQILevel(maxAQI),
+    pollutants: pollutants,
+    healthRecommendations: getHealthRecommendations(maxAQI)
   }
 }
 
-// Calculate unified AQI based on dominant pollutant
-function calculateUnifiedAQI(components: any): number {
-  const { pm2_5, pm10, co, no2, so2, o3 } = components
-  
-  // AQI breakpoints for different pollutants (simplified)
-  const getAQI = (concentration: number, breakpoints: number[]) => {
-    for (let i = 0; i < breakpoints.length; i++) {
-      if (concentration <= breakpoints[i]) return i + 1
+function calculatePollutantAQI(concentration: number, breakpoints: number[][]) {
+  for (const [cLow, cHigh, iLow, iHigh] of breakpoints) {
+    if (concentration >= cLow && concentration <= cHigh) {
+      return ((iHigh - iLow) / (cHigh - cLow)) * (concentration - cLow) + iLow
     }
-    return 5
   }
-  
-  const pm25AQI = getAQI(pm2_5, [12, 35.4, 55.4, 150.4])
-  const pm10AQI = getAQI(pm10, [54, 154, 254, 354])
-  const coAQI = getAQI(co / 1000, [4.4, 9.4, 12.4, 15.4]) // Convert to mg/m³
-  const no2AQI = getAQI(no2, [53, 100, 360, 649])
-  const so2AQI = getAQI(so2, [35, 75, 185, 304])
-  const o3AQI = getAQI(o3, [54, 70, 85, 105])
-  
-  return Math.max(pm25AQI, pm10AQI, coAQI, no2AQI, so2AQI, o3AQI)
+  return 500 // Maximum AQI
 }
 
-export async function getAirQuality(lat: number, lon: number): Promise<AirQualityData | null> {
-  try {
-    const response = await fetch(
-      `https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${process.env.OPENWEATHER_API_KEY}`
-    )
-    
-    if (!response.ok) return null
-    
-    const data = await response.json()
-    const weatherResponse = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${process.env.OPENWEATHER_API_KEY}&units=metric`
-    )
-    
-    const weatherData = await weatherResponse.json()
-    const unifiedAQI = calculateUnifiedAQI(data.list[0].components)
-    
-    return {
-      aqi: unifiedAQI,
-      pm25: data.list[0].components.pm2_5,
-      pm10: data.list[0].components.pm10,
-      co: data.list[0].components.co,
-      no2: data.list[0].components.no2,
-      so2: data.list[0].components.so2,
-      o3: data.list[0].components.o3,
-      temperature: weatherData.main.temp,
-      humidity: weatherData.main.humidity,
-      location: weatherData.name
+function getAQILevel(aqi: number) {
+  for (const [key, level] of Object.entries(AQI_LEVELS)) {
+    if (aqi >= level.min && aqi <= level.max) {
+      return level
     }
-  } catch (error) {
-    console.error('Air quality fetch error:', error)
-    return null
   }
+  return AQI_LEVELS.HAZARDOUS
 }
 
-export async function getAirQualityForecast(lat: number, lon: number): Promise<AirQualityForecast[]> {
-  try {
-    const response = await fetch(
-      `https://api.openweathermap.org/data/2.5/air_pollution/forecast?lat=${lat}&lon=${lon}&appid=${process.env.OPENWEATHER_API_KEY}`
-    )
-    
-    if (!response.ok) return []
-    
-    const data = await response.json()
-    
-    return data.list.slice(0, 5).map((item: any) => ({
-      date: new Date(item.dt * 1000).toLocaleDateString(),
-      aqi: item.main.aqi,
-      main: AQI_LEVELS[item.main.aqi as keyof typeof AQI_LEVELS].label
-    }))
-  } catch (error) {
-    console.error('Air quality forecast error:', error)
-    return []
+function getHealthRecommendations(aqi: number) {
+  if (aqi <= 50) return ['Air quality is good. Enjoy outdoor activities!']
+  if (aqi <= 100) return ['Air quality is acceptable. Sensitive individuals should consider limiting prolonged outdoor exertion.']
+  if (aqi <= 150) return ['Sensitive groups should reduce outdoor activities.', 'Consider wearing a mask when outdoors.']
+  if (aqi <= 200) return ['Everyone should limit outdoor activities.', 'Wear a mask when going outside.', 'Keep windows closed.']
+  if (aqi <= 300) return ['Avoid all outdoor activities.', 'Stay indoors with air purifier.', 'Seek medical attention if experiencing symptoms.']
+  return ['Health emergency! Avoid all outdoor exposure.', 'Stay indoors with sealed windows.', 'Seek immediate medical attention if needed.']
+}
+
+export function analyzeAirQualityImpact(carbonData: any, location?: string) {
+  // Estimate air quality impact based on carbon emissions
+  const transportationImpact = carbonData.breakdown.transportation * 0.8
+  const energyImpact = carbonData.breakdown.energy * 0.6
+  const totalImpact = transportationImpact + energyImpact
+
+  return {
+    estimatedPM25Contribution: Math.round(totalImpact * 2.5),
+    recommendations: [
+      'Reduce vehicle usage to improve local air quality',
+      'Switch to renewable energy sources',
+      'Use public transportation or cycling',
+      'Plant trees to offset emissions'
+    ],
+    airQualityScore: Math.max(0, 100 - totalImpact * 5)
   }
 }

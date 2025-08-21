@@ -17,6 +17,8 @@
     "bcryptjs": "^3.0.2",
     "canvas": "^2.11.2",
     "chart.js": "^4.4.0",
+    "jspdf": "^2.5.2",
+    "jspdf-autotable": "^3.8.4",
     "lucide-react": "^0.294.0",
     "mongodb": "^5.9.0",
     "mongoose": "^7.6.0",
