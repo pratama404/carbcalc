@@ -9,31 +9,22 @@ const UserSchema = new mongoose.Schema({
     enum: ['user', 'premium', 'government', 'admin'], 
     default: 'user' 
   },
-  profile: {
-    avatar: { type: String },
-    bio: { type: String },
-    location: { type: String }
-  },
+  bio: { type: String },
+  location: { type: String },
+  joinDate: { type: Date, default: Date.now },
   ecoPoints: { type: Number, default: 0 },
-  badges: [{
-    type: { type: String },
-    name: { type: String },
-    description: { type: String },
-    earnedAt: { type: Date, default: Date.now },
-    icon: { type: String }
-  }],
+  badges: [{ type: String }],
   carbonFootprint: {
     total: { type: Number, default: 0 },
     thisMonth: { type: Number, default: 0 },
     lastMonth: { type: Number, default: 0 },
     trend: { type: String, enum: ['up', 'down', 'stable'], default: 'stable' }
   },
-  achievements: {
-    challengesCompleted: { type: Number, default: 0 },
-    carbonSaved: { type: Number, default: 0 },
-    treesPlanted: { type: Number, default: 0 },
-    wasteRecycled: { type: Number, default: 0 }
-  }
+  challengesCompleted: { type: Number, default: 0 },
+  totalCO2Saved: { type: Number, default: 0 },
+  treesPlanted: { type: Number, default: 0 },
+  wasteRecycled: { type: Number, default: 0 },
+  achievements: [{ type: String }]
 }, {
   timestamps: true
 })

@@ -9,13 +9,13 @@ export async function GET(request: NextRequest) {
     await dbConnect()
     
     const { searchParams } = new URL(request.url)
-    const userId = searchParams.get('userId')
+    const email = searchParams.get('email')
     
-    if (!userId) {
-      return NextResponse.json({ error: 'User ID required' }, { status: 400 })
+    if (!email) {
+      return NextResponse.json({ error: 'Email required' }, { status: 400 })
     }
 
-    const user = await User.findOne({ email: userId }).select('-password')
+    const user = await User.findOne({ email }).select('-password')
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
@@ -27,31 +27,39 @@ export async function GET(request: NextRequest) {
     lastMonth.setMonth(lastMonth.getMonth() - 1)
 
     const [thisMonthEntries, lastMonthEntries, totalChallenges] = await Promise.all([
-      CarbonEntry.find({ userId, createdAt: { $gte: thisMonth } }),
-      CarbonEntry.find({ userId, createdAt: { $gte: lastMonth, $lt: thisMonth } }),
-      Challenge.countDocuments({ userId, status: 'approved' })
+      CarbonEntry.find({ userId: email, createdAt: { $gte: thisMonth } }),
+      CarbonEntry.find({ userId: email, createdAt: { $gte: lastMonth, $lt: thisMonth } }),
+      Challenge.countDocuments({ userId: email, status: 'approved' })
     ])
 
     const thisMonthTotal = thisMonthEntries.reduce((sum, entry) => sum + entry.totalCO2, 0)
     const lastMonthTotal = lastMonthEntries.reduce((sum, entry) => sum + entry.totalCO2, 0)
     const totalCO2 = await CarbonEntry.aggregate([
-      { $match: { userId } },
+      { $match: { userId: email } },
       { $group: { _id: null, total: { $sum: '$totalCO2' } } }
     ])
 
     const profile = {
-      ...user.toObject(),
+      name: user.name,
+      email: user.email,
+      bio: user.bio || '',
+      location: user.location || '',
+      role: user.role || 'user',
+      joinDate: user.joinDate,
+      ecoPoints: user.ecoPoints || 0,
+      badges: user.badges || [],
+      achievements: user.achievements || [],
+      challengesCompleted: user.challengesCompleted || totalChallenges,
+      totalCO2Saved: user.totalCO2Saved || 0,
+      treesPlanted: user.treesPlanted || 0,
+      wasteRecycled: user.wasteRecycled || 0,
+      totalEntries: thisMonthEntries.length + lastMonthEntries.length,
+      avgCO2: thisMonthEntries.length > 0 ? thisMonthTotal / thisMonthEntries.length : 0,
       carbonFootprint: {
         total: totalCO2[0]?.total || 0,
         thisMonth: thisMonthTotal,
         lastMonth: lastMonthTotal,
         trend: thisMonthTotal < lastMonthTotal ? 'down' : thisMonthTotal > lastMonthTotal ? 'up' : 'stable'
-      },
-      achievements: {
-        challengesCompleted: totalChallenges,
-        carbonSaved: user.achievements?.carbonSaved || 0,
-        treesPlanted: user.achievements?.treesPlanted || 0,
-        wasteRecycled: user.achievements?.wasteRecycled || 0
       }
     }
 
@@ -69,15 +77,15 @@ export async function PUT(request: NextRequest) {
   try {
     await dbConnect()
     
-    const { userId, updates } = await request.json()
+    const { email, name, bio, location } = await request.json()
     
-    if (!userId) {
-      return NextResponse.json({ error: 'User ID required' }, { status: 400 })
+    if (!email) {
+      return NextResponse.json({ error: 'Email required' }, { status: 400 })
     }
 
     const user = await User.findOneAndUpdate(
-      { email: userId },
-      { $set: updates },
+      { email },
+      { $set: { name, bio, location } },
       { new: true, select: '-password' }
     )
     
