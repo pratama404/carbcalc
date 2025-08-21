@@ -31,11 +31,11 @@ export default function Footer() {
   ]
 
   const socialLinks = [
-    { name: 'Instagram', icon: Instagram, href: 'https://instagram.com', color: 'hover:text-pink-500' },
-    { name: 'Twitter', icon: Twitter, href: 'https://twitter.com', color: 'hover:text-blue-400' },
-    { name: 'YouTube', icon: Youtube, href: 'https://youtube.com', color: 'hover:text-red-500' },
-    { name: 'Telegram', icon: Send, href: 'https://telegram.org', color: 'hover:text-blue-500' },
-    { name: 'LinkedIn', icon: Linkedin, href: 'https://linkedin.com', color: 'hover:text-blue-600' }
+    { name: 'Instagram', icon: Instagram, href: 'https://www.instagram.com/thegeotera/', color: 'hover:text-pink-500' },
+    { name: 'X', icon: Twitter, href: 'https://x.com/thegeotera', color: 'hover:text-blue-400' },
+    { name: 'YouTube', icon: Youtube, href: 'https://www.youtube.com/channel/UCr5W2EpnCGTsDX7iab6CDBA', color: 'hover:text-red-500' },
+    { name: 'Telegram', icon: Send, href: 'https://t.me/thegeotera', color: 'hover:text-blue-500' },
+    { name: 'LinkedIn', icon: Linkedin, href: 'https://www.linkedin.com/in/geotera-carbon-air-7800aa329/', color: 'hover:text-blue-600' }
   ]
 
   return (

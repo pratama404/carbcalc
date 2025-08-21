@@ -23,19 +23,19 @@ export default function AboutPage() {
 
   const team = [
     {
-      name: 'Dr. Sarah Green',
+      name: 'Dr.Eng Ageng',
       role: 'CEO & Founder',
       bio: 'Environmental scientist with 15+ years experience in climate research and sustainability.',
       avatar: '👩‍🔬'
     },
     {
-      name: 'Mike Chen',
+      name: 'Putra',
       role: 'CTO',
       bio: 'Tech entrepreneur passionate about using technology to solve environmental challenges.',
       avatar: '👨‍💻'
     },
     {
-      name: 'Emma Davis',
+      name: 'Pratama',
       role: 'Head of Sustainability',
       bio: 'Climate activist and policy expert focused on corporate sustainability initiatives.',
       avatar: '👩‍🌾'
