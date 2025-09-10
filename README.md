@@ -74,7 +74,7 @@ NEXTAUTH_URL=https://your-app-name.vercel.app
 ```bash
 git clone https://github.com/yourusername/carbcalc.git
 cd carbcalc
-```
+``` 
 
 2. **Install dependencies:**
 ```bash
