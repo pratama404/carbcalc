@@ -29,43 +29,127 @@ export default function ShareButton({ carbonData, airQualityData }: Props) {
   const generateShareImage = async (transparent = false) => {
     setLoading(true)
     try {
-      const response = await fetch('/api/share', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          carbonData,
-          airQualityData,
-          shareMode,
-          transparent,
-          format: 'png'
-        })
-      })
-
-      if (response.ok) {
-        const blob = await response.blob()
-        
-        // Validate PNG format
-        if (blob.type !== 'image/png') {
-          throw new Error('Invalid image format. Only PNG is supported.')
-        }
-        
-        const url = URL.createObjectURL(blob)
-        const filename = `carbcalc-${shareMode}-${transparent ? 'transparent-' : ''}${new Date().toISOString().split('T')[0]}.png`
-        
-        const a = document.createElement('a')
-        a.href = url
-        a.download = filename
-        document.body.appendChild(a)
-        a.click()
-        document.body.removeChild(a)
-        
-        // Clean up
-        setTimeout(() => URL.revokeObjectURL(url), 1000)
-        
-        alert(`✅ PNG image downloaded: ${filename}`)
-      } else {
-        throw new Error('Failed to generate image')
+      // Create canvas element
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+      if (!ctx) throw new Error('Canvas not supported')
+      
+      // Set canvas size (Instagram square)
+      canvas.width = 1080
+      canvas.height = 1080
+      
+      // Background
+      if (!transparent) {
+        const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height)
+        gradient.addColorStop(0, '#10b981')
+        gradient.addColorStop(0.5, '#059669')
+        gradient.addColorStop(1, '#3b82f6')
+        ctx.fillStyle = gradient
+        ctx.fillRect(0, 0, canvas.width, canvas.height)
       }
+      
+      // Title
+      ctx.fillStyle = transparent ? '#1f2937' : '#ffffff'
+      ctx.font = 'bold 64px Arial'
+      ctx.textAlign = 'center'
+      
+      if (shareMode === 'combined') {
+        ctx.fillText('Environmental Impact', canvas.width / 2, 180)
+      } else if (shareMode === 'air') {
+        ctx.fillText('Air Quality Report', canvas.width / 2, 180)
+      } else {
+        ctx.fillText('Carbon Footprint', canvas.width / 2, 180)
+      }
+      
+      // Carbon data
+      if (shareMode !== 'air') {
+        ctx.font = 'bold 120px Arial'
+        ctx.fillStyle = transparent ? '#ef4444' : '#fef3c7'
+        ctx.fillText(`${carbonData.total.toFixed(1)}`, canvas.width / 2, 350)
+        
+        ctx.font = 'bold 48px Arial'
+        ctx.fillStyle = transparent ? '#6b7280' : '#ffffff'
+        ctx.fillText('kg CO₂', canvas.width / 2, 420)
+        
+        // Category breakdown
+        const categories = [
+          { key: 'transportation', emoji: '🚗', color: '#ef4444' },
+          { key: 'energy', emoji: '⚡', color: '#f59e0b' },
+          { key: 'food', emoji: '🍽️', color: '#10b981' },
+          { key: 'waste', emoji: '🗑️', color: '#3b82f6' }
+        ]
+        
+        categories.forEach((cat, index) => {
+          const value = carbonData.breakdown[cat.key]
+          const x = 200 + index * 170
+          const y = 600
+          
+          // Circle
+          ctx.fillStyle = cat.color
+          ctx.beginPath()
+          ctx.arc(x, y, 40, 0, 2 * Math.PI)
+          ctx.fill()
+          
+          // Emoji
+          ctx.font = '32px Arial'
+          ctx.fillText(cat.emoji, x, y + 10)
+          
+          // Value
+          ctx.font = 'bold 24px Arial'
+          ctx.fillStyle = transparent ? '#1f2937' : '#ffffff'
+          ctx.fillText(`${value.toFixed(1)}kg`, x, y + 70)
+        })
+      }
+      
+      // Air quality data
+      if (shareMode !== 'carbon' && airQualityData) {
+        const y = shareMode === 'combined' ? 800 : 500
+        
+        // AQI Circle
+        let aqiColor = '#10b981'
+        if (airQualityData.aqi > 150) aqiColor = '#ef4444'
+        else if (airQualityData.aqi > 100) aqiColor = '#f59e0b'
+        else if (airQualityData.aqi > 50) aqiColor = '#eab308'
+        
+        ctx.fillStyle = aqiColor
+        ctx.beginPath()
+        ctx.arc(canvas.width / 2, y, 80, 0, 2 * Math.PI)
+        ctx.fill()
+        
+        // AQI number
+        ctx.font = 'bold 48px Arial'
+        ctx.fillStyle = '#ffffff'
+        ctx.fillText(airQualityData.aqi.toString(), canvas.width / 2, y + 15)
+        
+        // Location
+        ctx.font = 'bold 36px Arial'
+        ctx.fillStyle = transparent ? '#1f2937' : '#ffffff'
+        ctx.fillText(airQualityData.location, canvas.width / 2, y + 150)
+      }
+      
+      // Footer
+      ctx.font = 'bold 32px Arial'
+      ctx.fillStyle = transparent ? '#6b7280' : 'rgba(255,255,255,0.9)'
+      ctx.fillText('Track your environmental impact 🌍', canvas.width / 2, canvas.height - 80)
+      
+      // Download
+      canvas.toBlob((blob) => {
+        if (blob) {
+          const url = URL.createObjectURL(blob)
+          const filename = `carbcalc-${shareMode}-${transparent ? 'transparent-' : ''}${new Date().toISOString().split('T')[0]}.png`
+          
+          const a = document.createElement('a')
+          a.href = url
+          a.download = filename
+          document.body.appendChild(a)
+          a.click()
+          document.body.removeChild(a)
+          
+          setTimeout(() => URL.revokeObjectURL(url), 1000)
+          alert(`✅ PNG image downloaded: ${filename}`)
+        }
+      }, 'image/png')
+      
     } catch (error) {
       console.error('Failed to generate share image:', error)
       alert('❌ Failed to generate PNG image. Please try again.')

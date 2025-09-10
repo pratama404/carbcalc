@@ -1,25 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { generateShareImage } from '@/lib/shareImageGenerator'
 
 export async function POST(request: NextRequest) {
   try {
-    const carbonData = await request.json()
+    const { carbonData, airQualityData, shareMode, transparent, format } = await request.json()
     
-    const imageBuffer = await generateShareImage(carbonData)
-    
-    return new NextResponse(imageBuffer as any, {
-      headers: {
-        'Content-Type': 'image/svg+xml',
-        'Content-Length': imageBuffer.length.toString(),
-        'Cache-Control': 'public, max-age=31536000'
+    // Return configuration for client-side canvas generation
+    return NextResponse.json({
+      success: true,
+      config: {
+        carbonData,
+        airQualityData,
+        shareMode,
+        transparent,
+        format
       }
     })
   } catch (error) {
-    console.error('Share image generation error:', error)
+    console.error('Share config error:', error)
     return NextResponse.json(
-      { success: false, error: 'Failed to generate share image' },
+      { success: false, error: 'Failed to get share config' },
       { status: 500 }
     )
   }
 }
-
