@@ -82,7 +82,7 @@ export default function Footer() {
           <div className="sm:col-span-2 lg:col-span-1">
             <div className="flex items-center mb-4 sm:mb-6">
               <Leaf className="w-6 h-6 sm:w-8 sm:h-8 text-green-400 mr-2 sm:mr-3" />
-              <span className="text-xl sm:text-2xl font-bold">CarbCalc</span>
+              <span className="text-xl sm:text-2xl font-bold">EcoTrack</span>
             </div>
 
             <p className="text-base sm:text-lg font-medium text-green-400 mb-3 sm:mb-4">
@@ -207,7 +207,7 @@ export default function Footer() {
           <div className="flex flex-col md:flex-row justify-between items-center">
             {/* Copyright */}
             <div className="text-gray-400 text-sm mb-4 md:mb-0">
-              © 2024 CarbCalc. All rights reserved. | Built with 💚 for the
+              © 2024 EcoTrack. All rights reserved. | Built with 💚 for the
               planet.
             </div>
 

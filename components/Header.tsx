@@ -41,7 +41,7 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <Leaf className="w-6 h-6 sm:w-8 sm:h-8 text-green-600 mr-2 sm:mr-3" />
-            <span className="text-xl sm:text-2xl font-bold text-gray-900">CarbCalc</span>
+            <span className="text-xl sm:text-2xl font-bold text-gray-900">EcoTrack</span>
           </Link>
 
           {/* Desktop Navigation */}
