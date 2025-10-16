@@ -80,7 +80,7 @@ export default function ShareButton({ carbonData, airQualityData }: Props) {
         ]
         
         categories.forEach((cat, index) => {
-          const value = carbonData.breakdown[cat.key]
+          const value = (carbonData.breakdown as any)[cat.key]
           const x = 200 + index * 170
           const y = 600
           
