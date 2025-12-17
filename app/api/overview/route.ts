@@ -17,7 +17,21 @@ export async function GET(request: NextRequest) {
 
     const user = await User.findOne({ email: userId })
     if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 })
+      // If user doesn't exist, return empty overview (user might be new)
+      return NextResponse.json({
+        success: true,
+        data: {
+          totalCO2ThisMonth: 0,
+          totalCO2LastMonth: 0,
+          challengesCompleted: 0,
+          totalChallenges: 0,
+          ecoPoints: 0,
+          streak: 0,
+          carbonSaved: 0,
+          recentActivity: 0,
+          trend: 'stable'
+        }
+      })
     }
 
     // Calculate this month's data

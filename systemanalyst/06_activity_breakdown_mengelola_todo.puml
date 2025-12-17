@@ -1,0 +1,125 @@
+@startuml Activity_Breakdown_Mengelola_Rencana_Aksi
+!theme plain
+title Activity Diagram Breakdown - UC-07: Mengelola Rencana Aksi
+
+|#LightGreen|Pengguna|
+|#LightBlue|Sistem CarbCalc|
+|#Orange|Database|
+
+|Pengguna|
+start
+:AC-07.01: Membuka halaman rencana aksi;
+note right: WF-04: Halaman Todo Management
+
+:AC-07.02: Melihat daftar todo aktif;
+
+|Sistem CarbCalc|
+:AC-07.03: Menampilkan todo berdasarkan
+prioritas dan status;
+
+|Pengguna|
+if (Aksi yang dipilih?) then (Buat Todo Baru)
+  :AC-07.04: Mengklik "Tambah Rencana Baru";
+  
+  |Sistem CarbCalc|
+  :AC-07.05: Menampilkan form todo baru;
+  
+  |Pengguna|
+  :AC-07.06: Mengisi detail todo;
+  note right: UC-07.1: Membuat Todo\n- Judul\n- Deskripsi\n- Target tanggal\n- Prioritas
+  
+  :AC-07.07: Mengklik "Simpan Todo";
+  
+  |Sistem CarbCalc|
+  :AC-07.08: Memvalidasi input;
+  
+  |Database|
+  :AC-07.09: Menyimpan todo baru;
+  
+  |Sistem CarbCalc|
+  :AC-07.10: Mengupdate daftar todo;
+  :AC-07.11: Mengset reminder otomatis;
+
+elseif (Tandai Selesai) then
+  :AC-07.12: Memilih todo yang selesai;
+  :AC-07.13: Mengklik "Tandai Selesai";
+  
+  |Sistem CarbCalc|
+  :AC-07.14: Menampilkan konfirmasi;
+  
+  |Pengguna|
+  :AC-07.15: Mengkonfirmasi penyelesaian;
+  
+  |Sistem CarbCalc|
+  :AC-07.16: Mengupdate status todo;
+  note right: UC-07.2: Menandai Todo Selesai
+  
+  |Database|
+  :AC-07.17: Menyimpan timestamp selesai;
+  
+  |Sistem CarbCalc|
+  :AC-07.18: Menghitung eco points reward;
+  :AC-07.19: Mengupdate progress tracking;
+  :AC-07.20: Menampilkan notifikasi
+  pencapaian;
+
+elseif (Edit Todo) then
+  :AC-07.21: Memilih todo untuk diedit;
+  :AC-07.22: Mengklik tombol edit;
+  
+  |Sistem CarbCalc|
+  :AC-07.23: Menampilkan form edit;
+  
+  |Pengguna|
+  :AC-07.24: Mengubah detail todo;
+  :AC-07.25: Menyimpan perubahan;
+  
+  |Database|
+  :AC-07.26: Mengupdate data todo;
+
+else (Hapus Todo)
+  :AC-07.27: Memilih todo untuk dihapus;
+  :AC-07.28: Mengklik tombol hapus;
+  
+  |Sistem CarbCalc|
+  :AC-07.29: Menampilkan konfirmasi hapus;
+  
+  |Pengguna|
+  :AC-07.30: Mengkonfirmasi penghapusan;
+  
+  |Database|
+  :AC-07.31: Menghapus todo dari database;
+  note right: UC-07.3: Menghapus Todo
+endif
+
+|Sistem CarbCalc|
+:AC-07.32: Mengupdate statistik progress;
+:AC-07.33: Menghitung persentase
+penyelesaian;
+
+|Pengguna|
+:AC-07.34: Melihat progress overview;
+note right: WF-04: Progress tracking di halaman
+
+if (Ingin lihat statistik detail?) then (ya)
+  :AC-07.35: Mengklik "Lihat Progress Detail";
+  
+  |Sistem CarbCalc|
+  :AC-07.36: Menampilkan analytics
+  pencapaian todo;
+  :AC-07.37: Menampilkan estimasi
+  pengurangan CO2e;
+  note right: WF-04: Statistik pencapaian
+else (tidak)
+  :AC-07.38: Melanjutkan manajemen todo;
+endif
+
+if (Ada reminder yang aktif?) then (ya)
+  |Sistem CarbCalc|
+  :AC-07.39: Mengirim notifikasi
+  reminder otomatis;
+endif
+
+stop
+
+@enduml

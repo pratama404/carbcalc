@@ -1,0 +1,123 @@
+@startuml WF-06_Profil_Pengguna
+!theme plain
+title WF-06: Profil Pengguna - UC-02 (Mengelola Profil)
+
+salt
+{
+  {* CarbCalc | John Doe | (3) }
+  {
+    [Dashboard] | [Calculator] | [Reports] | [Social] | [Settings]
+  }
+  --
+  My Profile - UC-02
+  --
+  {
+    {
+      PROFILE PHOTO
+      
+      [👤 Avatar 150x150]
+      
+      [📷 Change Photo]
+      [🗑️ Remove Photo]
+      
+      LEVEL & BADGES
+      Level 3: Eco Warrior
+      1,250 / 2,000 points
+      Progress: [████████░░] 63%
+    } | {
+      BASIC INFORMATION
+      Name: John Doe
+      Email: john@email.com
+      Role: Premium User
+      Member Since: Jan 2024
+      Last Login: Dec 12, 10:30
+      
+      [✏️ Edit Profile - UC-02.2]
+    }
+  }
+  --
+  HOUSEHOLD INFORMATION - UC-02.1
+  {
+    Location: Jakarta Selatan, Indonesia
+    Household Members: 4 people
+    Income Range: Rp 10-20 million/month
+    Housing Type: 2-story house
+    
+    [✏️ Update Information]
+  }
+  --
+  TARGETS & PREFERENCES - UC-02.2
+  {
+    Carbon Reduction Target: 25% in 6 months
+    Focus Areas: [✓] Transportation [✓] Energy [ ] Food
+    Eco-Investment Budget: Rp 2-5 million/month
+    
+    Notifications:
+    [✓] Daily reminder [✓] Weekly report [ ] Achievement
+    [✓] Recommendation [ ] Social updates
+    
+    [💾 Save Preferences]
+  }
+  --
+  ACHIEVEMENTS & BADGES - UC-02.3
+  {
+    LATEST BADGES:
+    🌟 Action Hero (Dec 12) - Complete 5 action plans
+    🚗 Commute Champion (Dec 10) - 1 week without car
+    💡 Energy Saver (Dec 8) - Save 20% monthly electricity
+    
+    ALL BADGES (8/15):
+    ✅ First Step    ✅ Week Warrior   ✅ Month Master
+    ✅ Social Share  ✅ Eco Newbie     ✅ Green Starter
+    ✅ Action Hero   ✅ Energy Saver   ❌ Carbon Neutral
+    ❌ Eco Expert    ❌ Planet Saver   ❌ Climate Champion
+    
+    [🏅 View All] [🎯 Next Badge]
+  }
+  --
+  PERSONAL STATISTICS
+  {
+    {
+      CARBON FOOTPRINT
+      Total 2024: 2,890 kg CO2e
+      Average: 8.2 kg/day
+      Reduction: -18% YoY
+      
+      Best Month: October
+      Saved: 45 kg CO2e
+      
+      [📊 Detailed Analytics]
+    } | {
+      ACHIEVEMENTS
+      Plans Completed: 12
+      Total Saved: 156 kg CO2e
+      Eco Points: 1,250
+      
+      Longest Streak: 15 days
+      Badges Earned: 8/15
+      
+      [🏆 View Leaderboard]
+    }
+  }
+  --
+  PRIVACY & SECURITY
+  {
+    Profile Visibility: [Public ^]
+    Share Data for Research: [✓] Yes, for climate research
+    Two-Factor Authentication: [❌ Inactive] [🔐 Activate]
+    
+    [🔑 Change Password] [📧 Update Email] [🗑️ Delete Account]
+  }
+  --
+  [💾 Save All Changes] [🔄 Reset to Default]
+}
+
+note bottom
+Wireframe ini mendukung:
+- UC-02.1: Melihat Profil
+- UC-02.2: Mengubah Profil
+- UC-02.3: Mengelola Achievement
+- Class: User, UserProfile, Achievement, UserAchievement
+end note
+
+@enduml

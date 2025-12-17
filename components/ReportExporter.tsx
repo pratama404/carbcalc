@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Download, FileText, Table, Mail } from 'lucide-react'
+import { useToast } from '@/context/ToastContext'
 import { generatePDFReport, generateCSVReport, ReportData } from '@/lib/reportGenerator'
 import { calculateAQI, analyzeAirQualityImpact } from '@/lib/airQuality'
 
@@ -16,12 +17,13 @@ interface ReportExporterProps {
 }
 
 export default function ReportExporter({ userData, carbonData, historicalData, recommendations }: ReportExporterProps) {
+  const { addToast } = useToast()
   const [loading, setLoading] = useState(false)
   const [exportType, setExportType] = useState<'pdf' | 'csv'>('pdf')
 
   const prepareReportData = (): ReportData => {
     // Calculate trend
-    const trend = historicalData.length > 1 ? 
+    const trend = historicalData.length > 1 ?
       ((carbonData.total - historicalData[1].totalCO2) / historicalData[1].totalCO2) * 100 : 0
 
     // Mock air quality data
@@ -31,7 +33,7 @@ export default function ReportExporter({ userData, carbonData, historicalData, r
       o3: 60,
       no2: 30
     }
-    
+
     const aqiData = calculateAQI(mockPollutants)
     const airQualityImpact = analyzeAirQualityImpact(carbonData)
 
@@ -65,7 +67,7 @@ export default function ReportExporter({ userData, carbonData, historicalData, r
     setLoading(true)
     try {
       const reportData = prepareReportData()
-      
+
       if (exportType === 'pdf') {
         const pdfBlob = await generatePDFReport(reportData)
         const url = URL.createObjectURL(pdfBlob)
@@ -90,7 +92,7 @@ export default function ReportExporter({ userData, carbonData, historicalData, r
       }
     } catch (error) {
       console.error('Export failed:', error)
-      alert('Failed to generate report. Please try again.')
+      addToast('Failed to generate report. Please try again.', 'error')
     } finally {
       setLoading(false)
     }
@@ -195,7 +197,7 @@ Visit: https://carbcalc.app`
             )}
             {loading ? 'Generating...' : `Download ${exportType.toUpperCase()}`}
           </button>
-          
+
           <button
             onClick={handleEmailReport}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center"

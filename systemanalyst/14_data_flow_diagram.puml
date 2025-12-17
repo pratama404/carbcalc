@@ -1,0 +1,29 @@
+@startuml Data_Flow_Diagram_CarbCalc
+!theme plain
+title Data Flow Diagram - Carbon Calculator System
+
+' Level 0 - Context Diagram
+rectangle "DFD Level 0 - Context Diagram" {
+  actor "Pengguna" as user
+  actor "Administrator" as admin
+  actor "Sistem AI" as ai
+  actor "Media Sosial" as social
+
+  circle "0\nSistem Carbon\nCalculator" as system
+
+  user --> system : "DF-01: Data Aktivitas Harian"
+  system --> user : "DF-02: Laporan Jejak Karbon"
+  system --> user : "DF-03: Rekomendasi Personal"
+  system --> user : "DF-04: Gambar Share"
+
+  admin --> system : "DF-05: Data Faktor Emisi"
+  system --> admin : "DF-06: Laporan Sistem"
+
+  system --> ai : "DF-07: Data Profil & Aktivitas"
+  ai --> system : "DF-08: Rekomendasi AI"
+
+  system --> social : "DF-09: Konten Share"
+  social --> system : "DF-10: Status Share"
+}
+
+@enduml

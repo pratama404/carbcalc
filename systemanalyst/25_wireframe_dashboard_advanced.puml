@@ -1,0 +1,328 @@
+@startuml WF-09_Advanced_Dashboard_Interactive
+!theme plain
+title WF-09: Advanced Interactive Dashboard with Pop-up Cards & 3D Elements
+
+salt
+{
+  {* 🌱 CarbCalc | John Doe 🏆 Lv3 | 🔔 (5) | 🌙 | ⚙️ }
+  --
+  **Welcome back, John! 👋** | Today: Tuesday, Dec 12, 2024 | 🌤️ Jakarta: AQI 85
+  --
+  MAIN DASHBOARD with Interactive Cards
+  {
+    {
+      **📊 TODAY'S CARBON** [ℹ️ Click for details]
+      **8.2 kg CO2e** 
+      +1.5 from yesterday 🔴
+      Status: Above Target
+      
+      [📈 View Trend] [🎯 Adjust Target]
+    } | {
+      **📅 THIS MONTH** [ℹ️ Hover for breakdown]  
+      **245 kg CO2e**
+      -12% from last month 🟢
+      Target: 300 kg (82% achieved)
+      
+      [📊 Monthly Report] [🏆 Celebrate]
+    } | {
+      **🏆 ACHIEVEMENTS** [ℹ️ Click to expand]
+      **Level 3 Eco Warrior**
+      1,250 / 2,000 points
+      **New Badge Available!** ✨
+      
+      [🏅 View All] [🎮 Challenges]
+    }
+  }
+  --
+  **Pop-up Card Example (Today's Carbon Details):**
+  {
+    ┌─ 📊 TODAY'S DETAILED BREAKDOWN ──────────────────────────┐
+    │                                                         │
+    │ **🚗 Transportation: 3.7kg (45%)** ↓ 20% from avg      │
+    │ ├─ Car trips: 3.2kg (2 trips, 30km total)             │
+    │ ├─ Public transport: 0.3kg (TransJakarta)             │
+    │ └─ Walking: 0.2kg (steps bonus!)                       │
+    │                                                         │
+    │ **💡 Energy: 2.5kg (30%)** ↓ 15% from avg             │
+    │ ├─ Home electricity: 1.8kg (12 kWh)                   │
+    │ ├─ Office usage: 0.5kg (shared)                       │
+    │ └─ Charging devices: 0.2kg                            │
+    │                                                         │
+    │ **🍽️ Food: 1.6kg (20%)** ↑ 5% from avg               │
+    │ ├─ Breakfast: 0.3kg (oatmeal + fruits)               │
+    │ ├─ Lunch: 0.8kg (beef rendang)                       │
+    │ └─ Dinner: 0.5kg (fish + vegetables)                 │
+    │                                                         │
+    │ **🗑️ Waste: 0.4kg (5%)** ↓ 10% from avg              │
+    │ ├─ Recycled: 0.1kg ♻️                                │
+    │ ├─ Composted: 0.1kg 🌱                               │
+    │ └─ Landfill: 0.2kg ⚠️                                │
+    │                                                         │
+    │ [🤖 Get AI Tips] [📝 Add Activity] [📊 Compare Days]   │
+    │ [🎯 Set Daily Goal] [📤 Share Progress] [❌ Close]     │
+    └─────────────────────────────────────────────────────────┘
+  }
+  --
+  3D INTERACTIVE CHARTS SECTION
+  {
+    **📊 Interactive Analytics** - Hover and click to explore
+    
+    {
+      **🌍 3D Emission Globe**
+      [Rotating 3D sphere showing]
+      [emission sources with particles]
+      
+      • Transport: Red particles
+      • Energy: Yellow glow  
+      • Food: Green dots
+      • Waste: Gray smoke
+      
+      **Controls:**
+      [🔄 Rotate] [🔍 Zoom] [⏸️ Pause]
+    } | {
+      **📈 3D Trend Mountain**
+      [3D landscape chart showing]
+      [emission trends over time]
+      
+      Peaks = High emission days
+      Valleys = Low emission days
+      Colors = Category breakdown
+      
+      **Hover Effects:**
+      Shows exact values + tips
+    } | {
+      **🎯 3D Progress Rings**
+      [Animated concentric rings]
+      [showing goal completion]
+      
+      Outer ring: Monthly target
+      Middle ring: Weekly goal  
+      Inner ring: Daily target
+      
+      **Particle Effects:**
+      Celebration when goals met!
+    }
+  }
+  --
+  AI INSIGHTS with Smart Pop-ups
+  {
+    **🤖 AI-Powered Insights** - Personalized for you
+    
+    {
+      **💡 Smart Recommendation** [🔥 Hot Tip]
+      
+      "Based on your pattern, switching to 
+      bike-to-work 3x/week could save you 
+      **18 kg CO2e/month** 🚴‍♂️"
+      
+      **Impact Prediction:**
+      • Cost: Rp 0 (use existing bike)
+      • Time: +10 min/day  
+      • Health: +150 calories burned
+      • CO2 saved: 216 kg/year
+      
+      [✅ Accept Challenge] [📅 Plan Schedule] [❌ Not Now]
+    } | {
+      **📊 Pattern Analysis** [🧠 AI Insight]
+      
+      "Your emissions are **23% lower** 
+      on weekends. Weekend habits to 
+      apply on weekdays:"
+      
+      • 🏠 Work from home more
+      • 🥗 Cook at home vs eating out  
+      • 🚶 Walk for errands
+      • 💡 Use natural light
+      
+      [📋 Create Weekday Plan] [📈 See Full Analysis]
+    }
+  }
+  --
+  REAL-TIME ACTIVITY FEED with Notifications
+  {
+    **📱 Live Activity Stream** | **🔔 Smart Notifications**
+    
+    {
+      **Recent Activities** (Auto-detected + Manual)
+      
+      🕐 **2 min ago** - AI detected car trip
+      📍 Home → Office (15.2 km)
+      💨 Estimated: 3.2 kg CO2e
+      [✅ Confirm] [✏️ Edit] [❌ Not me]
+      
+      🕐 **15 min ago** - Smart meter sync
+      💡 Morning energy usage: 2.1 kWh  
+      💨 Estimated: 0.8 kg CO2e
+      [✅ Auto-confirmed] [📊 Details]
+      
+      🕐 **1 hour ago** - Manual entry
+      🍽️ Breakfast: Oatmeal + banana
+      💨 Calculated: 0.3 kg CO2e  
+      [✏️ Edit] [🔄 Make Recurring]
+    } | {
+      **Smart Alerts** 🚨
+      
+      🎯 **Goal Alert**
+      "You're 2.1 kg over daily target. 
+      Consider walking for lunch?"
+      [🚶 Find Walking Routes] [⏰ Remind Later]
+      
+      🏆 **Achievement Unlocked!**  
+      "Week Warrior - 7 days of tracking!"
+      [🎉 Celebrate] [📤 Share Achievement]
+      
+      💡 **Energy Tip**
+      "Peak hours starting. Switch to 
+      energy-saving mode?"
+      [⚡ Auto-Switch] [📚 Learn More]
+    }
+  }
+  --
+  SOCIAL & COMMUNITY FEATURES
+  {
+    **👥 Community Dashboard** | **🏆 Leaderboards** | **🌐 Social Impact**
+    
+    {
+      **Friends Activity** 🤝
+      
+      👤 **Sarah** just planted a tree! 🌱
+      Saved 25 kg CO2e this week
+      [👍 Like] [💬 Comment] [🌱 Plant Too]
+      
+      👤 **Ahmad** completed bike challenge 🚴
+      15 days streak, 45 kg saved!
+      [🔥 Cheer] [🚴 Join Challenge]
+      
+      👤 **Maria** shared monthly report 📊  
+      -30% reduction, inspiring! 
+      [📊 View] [📤 Share Mine]
+      
+      [👥 Find Friends] [🎮 Join Challenges]
+    } | {
+      **This Week's Leaders** 🏆
+      
+      🥇 **EcoMaster99** - 2.1 kg avg
+      🥈 **GreenGuru** - 2.8 kg avg  
+      🥉 **ClimateHero** - 3.2 kg avg
+      
+      **Your Rank:** #47 of 1,247
+      ↗️ Up 12 positions!
+      
+      **Category Leaders:**
+      🚗 Transport: **BikeKing**
+      💡 Energy: **SolarSarah** 
+      🍽️ Food: **VeggieMike**
+      
+      [🏆 View Full Leaderboard]
+    } | {
+      **Global Impact** 🌍
+      
+      **Community Stats:**
+      👥 10,847 active users
+      🌱 2.3M kg CO2e saved
+      🌳 15,847 trees equivalent
+      
+      **Your Contribution:**
+      📊 156 kg saved (0.007%)
+      🌱 12 trees equivalent
+      🏆 Top 15% performer
+      
+      **Live Counter:**
+      💨 CO2 saved today: 
+      **2,847 kg** and counting...
+      
+      [🌍 Global Map] [📈 Impact Report]
+    }
+  }
+  --
+  QUICK ACTIONS with Smart Suggestions
+  {
+    **⚡ Quick Actions** | **🎯 Smart Suggestions** | **📱 Mobile Sync**
+    
+    {
+      [➕ Add Activity] [📊 View Report]
+      [🤖 Get AI Tips] [🎯 Set Goal]
+      [📤 Share Progress] [🏆 Challenges]
+      [⚙️ Settings] [❓ Help]
+      
+      **Voice Commands:** 🎤
+      "Add 10km car trip"
+      "Show this week's progress"  
+      "Get energy saving tips"
+      
+      [🎤 Enable Voice] [📚 Voice Guide]
+    } | {
+      **Based on your patterns:** 🧠
+      
+      🕐 **It's 12:00 PM**
+      Time to log your lunch?
+      [🍽️ Quick Add Meal]
+      
+      🚗 **Detected location change**
+      Did you just drive somewhere?
+      [🚗 Log Trip] [🚶 I walked]
+      
+      💡 **High energy usage alert**
+      AC running during peak hours
+      [❄️ Adjust Temp] [⏰ Schedule]
+      
+      [⚙️ Customize Suggestions]
+    } | {
+      **📱 Mobile App Sync** 
+      
+      📲 **Last sync:** 2 min ago
+      🔄 **Status:** All up to date
+      
+      **Mobile Features:**
+      📍 GPS trip tracking
+      📷 Receipt scanning  
+      🔔 Smart notifications
+      ⌚ Apple Watch support
+      
+      **Offline Mode:** ✅ Available
+      Data syncs when online
+      
+      [📱 Download App] [🔗 Pair Device]
+    }
+  }
+  --
+  ADVANCED SETTINGS PANEL (Collapsible)
+  {
+    ▼ **⚙️ Advanced Dashboard Settings** 
+    
+    {
+      **🎨 Customization**
+      Theme: [Dark 🌙] [Light ☀️] [Auto 🔄]
+      Layout: [Compact] [Standard] [Spacious]
+      Animations: [Full 3D] [Simple] [None]
+      Language: [🇮🇩 Bahasa] [🇺🇸 English]
+    } | {
+      **📊 Data & Privacy**  
+      Data sharing: [✅ Research] [❌ Marketing]
+      Auto-detection: [✅ Location] [✅ Energy] 
+      Backup: [☁️ Cloud] [📱 Local] [Both]
+      Export: [📄 PDF] [📊 CSV] [📋 JSON]
+    } | {
+      **🔔 Notifications**
+      Daily reminders: [✅ 9:00 AM]
+      Goal alerts: [✅ When exceeded]  
+      Social: [✅ Friend activities]
+      AI tips: [✅ Smart suggestions]
+    }
+  }
+}
+
+note bottom
+Advanced Dashboard Features:
+✅ Interactive pop-up cards with detailed breakdowns
+✅ 3D animated charts (globe, mountain, rings)
+✅ Real-time activity feed with AI detection
+✅ Smart notifications and suggestions
+✅ Social community features
+✅ Voice commands support
+✅ Mobile app synchronization
+✅ Customizable themes and layouts
+✅ Advanced privacy controls
+end note
+
+@enduml

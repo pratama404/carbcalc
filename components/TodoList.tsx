@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { CheckCircle, Circle, Plus, Trash2, Calendar, Edit3, Target, Zap, Clock, Filter, Trophy, Flame, Star, X } from 'lucide-react'
+import { Button } from '@/components/ui/Button'
 
 interface Todo {
   _id: string
@@ -45,7 +46,7 @@ export default function TodoList({ userId, newTodo }: Props) {
     dueDate: ''
   })
 
-  const fetchTodos = async () => {
+  const fetchTodos = useCallback(async () => {
     try {
       setLoading(true)
       const response = await fetch(`/api/todos?userId=${userId}&filter=${filter}`)
@@ -59,7 +60,7 @@ export default function TodoList({ userId, newTodo }: Props) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [userId, filter])
 
   const calculateStats = (todoList: Todo[]) => {
     const total = todoList.length
@@ -67,18 +68,18 @@ export default function TodoList({ userId, newTodo }: Props) {
     const pending = todoList.filter(t => !t.completed).length
     const overdue = todoList.filter(t => !t.completed && t.dueDate && new Date(t.dueDate) < new Date()).length
     const totalCO2Saved = todoList.filter(t => t.completed).reduce((sum, t) => sum + t.estimatedCO2Reduction, 0)
-    
+
     setStats({ total, completed, pending, overdue, totalCO2Saved, streak: 0 })
   }
 
-  const addTodo = async (todoData: any) => {
+  const addTodo = useCallback(async (todoData: any) => {
     try {
       const response = await fetch('/api/todos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...todoData, userId })
       })
-      
+
       const result = await response.json()
       if (result.success) {
         fetchTodos()
@@ -96,7 +97,7 @@ export default function TodoList({ userId, newTodo }: Props) {
     } catch (error) {
       console.error('Failed to add todo:', error)
     }
-  }
+  }, [userId, fetchTodos])
 
   const updateTodo = async (id: string, updates: Partial<Todo>) => {
     try {
@@ -105,7 +106,7 @@ export default function TodoList({ userId, newTodo }: Props) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, ...updates })
       })
-      
+
       const result = await response.json()
       if (result.success) {
         fetchTodos()
@@ -120,12 +121,12 @@ export default function TodoList({ userId, newTodo }: Props) {
 
   const deleteTodo = async (id: string) => {
     if (!confirm('Are you sure you want to delete this todo?')) return
-    
+
     try {
       const response = await fetch(`/api/todos?id=${id}`, {
         method: 'DELETE'
       })
-      
+
       const result = await response.json()
       if (result.success) {
         fetchTodos()
@@ -151,7 +152,7 @@ export default function TodoList({ userId, newTodo }: Props) {
 
   useEffect(() => {
     fetchTodos()
-  }, [userId, filter])
+  }, [fetchTodos])
 
   useEffect(() => {
     if (newTodo) {
@@ -164,48 +165,48 @@ export default function TodoList({ userId, newTodo }: Props) {
         priority: 'medium'
       })
     }
-  }, [newTodo])
+  }, [newTodo, addTodo])
 
   return (
     <div className="space-y-6">
       {/* Stats Dashboard */}
-      <div className="bg-gradient-to-r from-green-50 to-blue-50 p-6 rounded-xl border">
+      <div className="bg-gradient-to-r from-green-50 to-blue-50 p-6 rounded-2xl border shadow-sm">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-2xl font-bold text-gray-800 flex items-center">
             <Target className="w-6 h-6 mr-2 text-green-600" />
             Carbon Reduction Todos
           </h3>
-          <button
+          <Button
             onClick={() => setShowAddForm(!showAddForm)}
-            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 flex items-center transition-all hover:scale-105"
+            className="flex items-center"
           >
             <Plus className="w-4 h-4 mr-2" />
             Add Goal
-          </button>
+          </Button>
         </div>
-        
+
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
-          <div className="text-center p-3 bg-white rounded-lg shadow-sm">
+          <div className="text-center p-3 bg-white rounded-xl shadow-sm card-hover">
             <div className="text-2xl font-bold text-blue-600">{stats.total}</div>
             <div className="text-xs text-gray-600">Total Goals</div>
           </div>
-          <div className="text-center p-3 bg-white rounded-lg shadow-sm">
+          <div className="text-center p-3 bg-white rounded-xl shadow-sm card-hover">
             <div className="text-2xl font-bold text-green-600">{stats.completed}</div>
             <div className="text-xs text-gray-600">Completed</div>
           </div>
-          <div className="text-center p-3 bg-white rounded-lg shadow-sm">
+          <div className="text-center p-3 bg-white rounded-xl shadow-sm card-hover">
             <div className="text-2xl font-bold text-yellow-600">{stats.pending}</div>
             <div className="text-xs text-gray-600">Pending</div>
           </div>
-          <div className="text-center p-3 bg-white rounded-lg shadow-sm">
+          <div className="text-center p-3 bg-white rounded-xl shadow-sm card-hover">
             <div className="text-2xl font-bold text-red-600">{stats.overdue}</div>
             <div className="text-xs text-gray-600">Overdue</div>
           </div>
-          <div className="text-center p-3 bg-white rounded-lg shadow-sm">
+          <div className="text-center p-3 bg-white rounded-xl shadow-sm card-hover">
             <div className="text-2xl font-bold text-purple-600">{stats.totalCO2Saved.toFixed(1)}</div>
             <div className="text-xs text-gray-600">kg CO₂ Saved</div>
           </div>
-          <div className="text-center p-3 bg-white rounded-lg shadow-sm">
+          <div className="text-center p-3 bg-white rounded-xl shadow-sm card-hover">
             <div className="text-2xl font-bold text-orange-600 flex items-center justify-center">
               {stats.streak > 0 && <Flame className="w-5 h-5 mr-1" />}
               {stats.streak}
@@ -213,14 +214,14 @@ export default function TodoList({ userId, newTodo }: Props) {
             <div className="text-xs text-gray-600">Day Streak</div>
           </div>
         </div>
-        
+
         <div className="mt-4">
           <div className="flex justify-between text-sm text-gray-600 mb-1">
             <span>Progress</span>
             <span>{stats.total > 0 ? Math.round((stats.completed / stats.total) * 100) : 0}%</span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-3">
-            <div 
+            <div
               className="bg-gradient-to-r from-green-500 to-blue-500 h-3 rounded-full transition-all duration-500"
               style={{ width: `${stats.total > 0 ? (stats.completed / stats.total) * 100 : 0}%` }}
             ></div>
@@ -229,7 +230,7 @@ export default function TodoList({ userId, newTodo }: Props) {
       </div>
 
       {/* Filters */}
-      <div className="bg-white p-4 rounded-xl shadow-sm border">
+      <div className="bg-white p-4 rounded-xl shadow-sm border card-hover">
         <div className="flex items-center space-x-2 overflow-x-auto pb-2">
           <Filter className="w-4 h-4 text-gray-500 mr-2" />
           {[
@@ -241,11 +242,10 @@ export default function TodoList({ userId, newTodo }: Props) {
             <button
               key={filterOption.key}
               onClick={() => setFilter(filterOption.key)}
-              className={`px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
-                filter === filterOption.key
-                  ? 'bg-green-600 text-white shadow-md'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
+              className={`px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${filter === filterOption.key
+                ? 'btn-primary text-white shadow-md'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
             >
               {filterOption.label} ({filterOption.count})
             </button>
@@ -254,7 +254,7 @@ export default function TodoList({ userId, newTodo }: Props) {
       </div>
 
       {/* Todo List */}
-      <div className="bg-white p-6 rounded-xl shadow-sm border">
+      <div className="bg-white p-6 rounded-xl shadow-sm border card-hover">
         {loading && (
           <div className="text-center py-8">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto mb-2"></div>
@@ -294,17 +294,17 @@ export default function TodoList({ userId, newTodo }: Props) {
               {filter === 'all' ? 'No goals yet!' : `No ${filter} goals`}
             </h4>
             <p className="text-gray-500 mb-4">
-              {filter === 'all' 
-                ? 'Start your carbon reduction journey by adding your first goal!' 
+              {filter === 'all'
+                ? 'Start your carbon reduction journey by adding your first goal!'
                 : `Switch to "All" to see your other goals.`}
             </p>
             {filter === 'all' && (
-              <button
+              <Button
                 onClick={() => setShowAddForm(true)}
-                className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors"
+                size="lg"
               >
                 Add Your First Goal
-              </button>
+              </Button>
             )}
           </div>
         )}
@@ -330,11 +330,20 @@ export default function TodoList({ userId, newTodo }: Props) {
           onSubmit={(data) => {
             if (editingTodo) {
               updateTodo(editingTodo._id, data)
+              setEditingTodo(null)
             } else {
               addTodo(data)
             }
           }}
-          formData={editingTodo || newTodoData}
+          formData={editingTodo ? {
+            title: editingTodo.title,
+            description: editingTodo.description,
+            category: editingTodo.category,
+            estimatedCO2Reduction: editingTodo.estimatedCO2Reduction,
+            difficulty: editingTodo.difficulty,
+            priority: editingTodo.priority,
+            dueDate: editingTodo.dueDate ? new Date(editingTodo.dueDate).toISOString().split('T')[0] : ''
+          } : newTodoData}
           setFormData={setNewTodoData}
         />
       )}
@@ -349,7 +358,7 @@ function TodoCard({ todo, onToggle, onEdit, onDelete }: {
   onDelete: () => void
 }) {
   const isOverdue = !todo.completed && todo.dueDate && new Date(todo.dueDate) < new Date()
-  
+
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'high': return 'border-l-red-500 bg-red-50'
@@ -369,26 +378,24 @@ function TodoCard({ todo, onToggle, onEdit, onDelete }: {
   }
 
   return (
-    <div className={`border-l-4 p-4 rounded-r-lg transition-all hover:shadow-md ${
-      todo.completed 
-        ? 'bg-green-50 border-l-green-500 opacity-75' 
-        : isOverdue 
-          ? 'bg-red-50 border-l-red-500' 
-          : getPriorityColor(todo.priority)
-    }`}>
+    <div className={`border-l-4 p-4 rounded-r-lg transition-all hover:shadow-md card-hover ${todo.completed
+      ? 'bg-green-50 border-l-green-500 opacity-75'
+      : isOverdue
+        ? 'bg-red-50 border-l-red-500'
+        : getPriorityColor(todo.priority)
+      }`}>
       <div className="flex items-start justify-between">
         <div className="flex items-start space-x-3 flex-1">
           <button
             onClick={() => onToggle(!todo.completed)}
-            className={`mt-1 transition-colors ${
-              todo.completed 
-                ? 'text-green-600 hover:text-green-700' 
-                : 'text-gray-400 hover:text-green-600'
-            }`}
+            className={`mt-1 transition-colors ${todo.completed
+              ? 'text-green-600 hover:text-green-700'
+              : 'text-gray-400 hover:text-green-600'
+              }`}
           >
             {todo.completed ? <CheckCircle className="w-6 h-6" /> : <Circle className="w-6 h-6" />}
           </button>
-          
+
           <div className="flex-1">
             <div className="flex items-center space-x-2 mb-1">
               <h5 className={`font-semibold ${todo.completed ? 'line-through text-gray-600' : 'text-gray-900'}`}>
@@ -397,11 +404,11 @@ function TodoCard({ todo, onToggle, onEdit, onDelete }: {
               {getDifficultyIcon(todo.difficulty)}
               {isOverdue && <Clock className="w-4 h-4 text-red-500" />}
             </div>
-            
+
             {todo.description && (
               <p className="text-sm text-gray-600 mb-2">{todo.description}</p>
             )}
-            
+
             <div className="flex items-center space-x-4 text-xs text-gray-500">
               <span className="capitalize px-2 py-1 bg-white rounded-full">{todo.category}</span>
               <span className="capitalize">{todo.difficulty}</span>
@@ -412,9 +419,8 @@ function TodoCard({ todo, onToggle, onEdit, onDelete }: {
                 </span>
               )}
               {todo.dueDate && (
-                <span className={`flex items-center ${
-                  isOverdue ? 'text-red-600 font-medium' : ''
-                }`}>
+                <span className={`flex items-center ${isOverdue ? 'text-red-600 font-medium' : ''
+                  }`}>
                   <Calendar className="w-3 h-3 mr-1" />
                   {new Date(todo.dueDate).toLocaleDateString()}
                 </span>
@@ -422,7 +428,7 @@ function TodoCard({ todo, onToggle, onEdit, onDelete }: {
             </div>
           </div>
         </div>
-        
+
         <div className="flex items-center space-x-1 ml-4">
           <button
             onClick={onEdit}
@@ -468,7 +474,7 @@ function TodoFormModal({ todo, onClose, onSubmit, formData, setFormData }: {
             <X className="w-6 h-6" />
           </button>
         </div>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
@@ -482,7 +488,7 @@ function TodoFormModal({ todo, onClose, onSubmit, formData, setFormData }: {
                 placeholder="e.g., Use public transport for work commute"
               />
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium mb-2">Category</label>
               <select
@@ -497,7 +503,7 @@ function TodoFormModal({ todo, onClose, onSubmit, formData, setFormData }: {
                 <option value="general">General</option>
               </select>
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium mb-2">Priority</label>
               <select
@@ -510,7 +516,7 @@ function TodoFormModal({ todo, onClose, onSubmit, formData, setFormData }: {
                 <option value="high">High Priority</option>
               </select>
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium mb-2">Difficulty</label>
               <select
@@ -523,7 +529,7 @@ function TodoFormModal({ todo, onClose, onSubmit, formData, setFormData }: {
                 <option value="hard">Hard</option>
               </select>
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium mb-2">Due Date</label>
               <input
@@ -533,7 +539,7 @@ function TodoFormModal({ todo, onClose, onSubmit, formData, setFormData }: {
                 onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
               />
             </div>
-            
+
             <div className="md:col-span-2">
               <label className="block text-sm font-medium mb-2">Description</label>
               <textarea
@@ -544,7 +550,7 @@ function TodoFormModal({ todo, onClose, onSubmit, formData, setFormData }: {
                 placeholder="Describe your goal and how you plan to achieve it..."
               />
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium mb-2">Estimated CO₂ Reduction (kg)</label>
               <input
@@ -558,21 +564,22 @@ function TodoFormModal({ todo, onClose, onSubmit, formData, setFormData }: {
               />
             </div>
           </div>
-          
+
           <div className="flex space-x-3 pt-4">
-            <button
+            <Button
               type="button"
+              variant="secondary"
               onClick={onClose}
-              className="flex-1 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              className="flex-1"
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
-              className="flex-1 px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              className="flex-1"
             >
               {isEditing ? 'Update Goal' : 'Add Goal'}
-            </button>
+            </Button>
           </div>
         </form>
       </div>

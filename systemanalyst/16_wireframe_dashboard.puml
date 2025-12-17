@@ -1,0 +1,97 @@
+@startuml WF-01_Dashboard_Utama
+!theme plain
+title WF-01: Dashboard Utama - UC-05 (Melihat Visualisasi Data)
+
+salt
+{
+  {* CarbCalc | John Doe | (3) }
+  {
+    [Dashboard] | [Calculator] | [Reports] | [Social] | [Settings]
+  }
+  --
+  {
+    Welcome back, John! | Today: Tuesday, Dec 12, 2024
+  }
+  --
+  {
+    {
+      TODAY'S CARBON
+      8.2 kg CO2e
+      +1.5 from yesterday
+      Status: High
+    } | {
+      THIS MONTH  
+      245 kg CO2e
+      -12% from last month
+      Target: 300 kg
+      Status: Good
+    } | {
+      ACHIEVEMENTS
+      Level 3 Eco Warrior
+      1,250 points
+      New Badge!
+    }
+  }
+  --
+  {
+    {
+      EMISSION BREAKDOWN
+      [Pie Chart]
+      • Transport: 45% (3.7kg)
+      • Energy: 30% (2.5kg) 
+      • Food: 20% (1.6kg)
+      • Waste: 5% (0.4kg)
+      [View Details]
+    } | {
+      RECENT ACTIVITIES
+      08:30 - Car trip: 3.2 kg CO2e
+      12:15 - Lunch: 2.8 kg CO2e  
+      18:00 - Electricity: 1.4 kg
+      [View All Activities]
+      
+      MONTHLY TREND
+      [Line Chart]
+      Oct: 380 kg | Nov: 320 kg ↓
+      Dec: 245 kg ↓ (projected)
+      Target 2024: 3,500 kg
+      Progress: 78% ✓
+    }
+  }
+  --
+  {
+    AI RECOMMENDATIONS                    [Get More]
+    💡 Switch to LED bulbs → Save 8 kg CO2e/month
+    🚗 Try carpooling 2x/week → Save 15 kg CO2e/month  
+    🥗 One meatless day/week → Save 12 kg CO2e/month
+  }
+  --
+  {
+    {
+      ACTION ITEMS (4/8 completed)
+      HIGH PRIORITY
+      ⏳ Install LED bulbs (Due: Dec 15)
+      ⏳ Research carpool options (Due: Dec 20)
+      
+      COMPLETED THIS WEEK  
+      ✅ Buy reusable water bottle
+      ✅ Start composting
+    } | {
+      AIR QUALITY
+      Jakarta Selatan
+      AQI: 85 (Moderate)
+      PM2.5: 35 μg/m³
+      Recommendation:
+      Reduce travel today
+    }
+  }
+}
+
+note bottom
+Wireframe ini mendukung:
+- UC-05.1: Melihat Dashboard
+- UC-05.2: Melihat Chart Emisi  
+- AC-22: Mengupdate dashboard
+- Class: User, EmissionActivity, Achievement
+end note
+
+@enduml

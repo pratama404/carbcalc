@@ -1,0 +1,102 @@
+@startuml Activity_Breakdown_Menghitung_Jejak_Karbon
+!theme plain
+title Activity Diagram Breakdown - UC-03: Menghitung Jejak Karbon
+
+|#LightGreen|Pengguna|
+|#LightBlue|Sistem CarbCalc|
+|#Orange|Database|
+
+|Pengguna|
+start
+:AC-03.01: Membuka halaman kalkulator;
+note right: WF-02: Kalkulator Karbon
+
+:AC-03.02: Memilih tab kategori;
+if (Kategori yang dipilih?) then (Transportasi)
+  :AC-03.03: Mengisi form transportasi;
+  note right: UC-03.1: Input Data Transportasi\n- Jenis kendaraan\n- Jarak tempuh\n- Jenis bahan bakar
+elseif (Energi) then
+  :AC-03.04: Mengisi form energi;
+  note right: UC-03.2: Input Data Energi\n- Konsumsi listrik\n- Penggunaan gas\n- Heating/cooling
+elseif (Makanan) then
+  :AC-03.05: Mengisi form makanan;
+  note right: UC-03.3: Input Data Makanan\n- Jenis makanan\n- Porsi/berat\n- Frekuensi konsumsi
+else (Limbah)
+  :AC-03.06: Mengisi form limbah;
+  note right: UC-03.4: Input Data Limbah\n- Jenis limbah\n- Berat/volume\n- Metode pembuangan
+endif
+
+:AC-03.07: Mengklik tombol "Hitung Emisi";
+
+|Sistem CarbCalc|
+:AC-03.08: Memvalidasi input data;
+if (Data lengkap dan valid?) then (tidak)
+  :AC-03.09: Menampilkan pesan error
+  dengan field yang salah;
+  |Pengguna|
+  :AC-03.10: Memperbaiki input;
+else (ya)
+  |Database|
+  :AC-03.11: Mengambil faktor emisi
+  berdasarkan kategori dan jenis;
+  
+  |Sistem CarbCalc|
+  :AC-03.12: Menghitung emisi per aktivitas
+  (jumlah × faktor emisi);
+  
+  :AC-03.13: Mengakumulasi total emisi
+  semua kategori;
+  
+  |Database|
+  :AC-03.14: Menyimpan data aktivitas
+  dengan timestamp;
+  
+  |Sistem CarbCalc|
+  :AC-03.15: Mengupdate statistik harian;
+  :AC-03.16: Membandingkan dengan
+  target dan rata-rata;
+  
+  if (Emisi > target harian?) then (ya)
+    :AC-03.17: Menampilkan warning
+    dan saran pengurangan;
+  else (tidak)
+    :AC-03.18: Menampilkan apresiasi
+    pencapaian target;
+  endif
+  
+  :AC-03.19: Menampilkan hasil perhitungan
+  dengan breakdown per kategori;
+  note right: WF-02: Hasil di halaman kalkulator
+endif
+
+|Pengguna|
+:AC-03.20: Melihat hasil dan breakdown;
+
+if (Ingin melihat detail?) then (ya)
+  :AC-03.21: Mengklik "Lihat Detail";
+  
+  |Sistem CarbCalc|
+  :AC-03.22: Menampilkan chart breakdown
+  dan perbandingan historis;
+  note right: WF-01: Dashboard dengan chart
+else (tidak)
+  :AC-03.23: Melanjutkan input aktivitas lain;
+endif
+
+if (Ingin menyimpan dan lanjut?) then (ya)
+  :AC-03.24: Mengklik "Simpan & Lanjut";
+  
+  |Sistem CarbCalc|
+  :AC-03.25: Menyimpan semua data;
+  :AC-03.26: Mengupdate dashboard;
+  :AC-03.27: Mengarahkan ke halaman
+  rekomendasi;
+  note right: WF-03: Halaman Rekomendasi
+else (tidak)
+  :AC-03.28: Tetap di halaman kalkulator
+  untuk input tambahan;
+endif
+
+stop
+
+@enduml

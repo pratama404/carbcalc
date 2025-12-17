@@ -108,7 +108,6 @@ export async function GET(request: NextRequest) {
 
     const challenges = await Challenge.find(query)
       .sort({ createdAt: -1 })
-      .populate('userId', 'name email')
 
     return NextResponse.json({
       success: true,

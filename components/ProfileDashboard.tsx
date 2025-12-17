@@ -1,11 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
 import { User, Mail, Calendar, MapPin, Edit3, Save, X, Share2, Trophy, Leaf, Target, Award, ExternalLink, Copy, Check } from 'lucide-react'
+import { useToast } from '@/context/ToastContext'
 
 export default function ProfileDashboard() {
   const { data: session } = useSession()
+  const { addToast } = useToast()
   const [editing, setEditing] = useState(false)
   const [loading, setLoading] = useState(false)
   const [copied, setCopied] = useState(false)
@@ -26,13 +28,11 @@ export default function ProfileDashboard() {
     achievements: [] as string[]
   })
 
-  useEffect(() => {
-    fetchProfile()
-  }, [session])
+  const fetchProfile = useCallback(async () => {
+    if (!session?.user?.email) return
 
-  const fetchProfile = async () => {
     try {
-      const response = await fetch(`/api/profile?email=${session?.user?.email}`)
+      const response = await fetch(`/api/profile?email=${session.user.email}`)
       const result = await response.json()
       if (result.success) {
         setProfile({
@@ -53,7 +53,11 @@ export default function ProfileDashboard() {
     } catch (error) {
       console.error('Failed to fetch profile:', error)
     }
-  }
+  }, [session])
+
+  useEffect(() => {
+    fetchProfile()
+  }, [fetchProfile])
 
   const handleSave = async () => {
     setLoading(true)
@@ -68,14 +72,14 @@ export default function ProfileDashboard() {
           location: profile.location
         })
       })
-      
+
       if (response.ok) {
         setEditing(false)
-        alert('Profile updated successfully!')
+        addToast('Profile updated successfully!', 'success')
       }
     } catch (error) {
       console.error('Failed to update profile:', error)
-      alert('Failed to update profile')
+      addToast('Failed to update profile', 'error')
     } finally {
       setLoading(false)
     }
@@ -83,7 +87,7 @@ export default function ProfileDashboard() {
 
   const shareProfile = async () => {
     const shareText = `Check out my carbon footprint progress! I've saved ${profile.totalCO2Saved.toFixed(1)} kg CO2 and planted ${profile.treesPlanted} trees using CarbCalc! 🌱 Join me in making a difference: ${window.location.origin}`
-    
+
     if (navigator.share) {
       try {
         await navigator.share({
@@ -148,7 +152,7 @@ export default function ProfileDashboard() {
                 </div>
               </div>
             </div>
-            
+
             <div className="flex space-x-3">
               <button
                 onClick={shareProfile}
@@ -171,14 +175,14 @@ export default function ProfileDashboard() {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid lg:grid-cols-3 gap-8">
-          
+
           {/* Left Column - Profile Info */}
           <div className="lg:col-span-1 space-y-6">
-            
+
             {/* Profile Details */}
             <div className="bg-white rounded-xl shadow-lg p-6">
               <h3 className="text-xl font-semibold mb-4">Profile Information</h3>
-              
+
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -275,7 +279,7 @@ export default function ProfileDashboard() {
 
           {/* Right Column - Stats & Achievements */}
           <div className="lg:col-span-2 space-y-6">
-            
+
             {/* Carbon Stats */}
             <div className="bg-white rounded-xl shadow-lg p-6">
               <h3 className="text-xl font-semibold mb-6">Carbon Footprint Overview</h3>

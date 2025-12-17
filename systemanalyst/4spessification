@@ -1,0 +1,193 @@
+aBerdasarkan Ruang Lingkup Proyek yang anda pilih, dengan usecase yang sama yang anda gunakan dalam kertas kerja 03 :
+
+Buatlah Activity Diagram yang menjelaskan workflow dari Usecase
+
+Gambarkan Wireframe (Low Fidelity) sesuai kebutuhan dalam Activity Diagram
+
+
+Berikan Kode dan nama di atas diagram/ Wireframe
+
+
+
+
+
+
+
+
+
+
+
+STUDI KASUS: APLIKASI KALKULATOR JEJAK KARBON "ECOTRACK"
+
+I. Menggambar Proses Bisnis As-Is System
+Proses As-Is adalah alur kerja yang dilakukan secara manual sebelum adanya sistem aplikasi EcoTrack.
+Proses Bisnis As-Is System (Menghitung Jejak Karbon Manual)
+Individu mengumpulkan bukti-bukti aktivitas bulanan (contoh: tagihan listrik, struk bensin, catatan perjalanan).
+Individu mencatat total aktivitas ke dalam buku catatan atau spreadsheet (contoh: total pemakaian listrik 150 kWh, total jarak tempuh mobil 200 km).
+Individu membuka buku referensi atau tabel faktor emisi yang sudah dicetak (disediakan oleh ahli lingkungan).
+Individu mencari faktor emisi yang sesuai untuk setiap aktivitasnya.
+Untuk setiap aktivitas, individu menghitung emisi menggunakan kalkulator: (Total Aktivitas) x (Faktor Emisi).
+Individu menjumlahkan semua hasil perhitungan untuk mendapatkan total jejak karbon bulanan.
+Hasil akhir dicatat dalam buku catatan untuk perbandingan di bulan berikutnya.
+Activity Diagram - Proses Bisnis As-Is System
+
+
+II. Menggambar Proses Bisnis To-Be System
+Proses To-Be adalah alur kerja yang diusulkan setelah sistem aplikasi EcoTrack diimplementasikan.
+Proses Bisnis To-Be System (Menghitung Jejak Karbon dengan EcoTrack)
+Pengguna melakukan login ke aplikasi EcoTrack.
+Pengguna memilih menu untuk menambahkan aktivitas baru (contoh: "Listrik" atau "Transportasi").
+Pengguna memasukkan total data aktivitas ke dalam form yang disediakan sistem.
+Sistem secara otomatis melakukan perhitungan jejak karbon berdasarkan data yang dimasukkan.
+Sistem secara otomatis menyimpan hasil perhitungan dan memperbarui dasbor pengguna.
+Pengguna dapat langsung melihat total jejak karbon dan rinciannya dalam bentuk grafik di dasbor.
+Activity Diagram - Proses Bisnis To-Be System
+
+III. Menggambarkan Use Case Diagram
+Diagram ini memvisualisasikan fungsionalitas sistem EcoTrack secara keseluruhan dan interaksi antar aktor.
+No UC
+Nama UseCase
+Aktor
+Keterangan
+1.
+Melihat Info Edukasi
+Umum
+
+
+2.
+Melihat FAQ
+Umum
+
+
+3.
+Mendaftar Akun
+Umum
+
+
+4.
+Login
+Pengguna
+
+
+5.
+Ubah Password
+Pengguna Terdaftar
+
+
+6.
+Ubah Data Diri
+Pengguna Terdaftar
+
+
+7.
+Menghitung Jejak Karbon
+Pengguna Terdaftar
+Use Case Transaksi
+8.
+Melihat Riwayat & Dasbor
+Pengguna Terdaftar
+<<include>> ke UC4
+9.
+Melihat Lencana/Achievement
+Pengguna Terdaftar
+
+
+10.
+Mengatur Target Pribadi
+Pengguna Terdaftar
+<<extend>> dari UC7
+11.
+Mengelola Faktor Emisi
+Administrator
+Use Case Manajemen
+12.
+Mengelola Pengguna
+Administrator
+
+
+13.
+Mengelola Konten Edukasi
+Administrator
+
+
+14.
+Melihat Laporan Agregat
+Administrator
+
+
+
+
+Keterangan Relasi:
+Pengguna Terdaftar adalah generalisasi dari Pengguna.
+Administrator adalah generalisasi dari Pengguna Terdaftar.
+Use Case Diagram - Sistem EcoTrack
+
+IV. Use Case Description
+Berikut adalah rincian untuk 2 use case utama yang dipilih.
+1. Deskripsi Use Case Transaksi: Menghitung Jejak Karbon
+
+Nama Usecase
+Menghitung Jejak Karbon
+Aktor
+Pengguna Terdaftar
+Deskripsi
+Use case ini memungkinkan Pengguna Terdaftar untuk memasukkan data aktivitas mereka ke dalam sistem untuk dikalkulasi menjadi nilai jejak karbon.
+Trigger
+Pengguna menekan tombol "Tambah Aktivitas" atau sejenisnya di dasbor.
+Hubungan
+Asosiasi: Pengguna Terdaftar, Include: Login, Extend: Mengatur Target Pribadi
+Pre-Condition
+Pengguna telah berhasil login ke sistem.
+Normal Flow
+1. Sistem menampilkan Halaman Dasbor.
+2. Pengguna memilih menu "Tambah Aktivitas".
+3. Sistem menampilkan halaman pilihan kategori emisi.
+4. Pengguna memilih kategori (misal: "Transportasi").
+5. Sistem menampilkan form input untuk kategori tersebut.
+6. Pengguna mengisikan detail aktivitas dan menekan "Simpan".
+7. Sistem menyimpan data dan menampilkan Halaman Dasbor yang telah diperbarui.
+Exceptional Flow
+6a. Pengguna tidak mengisi kolom wajib.
+Sistem menampilkan form warning: "Data yang diisikan belum lengkap, silahkan diisi kembali" dan kembali ke Normal Flow langkah 5.
+Post-Condition
+Sistem menampilkan Halaman Dasbor dengan data jejak karbon terbaru.
+
+
+2. Deskripsi Use Case Manajemen: Mengelola Faktor Emisi
+Nama Usecase
+Mengelola Faktor Emisi
+Aktor
+Administrator
+Deskripsi
+Use case ini memungkinkan Administrator untuk mengelola data master faktor emisi (tambah, ubah, hapus).
+Trigger
+Terdapat data faktor emisi baru atau terdapat kesalahan pada data yang ada.
+Hubungan
+Asosiasi: Administrator, Include: Login
+Pre-Condition
+Administrator telah berhasil login ke sistem.
+Normal Flow
+1. Sistem menampilkan Halaman Utama Admin.
+2. Administrator memilih menu "Kelola Faktor Emisi".
+3. Sistem menampilkan halaman berisi daftar data faktor emisi.
+4. Apabila Aktor ingin menambah data, dijalankan Subflow S1: Menambah Faktor Emisi.
+5. Apabila Aktor ingin merubah data, dijalankan Subflow S2: Merubah Faktor Emisi.
+6. Apabila Aktor ingin menghapus data, dijalankan Subflow S3: Menghapus Faktor Emisi.
+SubFlow
+
+
+Post-Condition
+Sistem menampilkan daftar faktor emisi sesuai database terbaru.
+
+
+V. Menggambarkan Activity Diagram dan Wireframe
+Berikut adalah rincian alur kerja dan desain antarmuka untuk 2 use case yang telah dipilih.
+1. UC-07 Menghitung Jejak Karbon
+AD-07: Activity Diagram - Menghitung Jejak Karbon
+
+Wireframe: WF-07.1 Halaman Dasbor & WF-07.2 Form Input
+2. UC-11 Mengelola Faktor Emisi
+AD-11: Activity Diagram - Mengelola Faktor Emisi
+
+Wireframe: WF-11.1 Daftar Faktor Emisi (F14) & WF-11.2 Form Tambah (F15)
+

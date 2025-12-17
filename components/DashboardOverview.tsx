@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { TrendingUp, TrendingDown, Award, Target, Calendar, Leaf, Calculator, Trophy, Wind, BookOpen, Zap, Car, Utensils, Trash2, Info, ArrowRight, Lightbulb } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
@@ -38,12 +38,12 @@ export default function DashboardOverview({ userId }: { userId: string }) {
   const [loading, setLoading] = useState(true)
   const [showInsights, setShowInsights] = useState(false)
 
-  const fetchOverview = async () => {
+  const fetchOverview = useCallback(async () => {
     try {
       setLoading(true)
       const response = await fetch(`/api/overview?userId=${userId}`)
       const result = await response.json()
-      
+
       if (result.success) {
         setStats(result.data)
       }
@@ -52,26 +52,26 @@ export default function DashboardOverview({ userId }: { userId: string }) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [userId])
 
   useEffect(() => {
     if (userId) {
       fetchOverview()
     }
-  }, [userId])
+  }, [userId, fetchOverview])
 
   const carbonChange = Math.abs(stats.totalCO2ThisMonth - stats.totalCO2LastMonth)
   const carbonPercentage = stats.totalCO2LastMonth > 0 ? ((carbonChange / stats.totalCO2LastMonth) * 100).toFixed(1) : '0'
-  
+
   const getImpactLevel = (co2: number) => {
     if (co2 < 100) return { level: 'Excellent', color: 'text-green-600', bg: 'bg-green-50' }
     if (co2 < 300) return { level: 'Good', color: 'text-blue-600', bg: 'bg-blue-50' }
     if (co2 < 500) return { level: 'Moderate', color: 'text-yellow-600', bg: 'bg-yellow-50' }
     return { level: 'High Impact', color: 'text-red-600', bg: 'bg-red-50' }
   }
-  
+
   const impactLevel = getImpactLevel(stats.totalCO2ThisMonth)
-  
+
   const getRecommendations = () => {
     const recs = []
     if (stats.totalCO2ThisMonth > 300) {
@@ -106,12 +106,12 @@ export default function DashboardOverview({ userId }: { userId: string }) {
       <div className="bg-gradient-to-r from-green-50 to-blue-50 p-6 rounded-xl border text-center">
         <h2 className="text-3xl font-bold text-gray-900 mb-2">Your Carbon Impact Dashboard</h2>
         <p className="text-lg text-gray-600 mb-4">Track your progress and environmental impact</p>
-        
+
         <div className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-medium ${impactLevel.bg} ${impactLevel.color}`}>
           <Leaf className="w-4 h-4 mr-2" />
           Current Impact Level: {impactLevel.level}
         </div>
-        
+
         <button
           onClick={() => setShowInsights(true)}
           className="ml-4 inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-full text-sm font-medium hover:bg-blue-700 transition-colors"
@@ -164,7 +164,7 @@ export default function DashboardOverview({ userId }: { userId: string }) {
           <div className="text-sm text-gray-600">Challenges</div>
           <div className="mt-2">
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div 
+              <div
                 className="bg-blue-500 h-2 rounded-full transition-all duration-300"
                 style={{ width: `${stats.totalChallenges > 0 ? (stats.challengesCompleted / stats.totalChallenges) * 100 : 0}%` }}
               ></div>
@@ -183,7 +183,7 @@ export default function DashboardOverview({ userId }: { userId: string }) {
             </div>
           </div>
           <div className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">
-            {stats.ecoPoints > 999 ? `${(stats.ecoPoints/1000).toFixed(1)}k` : stats.ecoPoints}
+            {stats.ecoPoints > 999 ? `${(stats.ecoPoints / 1000).toFixed(1)}k` : stats.ecoPoints}
           </div>
           <div className="text-sm text-gray-600">Eco Points</div>
           <div className="mt-2 text-xs text-gray-500">
@@ -240,7 +240,7 @@ export default function DashboardOverview({ userId }: { userId: string }) {
           Quick Actions
         </h3>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <button 
+          <button
             onClick={() => router.push('/dashboard/calculator')}
             className="p-4 text-center bg-green-50 rounded-lg hover:bg-green-100 transition-all hover:scale-105 group"
           >
@@ -248,7 +248,7 @@ export default function DashboardOverview({ userId }: { userId: string }) {
             <div className="text-sm font-medium text-gray-700">Calculate Carbon</div>
             <div className="text-xs text-gray-500 mt-1">Track daily emissions</div>
           </button>
-          <button 
+          <button
             onClick={() => router.push('/dashboard/challenges')}
             className="p-4 text-center bg-blue-50 rounded-lg hover:bg-blue-100 transition-all hover:scale-105 group"
           >
@@ -256,7 +256,7 @@ export default function DashboardOverview({ userId }: { userId: string }) {
             <div className="text-sm font-medium text-gray-700">Take Challenge</div>
             <div className="text-xs text-gray-500 mt-1">Earn eco points</div>
           </button>
-          <button 
+          <button
             onClick={() => router.push('/dashboard/air-quality')}
             className="p-4 text-center bg-yellow-50 rounded-lg hover:bg-yellow-100 transition-all hover:scale-105 group"
           >
@@ -264,7 +264,7 @@ export default function DashboardOverview({ userId }: { userId: string }) {
             <div className="text-sm font-medium text-gray-700">Air Quality</div>
             <div className="text-xs text-gray-500 mt-1">Check local AQI</div>
           </button>
-          <button 
+          <button
             onClick={() => router.push('/dashboard/articles')}
             className="p-4 text-center bg-purple-50 rounded-lg hover:bg-purple-100 transition-all hover:scale-105 group"
           >
@@ -291,18 +291,18 @@ export default function DashboardOverview({ userId }: { userId: string }) {
                   </svg>
                 </button>
               </div>
-              
+
               <div className="space-y-6">
                 {/* Impact Assessment */}
                 <div className={`p-4 rounded-lg ${impactLevel.bg} border border-opacity-20`}>
                   <h4 className={`font-semibold mb-2 ${impactLevel.color}`}>Current Impact: {impactLevel.level}</h4>
                   <p className="text-sm text-gray-700">
-                    Your monthly carbon footprint is {stats.totalCO2ThisMonth.toFixed(1)} kg CO₂. 
-                    {stats.trend === 'down' ? 
-                      `Great job! You've reduced your emissions by ${carbonPercentage}% compared to last month.` :
-                    stats.trend === 'up' ?
-                      `Your emissions increased by ${carbonPercentage}% from last month. Let's work on reducing them.` :
-                      'Your emissions are stable compared to last month.'}
+                    Your monthly carbon footprint is {stats.totalCO2ThisMonth.toFixed(1)} kg CO₂.
+                    {stats.trend === 'down' ?
+                      `Great job! You&apos;ve reduced your emissions by ${carbonPercentage}% compared to last month.` :
+                      stats.trend === 'up' ?
+                        `Your emissions increased by ${carbonPercentage}% from last month. Let&apos;s work on reducing them.` :
+                        'Your emissions are stable compared to last month.'}
                   </p>
                 </div>
 
@@ -323,7 +323,7 @@ export default function DashboardOverview({ userId }: { userId: string }) {
 
                 {/* Activity Summary */}
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-3">This Month's Activity</h4>
+                  <h4 className="font-semibold text-gray-900 mb-3">This Month&apos;s Activity</h4>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="p-3 bg-gray-50 rounded-lg text-center">
                       <div className="text-2xl font-bold text-gray-900">{stats.recentActivity}</div>

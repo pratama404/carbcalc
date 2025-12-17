@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Plus, Edit, Trash2, Eye, Clock, User, Tag } from 'lucide-react'
+import { useToast } from '@/context/ToastContext'
 
 interface Article {
   _id: string
@@ -23,6 +24,7 @@ interface Props {
 }
 
 export default function ArticleManagement({ userRole }: Props) {
+  const { addToast } = useToast()
   const [articles, setArticles] = useState<Article[]>([])
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [editingArticle, setEditingArticle] = useState<Article | null>(null)
@@ -39,16 +41,16 @@ export default function ArticleManagement({ userRole }: Props) {
     { value: 'technology', label: 'Green Technology' }
   ]
 
-  const fetchArticles = async () => {
+  const fetchArticles = useCallback(async () => {
     try {
       setLoading(true)
-      const url = selectedCategory === 'all' 
-        ? '/api/articles' 
+      const url = selectedCategory === 'all'
+        ? '/api/articles'
         : `/api/articles?category=${selectedCategory}`
-      
+
       const response = await fetch(url)
       const result = await response.json()
-      
+
       if (result.success) {
         setArticles(result.data)
       }
@@ -57,13 +59,13 @@ export default function ArticleManagement({ userRole }: Props) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [selectedCategory])
 
   const fetchFullArticle = async (id: string) => {
     try {
       const response = await fetch(`/api/articles?id=${id}`)
       const result = await response.json()
-      
+
       if (result.success) {
         setSelectedArticle(result.data)
       }
@@ -74,27 +76,27 @@ export default function ArticleManagement({ userRole }: Props) {
 
   const deleteArticle = async (id: string) => {
     if (!confirm('Are you sure you want to delete this article?')) return
-    
+
     try {
       const response = await fetch(`/api/articles?id=${id}&userRole=${userRole}`, {
         method: 'DELETE'
       })
-      
+
       const result = await response.json()
       if (result.success) {
         fetchArticles()
-        alert('Article deleted successfully')
+        addToast('Article deleted successfully', 'success')
       } else {
-        alert('Failed to delete article: ' + result.error)
+        addToast('Failed to delete article: ' + result.error, 'error')
       }
     } catch (error) {
-      alert('Failed to delete article')
+      addToast('Failed to delete article', 'error')
     }
   }
 
   useEffect(() => {
     fetchArticles()
-  }, [selectedCategory])
+  }, [fetchArticles])
 
   const isAdmin = userRole === 'admin'
 
@@ -119,11 +121,10 @@ export default function ArticleManagement({ userRole }: Props) {
           <button
             key={category.value}
             onClick={() => setSelectedCategory(category.value)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
-              selectedCategory === category.value
-                ? 'bg-green-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
+            className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${selectedCategory === category.value
+              ? 'bg-green-600 text-white'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
           >
             {category.label}
           </button>
@@ -145,7 +146,7 @@ export default function ArticleManagement({ userRole }: Props) {
                   Featured Article
                 </div>
               )}
-              
+
               <div className="p-6">
                 <div className="flex items-center justify-between mb-3">
                   <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">
@@ -153,14 +154,14 @@ export default function ArticleManagement({ userRole }: Props) {
                   </span>
                   {isAdmin && (
                     <div className="flex space-x-1">
-                      <button 
+                      <button
                         onClick={() => setEditingArticle(article)}
                         className="p-1 text-gray-400 hover:text-blue-600"
                         title="Edit article"
                       >
                         <Edit className="w-4 h-4" />
                       </button>
-                      <button 
+                      <button
                         onClick={() => deleteArticle(article._id)}
                         className="p-1 text-gray-400 hover:text-red-600"
                         title="Delete article"
@@ -174,7 +175,7 @@ export default function ArticleManagement({ userRole }: Props) {
                 <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
                   {article.title}
                 </h3>
-                
+
                 <p className="text-gray-600 text-sm mb-4 line-clamp-3">
                   {article.excerpt}
                 </p>
@@ -195,7 +196,7 @@ export default function ArticleManagement({ userRole }: Props) {
                     <Eye className="w-3 h-3 mr-1" />
                     {article.views} views
                   </div>
-                  <button 
+                  <button
                     onClick={() => fetchFullArticle(article._id)}
                     className="text-green-600 text-sm font-medium hover:text-green-700 transition-colors"
                   >
@@ -233,7 +234,7 @@ export default function ArticleManagement({ userRole }: Props) {
 
       {/* Create Article Modal */}
       {showCreateForm && isAdmin && (
-        <ArticleFormModal 
+        <ArticleFormModal
           onClose={() => setShowCreateForm(false)}
           onSuccess={() => {
             setShowCreateForm(false)
@@ -245,7 +246,7 @@ export default function ArticleManagement({ userRole }: Props) {
 
       {/* Edit Article Modal */}
       {editingArticle && isAdmin && (
-        <ArticleFormModal 
+        <ArticleFormModal
           article={editingArticle}
           onClose={() => setEditingArticle(null)}
           onSuccess={() => {
@@ -258,7 +259,7 @@ export default function ArticleManagement({ userRole }: Props) {
 
       {/* Read Article Modal */}
       {selectedArticle && (
-        <ArticleReadModal 
+        <ArticleReadModal
           article={selectedArticle}
           onClose={() => setSelectedArticle(null)}
         />
@@ -267,17 +268,18 @@ export default function ArticleManagement({ userRole }: Props) {
   )
 }
 
-function ArticleFormModal({ 
-  article, 
-  onClose, 
-  onSuccess, 
-  userRole 
-}: { 
+function ArticleFormModal({
+  article,
+  onClose,
+  onSuccess,
+  userRole
+}: {
   article?: Article | null
   onClose: () => void
   onSuccess: () => void
   userRole: string
 }) {
+  const { addToast } = useToast()
   const isEditing = !!article
   const [formData, setFormData] = useState({
     title: article?.title || '',
@@ -301,7 +303,7 @@ function ArticleFormModal({
         tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean),
         userRole
       }
-      
+
       if (isEditing) {
         body.id = article._id
       }
@@ -315,12 +317,12 @@ function ArticleFormModal({
       const result = await response.json()
       if (result.success) {
         onSuccess()
-        alert(`Article ${isEditing ? 'updated' : 'created'} successfully!`)
+        addToast(`Article ${isEditing ? 'updated' : 'created'} successfully!`, 'success')
       } else {
-        alert(`Failed to ${isEditing ? 'update' : 'create'} article: ` + result.error)
+        addToast(`Failed to ${isEditing ? 'update' : 'create'} article: ` + result.error, 'error')
       }
     } catch (error) {
-      alert(`Failed to ${isEditing ? 'update' : 'create'} article`)
+      addToast(`Failed to ${isEditing ? 'update' : 'create'} article`, 'error')
     } finally {
       setLoading(false)
     }
@@ -330,7 +332,7 @@ function ArticleFormModal({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <h3 className="text-lg font-semibold mb-4">{isEditing ? 'Edit Article' : 'Create New Article'}</h3>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium mb-2">Title *</label>
@@ -454,7 +456,7 @@ function ArticleReadModal({ article, onClose }: { article: Article, onClose: () 
               </span>
             </div>
           </div>
-          <button 
+          <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 p-2"
           >
@@ -463,24 +465,24 @@ function ArticleReadModal({ article, onClose }: { article: Article, onClose: () 
             </svg>
           </button>
         </div>
-        
+
         <div className="p-6">
           {article.featured && (
             <div className="bg-gradient-to-r from-green-500 to-blue-500 text-white text-sm font-medium px-4 py-2 rounded-lg mb-6 inline-block">
               ⭐ Featured Article
             </div>
           )}
-          
+
           <div className="prose prose-lg max-w-none">
             <div className="text-lg text-gray-700 mb-6 font-medium border-l-4 border-green-500 pl-4 bg-green-50 py-3">
               {article.excerpt}
             </div>
-            
+
             <div className="text-gray-800 leading-relaxed whitespace-pre-wrap">
               {article.content}
             </div>
           </div>
-          
+
           {article.tags && article.tags.length > 0 && (
             <div className="mt-8 pt-6 border-t">
               <div className="flex items-center mb-3">
@@ -496,7 +498,7 @@ function ArticleReadModal({ article, onClose }: { article: Article, onClose: () 
               </div>
             </div>
           )}
-          
+
           <div className="mt-8 pt-6 border-t text-center">
             <button
               onClick={onClose}

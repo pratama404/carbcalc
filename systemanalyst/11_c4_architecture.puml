@@ -1,0 +1,29 @@
+@startuml C4_Architecture_CarbCalc
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title Software Architecture - C4 Model: Carbon Calculator App
+
+' Context Diagram (Level 1)
+Person(user, "Pengguna", "Individu yang ingin melacak jejak karbon")
+Person(admin, "Administrator", "Mengelola sistem dan data master")
+Person(researcher, "Peneliti", "Mengakses data agregat untuk penelitian")
+
+System(carbcalc, "Carbon Calculator App", "Aplikasi web untuk melacak dan mengurangi jejak karbon")
+
+System_Ext(gemini, "Google Gemini AI", "Memberikan rekomendasi personal berbasis AI")
+System_Ext(social, "Social Media APIs", "Twitter/X dan Instagram untuk sharing")
+System_Ext(email, "Email Service", "Layanan notifikasi email")
+System_Ext(maps, "Maps API", "Data lokasi dan kualitas udara")
+
+Rel(user, carbcalc, "Menggunakan", "HTTPS")
+Rel(admin, carbcalc, "Mengelola", "HTTPS")
+Rel(researcher, carbcalc, "Mengakses data", "HTTPS")
+
+Rel(carbcalc, gemini, "Meminta rekomendasi", "HTTPS/REST API")
+Rel(carbcalc, social, "Berbagi konten", "HTTPS/REST API")
+Rel(carbcalc, email, "Mengirim notifikasi", "SMTP")
+Rel(carbcalc, maps, "Mendapat data lokasi", "HTTPS/REST API")
+
+@enduml

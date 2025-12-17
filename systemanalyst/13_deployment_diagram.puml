@@ -1,0 +1,83 @@
+@startuml Deployment_Diagram_CarbCalc
+!theme plain
+title Deployment Diagram - Carbon Calculator App Production
+
+node "Vercel Edge Network" as CDN {
+  artifact "Static Assets" as static
+  artifact "Edge Functions" as edge
+  note bottom: Mendukung WF-01 sampai WF-07\nStatic content delivery
+}
+
+node "Vercel Serverless Platform" as vercel {
+  component "Next.js Application" as nextjs {
+    component "Frontend (React)" as frontend
+    component "API Routes" as api
+    component "Server Components" as server
+    note bottom: UC-01 sampai UC-10\nAC-01 sampai AC-45
+  }
+}
+
+cloud "MongoDB Atlas" as mongodb {
+  database "Primary Database" as db_primary
+  database "Replica Set" as db_replica
+  note bottom: Data persistence\nfor all domain models
+}
+
+cloud "Redis Cloud" as redis {
+  database "Session Cache" as cache
+  database "Calculation Cache" as calc_cache
+  note bottom: Session management\nTemporary calculations
+}
+
+cloud "External Services" as external {
+  component "Google Gemini AI" as gemini
+  component "Twitter/X API" as twitter
+  component "Instagram API" as instagram
+  component "Email Service (SendGrid)" as email
+  note bottom: AI recommendations\nSocial sharing\nNotifications
+}
+
+' Deployment relationships
+CDN --> vercel : "Route requests"
+static --> frontend : "Serve static assets"
+edge --> api : "Edge computing"
+
+frontend --> api : "API calls"
+api --> server : "Server-side rendering"
+
+api --> db_primary : "Read/Write operations"
+db_primary --> db_replica : "Data replication"
+api --> cache : "Session management"
+api --> calc_cache : "Calculation caching"
+
+api --> gemini : "AI recommendations (UC-06)"
+api --> twitter : "Social sharing (UC-08.2)"
+api --> instagram : "Social sharing (UC-08.3)"
+api --> email : "Notifications"
+
+' Deployment specifications
+note top of vercel
+**Deployment Specs:**
+- Region: Global Edge
+- Auto-scaling: Yes
+- SSL/TLS: Automatic
+- Environment: Production
+end note
+
+note top of mongodb
+**Database Specs:**
+- Cluster: M10 (Production)
+- Region: Singapore
+- Backup: Automated daily
+- Monitoring: 24/7
+end note
+
+note top of redis
+**Cache Specs:**
+- Plan: Premium
+- Memory: 1GB
+- Persistence: RDB + AOF
+- High Availability: Yes
+end note
+
+@enduml

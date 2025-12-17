@@ -1,0 +1,139 @@
+@startuml WF-07_Laporan_Analytics
+!theme plain
+title WF-07: Laporan & Analytics - UC-05 (Melihat Visualisasi Data)
+
+salt
+{
+  {* CarbCalc | John Doe | (3) }
+  {
+    [Dashboard] | [Calculator] | [Reports] | [Social] | [Settings]
+  }
+  --
+  Reports & Analytics - UC-05
+  --
+  {
+    Period: [This Month ^] [Custom Range]
+    View: [Chart] [Table] [Infographic]
+    Export: [PDF] [CSV] [PNG] [Email Report]
+  }
+  --
+  MONTHLY OVERVIEW - UC-05.1
+  {
+    {
+      TARGET VS ACTUAL
+      Target: 300 kg CO2e
+      Actual: 245 kg CO2e
+      Difference: -55 kg (18% ✅)
+      
+      Status: 🟢 Target Achieved
+      Ranking: Top 15% users
+      
+      [🎯 Set New Target]
+    } | {
+      6-MONTH TREND - UC-05.2
+      [Line Chart]
+      Jul: 420 kg | Aug: 380 kg ↓
+      Sep: 350 kg ↓ | Oct: 320 kg ↓
+      Nov: 280 kg ↓ | Dec: 245 kg ↓
+      Trend: -42% improvement
+    }
+  }
+  --
+  CATEGORY BREAKDOWN - UC-05.2
+  {
+    [Pie Chart]
+    
+    🚗 Transportation: 110 kg (45%) ↓ 20% from last month
+    💡 Energy: 74 kg (30%) ↓ 15% from last month
+    🍽️ Food: 49 kg (20%) ↑ 5% from last month
+    🗑️ Waste: 12 kg (5%) ↓ 10% from last month
+    
+    Best improvement: Transportation
+    Needs attention: Food
+  }
+  --
+  DAILY ANALYSIS - UC-05.2
+  {
+    [Bar Chart - 30 Days]
+    
+    Daily Average: 8.2 kg CO2e
+    Best Day: Dec 3 (4.1 kg) - Holiday, stayed home
+    Worst Day: Dec 15 (15.2 kg) - Out of town trip
+    
+    Weekly Pattern:
+    • Mon-Fri: 9.1 kg/day (workdays)
+    • Sat-Sun: 6.8 kg/day (weekends)
+    
+    [📊 View Daily Details]
+  }
+  --
+  ACHIEVEMENTS & MILESTONES - UC-05.3
+  {
+    {
+      MILESTONES ACHIEVED
+      ✅ Save 50+ kg CO2e
+      ✅ 30 days consistent
+      ✅ 5 recommendations done
+      ⏳ Target 200 kg (82%)
+      
+      Next Milestone:
+      🎯 Carbon Neutral Month
+      Progress: [██████░░░░] 60%
+      
+      [🏅 View All]
+    } | {
+      COMPARISONS
+      vs Average User:
+      You: 245 kg
+      Average: 320 kg
+      Difference: -75 kg (23% ✅)
+      
+      vs Global Target 2030:
+      Target: 2.3 ton/year
+      You: 2.9 ton (projected)
+      Gap: -0.6 ton
+      
+      [🌍 View Global Stats]
+    }
+  }
+  --
+  INSIGHTS & RECOMMENDATIONS - UC-05.3
+  {
+    🔍 KEY INSIGHTS:
+    
+    • Transportation down 20% thanks to bike-to-work program
+    • Energy consumption stable, potential savings with solar
+    • Food emissions up 5%, consider plant-based diet
+    • Weekend emissions 25% lower - good pattern!
+    
+    🎯 NEXT MONTH RECOMMENDATIONS:
+    1. Focus on reducing food emissions (target: -15%)
+    2. Maintain good transportation patterns
+    3. Explore renewable energy for home
+    
+    [🤖 Get Detailed Recommendations]
+  }
+  --
+  EXPORT & SHARING
+  {
+    📄 AVAILABLE REPORTS:
+    
+    [📊 Executive Summary] [📈 Detailed Analytics]
+    [🏆 Achievement Report] [📅 Monthly Comparison]
+    
+    FORMAT: [PDF] [Excel] [PowerPoint] [Infographic PNG]
+    
+    [📧 Email to Self] [📤 Share to Team]
+    [💾 Download All] [🔗 Generate Public Link]
+  }
+}
+
+note bottom
+Wireframe ini mendukung:
+- UC-05.1: Melihat Dashboard
+- UC-05.2: Melihat Chart Emisi
+- UC-05.3: Generate Laporan
+- Class: EmissionActivity, User, AnalyticsService
+end note
+
+@enduml

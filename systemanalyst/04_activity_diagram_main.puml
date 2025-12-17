@@ -1,0 +1,130 @@
+@startuml Activity_Main_Process
+!theme plain
+title Activity Diagram - Proses Utama Menghitung Jejak Karbon
+
+|#LightGreen|Pengguna|
+|#LightBlue|Sistem CarbCalc|
+|#Orange|Database|
+|#Pink|AI Service|
+
+|Pengguna|
+start
+:AC-01: Membuka aplikasi CarbCalc;
+:AC-02: Melakukan login;
+
+|Sistem CarbCalc|
+:AC-03: Memvalidasi kredensial;
+if (Kredensial valid?) then (tidak)
+  :AC-04: Menampilkan error login;
+  |Pengguna|
+  stop
+else (ya)
+  :AC-05: Menggenerate session token;
+  :AC-06: Menampilkan dashboard;
+endif
+
+|Pengguna|
+:AC-07: Memilih menu kalkulator;
+:AC-08: Memilih kategori aktivitas;
+note right: WF-02: Halaman Kalkulator
+
+|Sistem CarbCalc|
+:AC-09: Menampilkan form input
+sesuai kategori;
+
+|Pengguna|
+:AC-10: Mengisi data aktivitas;
+:AC-11: Mensubmit form;
+
+|Sistem CarbCalc|
+:AC-12: Memvalidasi input data;
+if (Data valid?) then (tidak)
+  :AC-13: Menampilkan pesan error;
+  |Pengguna|
+  :AC-14: Memperbaiki input data;
+else (ya)
+  |Database|
+  :AC-15: Mengambil faktor emisi
+  sesuai kategori;
+  
+  |Sistem CarbCalc|
+  :AC-16: Menghitung total emisi
+  (jumlah × faktor);
+  
+  |Database|
+  :AC-17: Menyimpan data aktivitas;
+  
+  |Sistem CarbCalc|
+  :AC-18: Mengupdate statistik pengguna;
+  :AC-19: Mengecek achievement baru;
+  
+  if (Ada achievement baru?) then (ya)
+    :AC-20: Menampilkan notifikasi
+    achievement;
+    :AC-21: Memberikan eco points;
+  endif
+  
+  :AC-22: Mengupdate dashboard;
+  :AC-23: Menampilkan hasil perhitungan;
+endif
+
+|Pengguna|
+:AC-24: Melihat hasil jejak karbon;
+note right: WF-01: Dashboard dengan hasil
+
+if (Ingin rekomendasi?) then (ya)
+  :AC-25: Mengklik "Dapatkan Rekomendasi";
+  
+  |Sistem CarbCalc|
+  :AC-26: Mengumpulkan data profil
+  dan aktivitas pengguna;
+  
+  |AI Service|
+  :AC-27: Menganalisis pola emisi;
+  :AC-28: Menggenerate rekomendasi
+  personal;
+  
+  |Sistem CarbCalc|
+  :AC-29: Memformat dan menyimpan
+  rekomendasi;
+  :AC-30: Menampilkan rekomendasi
+  ke pengguna;
+  note right: WF-03: Halaman Rekomendasi
+  
+  |Pengguna|
+  :AC-31: Memilih rekomendasi
+  untuk dijalankan;
+  :AC-32: Membuat rencana aksi (todo);
+  
+  |Sistem CarbCalc|
+  :AC-33: Menyimpan todo item;
+  :AC-34: Mengset reminder/notification;
+  note right: WF-04: Halaman Todo
+else (tidak)
+  :AC-35: Melanjutkan aktivitas lain;
+endif
+
+if (Ingin berbagi pencapaian?) then (ya)
+  :AC-36: Memilih template sharing;
+  :AC-37: Mengcustomize pesan;
+  note right: WF-05: Halaman Sharing
+  
+  |Sistem CarbCalc|
+  :AC-38: Menggenerate gambar infografis;
+  :AC-39: Menyiapkan konten sharing;
+  
+  |Pengguna|
+  :AC-40: Memilih platform media sosial;
+  :AC-41: Membagikan konten;
+  
+  |Sistem CarbCalc|
+  :AC-42: Memposting ke media sosial;
+  :AC-43: Menyimpan log sharing;
+else (tidak)
+  :AC-44: Selesai untuk hari ini;
+endif
+
+:AC-45: Logout dari sistem;
+stop
+
+@enduml

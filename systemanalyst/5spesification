@@ -1,0 +1,111 @@
+STUDI KASUS: SISTEM APLIKASI KALKULATOR JEJAK KARBON "ECOTRACK"
+I. Proses Bisnis As-Is System (Saat Ini)
+Proses As-Is adalah alur kerja perhitungan jejak karbon yang dilakukan secara manual, yang menjadi dasar mengapa sistem EcoTrack perlu dikembangkan. Proses ini rumit, memakan waktu, dan rentan terhadap kesalahan.
+Deskripsi Proses Bisnis As-Is System
+Pengumpulan Data: Individu secara manual mengumpulkan berbagai tagihan (listrik, air, gas), struk pembelian bahan bakar, tiket perjalanan, dan membuat catatan konsumsi makanan selama satu bulan.
+Tabulasi Data: Data-data tersebut kemudian direkapitulasi ke dalam sebuah buku catatan atau spreadsheet. Proses ini membutuhkan ketelitian untuk mengkonversi satuan (misal, dari Rupiah di struk bensin ke Liter).
+Pencarian Faktor Emisi: Individu harus mencari referensi faktor emisi dari sumber terpercaya (buku, jurnal, atau situs web pemerintah), yang seringkali tidak mudah dipahami oleh orang awam.
+Kalkulasi Manual: Dengan menggunakan kalkulator, individu mengalikan setiap data aktivitas dengan faktor emisi yang sesuai. Ini adalah langkah yang paling rentan terjadi kesalahan hitung.
+Agregasi & Pelaporan: Semua hasil perhitungan dijumlahkan untuk mendapatkan total jejak karbon. Laporan dibuat secara manual, biasanya hanya berupa angka akhir tanpa visualisasi atau analisis tren.
+Activity Diagram - Proses Bisnis As-Is System
+
+II. Proses Bisnis To-Be System (Yang Diusulkan)
+Proses To-Be adalah alur kerja ideal setelah aplikasi EcoTrack diimplementasikan. Proses ini menjawab pertanyaan "bagaimana sistem yang dikembangkan memudahkan pengguna" dengan cara mengotomatisasi langkah-langkah yang rumit dan menyediakan hasil yang bermanfaat.
+Deskripsi Proses Bisnis To-Be System
+Input Data Terpandu: Pengguna cukup login ke aplikasi dan memasukkan data aktivitas melalui formulir yang mudah dipahami (misal: "Berapa kWh listrik bulan ini?"). Sistem menyediakan pilihan yang jelas, menghilangkan kebingungan.
+Kalkulasi Otomatis & Terstandar: Sistem secara otomatis mengambil faktor emisi yang relevan dan akurat dari database, lalu melakukan semua perhitungan di latar belakang. Ini menghilangkan risiko salah hitung dan pencarian referensi yang sulit.
+Visualisasi & Wawasan: Hasil tidak hanya ditampilkan sebagai angka, tetapi juga dalam bentuk dasbor visual (grafik, diagram) yang interaktif. Pengguna bisa langsung melihat sumber emisi terbesarnya.
+Pelaporan & Gamifikasi: Sistem menyediakan laporan historis untuk melacak kemajuan dan memberikan elemen gamifikasi (lencana) untuk menjaga motivasi pengguna.
+Activity Diagram - Proses Bisnis To-Be System
+
+III. Use Case Diagram
+Analisis mendalam terhadap fitur yang diperlukan menghasilkan arsitektur fungsional yang lebih kaya. Aktor dan use case diperluas untuk mencakup semua kebutuhan pengguna, dari pengguna umum hingga level peneliti.
+Aktor yang Teridentifikasi:
+Pengguna Umum: Publik yang belum memiliki akun.
+Pengguna Terdaftar: Pengguna yang memiliki akun dan aktif melacak jejak karbonnya.
+Administrator: Pengelola sistem.
+Peneliti Lingkungan: Pihak ketiga (misal: dari universitas atau NGO) yang diberi akses khusus untuk melihat data agregat anonim untuk tujuan riset. Ini menjawab pertanyaan "siapa yang akan memanfaatkan laporannya".
+Use Case Diagram - Sistem EcoTrack (Lengkap)
+
+
+IV. Use Case Description
+Rincian dua use case utama yang merepresentasikan fungsi inti sistem.
+1. Deskripsi Use Case: Menghitung Jejak Karbon
+Nama Usecase
+Menghitung Jejak Karbon
+Aktor
+Pengguna Terdaftar
+Deskripsi
+Use case ini mendeskripsikan proses inti dimana pengguna memasukkan data aktivitasnya ke dalam sistem. Ini adalah fitur transaksional utama yang paling sering digunakan.
+Input Data
+Data kuantitatif dari aktivitas pengguna, contoh: kWh listrik, Liter bensin, kg sampah, porsi makan daging, km perjalanan.
+Normal Flow
+1. Pengguna login dan masuk ke Halaman Dasbor.
+2. Pengguna menekan tombol "Tambah Aktivitas".
+3. Sistem menampilkan halaman Pilihan Kategori (Listrik, Transportasi, Makanan, dll).
+4. Pengguna memilih satu kategori.
+5. Sistem menampilkan formulir input yang spesifik untuk kategori tersebut.
+6. Pengguna mengisi data yang diminta dan menekan "Simpan".
+7. Sistem memvalidasi, menghitung, menyimpan data, dan menampilkan Halaman Dasbor yang telah diperbarui dengan notifikasi sukses.
+Exceptional Flow
+6a. Input data tidak valid/kosong. Sistem akan menampilkan pesan error di bawah kolom yang salah dan proses penyimpanan dihentikan hingga data diperbaiki.
+Post-Condition
+Dasbor pengguna diperbarui dengan total dan rincian jejak karbon terbaru.
+
+2. Deskripsi Use Case: Mengelola Faktor Emisi
+Nama Usecase
+Mengelola Faktor Emisi
+Aktor
+Administrator
+Deskripsi
+Use case ini penting untuk menjaga akurasi sistem. Administrator mengelola data referensi yang menjadi dasar semua perhitungan.
+Input Data
+Nama faktor emisi, nilai numerik, satuan, kategori, dan sumber referensi.
+Normal Flow
+1. Admin login dan memilih menu "Kelola Faktor Emisi".
+2. Sistem menampilkan daftar semua faktor emisi yang ada (F14).
+3. S1: Menambah Data: Admin menekan "Tambah", mengisi form (F15), lalu menyimpan.
+4. S2: Merubah Data: Admin menekan "Edit" pada data, mengubah di form (F16), lalu menyimpan.
+5. S3: Menghapus Data: Admin menekan "Hapus" pada data dan melakukan konfirmasi.
+Post-Condition
+Database faktor emisi diperbarui. Semua perhitungan baru di sistem akan menggunakan data yang telah diperbarui.
+
+
+
+
+V. Activity Diagram dan Wireframe untuk Use Case
+1. UC-05 Menghitung Jejak Karbon
+Activity Diagram
+
+Wireframes (dibuat dengan PlantUML Salt)
+F01 - Halaman Dasbor
+
+F02 & F03 - Form Input
+
+
+2. UC-10 Mengelola Faktor Emisi
+Activity Diagram
+
+
+Wireframes (dibuat dengan PlantUML Salt)
+F14 - Daftar Faktor Emisi
+
+F15 - Form Tambah Faktor Emisi
+
+F16 - Form Tambah Faktor Emisi
+
+VI. Sequence Diagram dan Class Diagram
+Bagian ini menunjukkan bagaimana interaksi objek (Sequence Diagram) membentuk struktur data (Class Diagram).
+1. UC-05 Menghitung Jejak Karbon
+Sequence Diagram (Normal Flow)
+
+
+2. UC-10 Mengelola Faktor Emisi
+Sequence Mngubah Faktor Emisi
+
+
+Sequence Diagram (Alternate Flow - Gagal Validasi)
+
+Class Diagram yang Terbentuk (dan Bertambah Methodnya)
+Berdasarkan interaksi di atas, Class Diagram kita diperkaya dengan method-method spesifik:
+

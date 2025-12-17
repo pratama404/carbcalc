@@ -1,0 +1,121 @@
+@startuml WF-04_Rencana_Aksi
+!theme plain
+title WF-04: Rencana Aksi - UC-07 (Mengelola Rencana Aksi)
+
+salt
+{
+  {* CarbCalc | John Doe | (3) }
+  {
+    [Dashboard] | [Calculator] | [Reports] | [Social] | [Settings]
+  }
+  --
+  My Action Plans - UC-07
+  --
+  {
+    {
+      PROGRESS OVERVIEW
+      Completed: 5/12 plans
+      Progress: [██████░░░░] 42%
+      
+      This week: 3 completed ✅
+      Target: 2 more to go
+    } | {
+      MONTHLY TARGET
+      Reduction: 45/60 kg CO2e
+      Progress: [███████░░░] 75%
+      
+      Time left: 18 days
+      Need: 15 kg more
+    }
+  }
+  --
+  {
+    Filter: [All ^] [Pending] [Completed] [Overdue]
+    Sort: [Priority ^] [Date ^] [Category ^]
+  }
+  --
+  🔴 HIGH PRIORITY - UC-07.4
+  {
+    ⏳ T-07.1.001 | Install 3 LED bulbs in living room
+                  | Target: Dec 15, 2024 (3 days left)
+                  | Save: 8 kg CO2e/month
+                  | Status: 🟡 In Progress
+                  | [✅ Complete] [✏️ Edit] [🗑️ Delete]
+                  | [📝 Add Notes] [⏰ Set Reminder]
+  }
+  {
+    ⏳ T-07.1.002 | Research carpool options to office
+                  | Target: Dec 20, 2024 (8 days left)  
+                  | Save: 15 kg CO2e/month
+                  | Status: 🔴 Not Started
+                  | [✅ Complete] [✏️ Edit] [🗑️ Delete]
+                  | [📱 Find WhatsApp Groups] [🗺️ Check Routes]
+  }
+  --
+  🟡 MEDIUM PRIORITY - UC-07.4
+  {
+    ⏳ T-07.2.001 | Create "Meatless Monday" schedule
+                  | Target: Dec 31, 2024 (19 days left)
+                  | Save: 12 kg CO2e/month  
+                  | Status: 🟡 In Progress (60%)
+                  | [✅ Complete] [✏️ Edit] [🗑️ Delete]
+                  | [🍽️ View Recipes] [📅 Set Calendar]
+  }
+  {
+    ⏳ T-07.2.002 | Start organic waste composting
+                  | Target: Dec 25, 2024 (13 days left)
+                  | Save: 5 kg CO2e/month
+                  | Status: 🔴 Not Started  
+                  | [✅ Complete] [✏️ Edit] [🗑️ Delete]
+                  | [🛒 Buy Composter] [📖 Read Guide]
+  }
+  --
+  ✅ COMPLETED THIS WEEK - UC-07.2
+  {
+    ✅ T-07.3.001 | Buy stainless steel water bottle
+                  | Completed: Dec 10, 2024
+                  | Saved: 3 kg CO2e/month
+                  | Time: 2 days (3 days ahead of schedule)
+                  | [👁️ View Details] [📊 View Impact]
+  }
+  {
+    ✅ T-07.3.002 | Register for office bike-to-work program  
+                  | Completed: Dec 8, 2024
+                  | Saved: 10 kg CO2e/month
+                  | Bonus: Got Rp 100k voucher
+                  | [👁️ View Details] [📊 View Impact]
+  }
+  --
+  {
+    {
+      ACHIEVEMENT STATS
+      Total Saved: 28 kg CO2e
+      Average: 5.6 kg/plan
+      Avg Time: 3.2 days
+      Success Rate: 83%
+      
+      [📊 View Trends]
+    } | {
+      REWARDS & ACHIEVEMENTS  
+      Points Earned: +150 points
+      New Badge: "Action Hero"
+      Level Progress: 85% → Lv4
+      
+      Next Milestone:
+      10 completed plans = 🏅
+    }
+  }
+  --
+  [➕ Add New Plan] [🤖 From Recommendations] [📤 Export]
+}
+
+note bottom
+Wireframe ini mendukung:
+- UC-07.1: Membuat Todo dari Rekomendasi
+- UC-07.2: Menandai Todo Selesai
+- UC-07.3: Menghapus Todo
+- AC-07.01 sampai AC-07.39: Todo management flow
+- Class: TodoItem, Recommendation, User
+end note
+
+@enduml

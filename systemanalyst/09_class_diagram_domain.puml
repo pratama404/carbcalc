@@ -1,0 +1,218 @@
+@startuml Class_Diagram_Domain_Model
+!theme plain
+title Class Diagram - Domain Model
+
+package "Domain Models" {
+  class User {
+    +id: String
+    +email: String
+    +passwordHash: String
+    +name: String
+    +role: UserRole
+    +profilePicture: String
+    +ecoPoints: Integer
+    +createdAt: Date
+    +updatedAt: Date
+    --
+    +authenticate(password: String): Boolean
+    +updateProfile(data: Object): Boolean
+    +addEcoPoints(points: Integer): void
+    +getTotalEmissions(): Double
+    +getMonthlyEmissions(): Double
+  }
+
+  enum UserRole {
+    USER
+    PREMIUM
+    GOVERNMENT
+    ADMIN
+  }
+
+  class UserProfile {
+    +userId: String
+    +location: String
+    +householdSize: Integer
+    +incomeRange: String
+    +preferences: JSON
+    +sustainabilityGoals: String[]
+    --
+    +updateLocation(location: String): Boolean
+    +setPreferences(prefs: JSON): Boolean
+    +addGoal(goal: String): Boolean
+  }
+
+  class EmissionActivity {
+    +id: String
+    +userId: String
+    +category: ActivityCategory
+    +type: String
+    +amount: Double
+    +unit: String
+    +emissionValue: Double
+    +activityDate: Date
+    +notes: String
+    +createdAt: Date
+    --
+    +calculateEmission(factor: EmissionFactor): Double
+    +validate(): ValidationResult
+    +updateAmount(newAmount: Double): Boolean
+  }
+
+  enum ActivityCategory {
+    TRANSPORTATION
+    ENERGY
+    FOOD
+    WASTE
+  }
+
+  class EmissionFactor {
+    +id: String
+    +category: ActivityCategory
+    +type: String
+    +factorValue: Double
+    +unit: String
+    +source: String
+    +isActive: Boolean
+    +validFrom: Date
+    +validTo: Date
+    --
+    +isValidForDate(date: Date): Boolean
+    +getFactorForAmount(amount: Double): Double
+  }
+
+  class Recommendation {
+    +id: String
+    +userId: String
+    +title: String
+    +description: String
+    +category: ActivityCategory
+    +difficulty: DifficultyLevel
+    +estimatedReduction: Double
+    +priority: Integer
+    +isImplemented: Boolean
+    +implementedAt: Date
+    +createdAt: Date
+    --
+    +markAsImplemented(): Boolean
+    +calculateImpact(): Double
+  }
+
+  enum DifficultyLevel {
+    EASY
+    MEDIUM
+    HARD
+  }
+
+  class TodoItem {
+    +id: String
+    +userId: String
+    +recommendationId: String
+    +title: String
+    +description: String
+    +priority: Priority
+    +status: TodoStatus
+    +targetDate: Date
+    +completedAt: Date
+    +reminderSet: Boolean
+    --
+    +markAsCompleted(): Boolean
+    +updatePriority(priority: Priority): Boolean
+    +setReminder(date: Date): Boolean
+    +calculateProgress(): Double
+  }
+
+  enum Priority {
+    LOW
+    MEDIUM
+    HIGH
+    URGENT
+  }
+
+  enum TodoStatus {
+    PENDING
+    IN_PROGRESS
+    COMPLETED
+    CANCELLED
+    OVERDUE
+  }
+
+  class Achievement {
+    +id: String
+    +name: String
+    +description: String
+    +badgeIcon: String
+    +category: String
+    +criteria: JSON
+    +points: Integer
+    +rarity: Rarity
+    --
+    +checkCriteria(userData: Object): Boolean
+    +awardToUser(userId: String): UserAchievement
+  }
+
+  enum Rarity {
+    COMMON
+    RARE
+    EPIC
+    LEGENDARY
+  }
+
+  class UserAchievement {
+    +userId: String
+    +achievementId: String
+    +earnedAt: Date
+    +isVisible: Boolean
+    +progress: Double
+    --
+    +toggleVisibility(): Boolean
+    +getDisplayData(): Object
+  }
+
+  class ShareContent {
+    +id: String
+    +userId: String
+    +type: ShareType
+    +contentData: JSON
+    +imageUrl: String
+    +platform: String
+    +shareUrl: String
+    +likes: Integer
+    +shares: Integer
+    +createdAt: Date
+    --
+    +generateImage(): String
+    +shareToSocial(platform: String): Boolean
+    +trackEngagement(): Object
+  }
+
+  enum ShareType {
+    DAILY_SUMMARY
+    WEEKLY_REPORT
+    MONTHLY_REPORT
+    ACHIEVEMENT_BADGE
+    PROFILE_CARD
+    MILESTONE
+  }
+}
+
+' Relationships
+User ||--|| UserProfile : "1:1"
+User ||--o{ EmissionActivity : "1:N"
+User ||--o{ Recommendation : "1:N"
+User ||--o{ TodoItem : "1:N"
+User ||--o{ UserAchievement : "1:N"
+User ||--o{ ShareContent : "1:N"
+
+EmissionActivity }o--|| EmissionFactor : "N:1"
+Recommendation ||--o{ TodoItem : "1:N"
+Achievement ||--o{ UserAchievement : "1:N"
+
+note bottom
+Domain Model ini mendukung:
+- UC-01 sampai UC-10: Semua use case utama
+- WF-01 sampai WF-07: Semua wireframe
+- AC-01 sampai AC-45: Semua activity
+- SQ-01 sampai SQ-34: Semua sequence
+end note
+
+@enduml

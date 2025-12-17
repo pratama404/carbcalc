@@ -1,0 +1,250 @@
+@startuml Class_Diagram_Complete_System
+!theme plain
+title Class Diagram - Complete System Architecture
+
+package "Domain Layer" {
+  class User {
+    +id: String
+    +email: String
+    +name: String
+    +role: UserRole
+    +ecoPoints: Integer
+    --
+    +authenticate(): Boolean
+    +getTotalEmissions(): Double
+  }
+
+  class EmissionActivity {
+    +id: String
+    +userId: String
+    +category: ActivityCategory
+    +amount: Double
+    +emissionValue: Double
+    --
+    +calculateEmission(): Double
+    +validate(): Boolean
+  }
+
+  class Recommendation {
+    +id: String
+    +userId: String
+    +title: String
+    +difficulty: DifficultyLevel
+    +estimatedReduction: Double
+    --
+    +markAsImplemented(): Boolean
+  }
+
+  class TodoItem {
+    +id: String
+    +userId: String
+    +recommendationId: String
+    +status: TodoStatus
+    --
+    +markAsCompleted(): Boolean
+  }
+}
+
+package "Controller Layer" {
+  class AuthController {
+    -authService: AuthService
+    --
+    +login(credentials): Response
+    +register(userData): Response
+    +logout(): Response
+  }
+
+  class CarbonController {
+    -carbonService: CarbonService
+    --
+    +calculateEmission(data): Response
+    +getActivities(userId): Response
+    +updateActivity(id, data): Response
+  }
+
+  class RecommendationController {
+    -aiService: AIService
+    --
+    +getRecommendations(userId): Response
+    +generateNewRecommendations(): Response
+    +markAsImplemented(id): Response
+  }
+
+  class TodoController {
+    -todoService: TodoService
+    --
+    +createTodo(data): Response
+    +getTodos(userId): Response
+    +updateTodoStatus(id, status): Response
+  }
+
+  class ShareController {
+    -shareService: ShareService
+    --
+    +generateShareImage(userId, type): Response
+    +shareToSocial(platform, content): Response
+  }
+}
+
+package "Service Layer" {
+  interface ICarbonService {
+    +calculateEmission(data): Double
+    +saveActivity(data): EmissionActivity
+    +getActivities(userId): List<EmissionActivity>
+  }
+
+  class CarbonService {
+    -factorRepo: EmissionFactorRepository
+    -activityRepo: ActivityRepository
+    --
+    +calculateEmission(data): Double
+    +saveActivity(data): EmissionActivity
+    +getActivities(userId): List<EmissionActivity>
+    +validateActivityData(data): Boolean
+  }
+
+  interface IAIService {
+    +generateRecommendations(userId): List<Recommendation>
+    +analyzeEmissionPattern(activities): AnalysisResult
+  }
+
+  class AIService {
+    -geminiClient: GeminiClient
+    -recommendationRepo: RecommendationRepository
+    --
+    +generateRecommendations(userId): List<Recommendation>
+    +analyzeEmissionPattern(activities): AnalysisResult
+    +formatAIResponse(response): List<Recommendation>
+  }
+
+  class TodoService {
+    -todoRepo: TodoRepository
+    -notificationService: NotificationService
+    --
+    +createTodoFromRecommendation(recId): TodoItem
+    +updateTodoStatus(id, status): Boolean
+    +getTodos(userId): List<TodoItem>
+    +calculateUserProgress(userId): ProgressData
+  }
+
+  class ShareService {
+    -canvasService: CanvasService
+    -socialMediaService: SocialMediaService
+    --
+    +generateShareImage(userId, type): String
+    +shareToTwitter(content): Boolean
+    +shareToInstagram(content): Boolean
+  }
+
+  class AuthService {
+    -userRepo: UserRepository
+    -passwordEncoder: PasswordEncoder
+    --
+    +authenticate(credentials): User
+    +createUser(userData): User
+    +resetPassword(email): Boolean
+  }
+}
+
+package "Repository Layer" {
+  interface IUserRepository {
+    +findById(id): User
+    +findByEmail(email): User
+    +save(user): User
+    +update(id, data): Boolean
+  }
+
+  class UserRepository {
+    -database: Database
+    --
+    +findById(id): User
+    +findByEmail(email): User
+    +save(user): User
+    +getUserStats(userId): UserStats
+  }
+
+  class ActivityRepository {
+    -database: Database
+    --
+    +save(activity): EmissionActivity
+    +findByUserId(userId): List<EmissionActivity>
+    +findByDateRange(userId, start, end): List<EmissionActivity>
+    +getAggregatedData(userId, period): AggregateData
+  }
+
+  class RecommendationRepository {
+    -database: Database
+    --
+    +save(recommendation): Recommendation
+    +findByUserId(userId): List<Recommendation>
+    +markAsImplemented(id): Boolean
+  }
+
+  class TodoRepository {
+    -database: Database
+    --
+    +save(todo): TodoItem
+    +findByUserId(userId): List<TodoItem>
+    +updateStatus(id, status): Boolean
+    +getProgressStats(userId): ProgressStats
+  }
+}
+
+package "External Services" {
+  class GeminiClient {
+    -apiKey: String
+    --
+    +analyzeEmissionPattern(data): String
+    +generateRecommendations(data): String
+  }
+
+  class SocialMediaService {
+    --
+    +postToTwitter(content): Boolean
+    +postToInstagram(content): Boolean
+  }
+
+  class CanvasService {
+    --
+    +generateInfographic(data): String
+    +createShareImage(template, data): String
+  }
+}
+
+' Controller Dependencies
+AuthController --> AuthService
+CarbonController --> CarbonService
+RecommendationController --> AIService
+TodoController --> TodoService
+ShareController --> ShareService
+
+' Service Implementations
+CarbonService ..|> ICarbonService
+AIService ..|> IAIService
+UserRepository ..|> IUserRepository
+
+' Service Dependencies
+CarbonService --> ActivityRepository
+CarbonService --> EmissionFactorRepository
+AIService --> RecommendationRepository
+AIService --> GeminiClient
+TodoService --> TodoRepository
+ShareService --> CanvasService
+ShareService --> SocialMediaService
+AuthService --> UserRepository
+
+' Domain Relationships
+User ||--o{ EmissionActivity
+User ||--o{ Recommendation
+User ||--o{ TodoItem
+Recommendation ||--o{ TodoItem
+
+note bottom
+Complete System mendukung:
+- Semua Use Case (UC-01 sampai UC-10)
+- Semua Activity (AC-01 sampai AC-45)
+- Semua Sequence (SQ-01 sampai SQ-34)
+- Semua Wireframe (WF-01 sampai WF-07)
+end note
+
+@enduml

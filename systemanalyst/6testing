@@ -1,0 +1,296 @@
+
+
+USER ACCEPTANCE TESTING
+Sistem Informasi : 
+A. Informasi Umum
+1
+Nama Proyek
+Aplikasi Kalkulator Jejak Karbon "EcoTrack"
+2
+Tanggal Pengujian
+17 Oktober 2025
+3
+Lokasi Pengujian
+Ruang UAT, Kantor Klien
+4
+Penguji / User
+- Budi (mewakili Pengguna Terdaftar) - Citra (mewakili Administrator)
+5
+Tim Pengembang
+Tim Pengembang EcoTrack
+
+B. Daftar Skenario Pengujian
+
+No
+Skenario Uji / Kebutuhan Fungsional yang dipenuhi
+Langkah Pengujian
+Hasil yang Diharapkan
+Usecase
+Activity Diagram
+Sequence Diagram
+Class
+Kode UI/ Wireframe
+Hasil Aktual
+Status (Lulus/Gagal)
+Catatan
+1
+Login ke sistem
+User memasukkan username dan password yang valid
+Sistem menampilkan dashboard utama
+
+
+
+
+
+
+
+
+
+
+Sesuai
+Lulus
+-
+2
+Tambah data buku baru
+User mengisi form tambah buku dan menyimpan
+Data buku tersimpan dan muncul di daftar buku
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-
+3
+Edit data buku
+User mengubah informasi buku yang sudah ada
+Perubahan tersimpan dan tampil di daftar
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-
+4
+Hapus data buku
+User menghapus salah satu buku
+Data buku hilang dari daftar
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-
+5
+Proses peminjaman buku
+User memilih anggota dan buku untuk dipinjam
+Sistem mencatat transaksi peminjaman
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-
+6
+Proses pengembalian buku
+User mengembalikan buku yang dipinjam
+Status buku berubah menjadi tersedia
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-
+7
+Laporan peminjaman
+User membuka menu laporan
+Laporan menampilkan data peminjaman sesuai periode
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-
+
+
+
+No
+Skenario Uji / Kebutuhan Fungsional yang Dipenuhi
+Langkah Pengujian
+Hasil yang Diharapkan
+Kode Artefak Terkait
+Hasil Aktual
+Status (Lulus/Gagal)
+Catatan
+1
+Pendaftaran Pengguna Baru
+1. Buka halaman utama.
+2. Klik tombol "Daftar".
+3. Isi form pendaftaran dengan data valid.
+4. Klik "Daftar Akun".
+Akun berhasil dibuat, sistem mengarahkan ke halaman login atau langsung ke dasbor.
+UC3, REQ-F.XX (Pendaftaran), WF-XX (Form Daftar)
+Sesuai dengan hasil yang diharapkan.
+Lulus
+-
+2
+Login ke Sistem
+1. Buka halaman login.
+2. Masukkan email dan password yang valid.
+3. Klik tombol "Login".
+Pengguna berhasil login dan sistem menampilkan halaman dasbor utama pengguna.
+UC4, REQ-F.XX (Login), WF-XX (Form Login)
+Sesuai dengan hasil yang diharapkan.
+Lulus
+-
+3
+Menghitung Jejak Karbon (Transaksi Inti)
+1. Login sebagai Pengguna Terdaftar.
+2. Klik "Tambah Aktivitas".
+3. Pilih kategori "Transportasi".
+4. Isi form (jenis kendaraan, jarak tempuh) dan simpan.
+Perhitungan berhasil, data aktivitas baru tersimpan, dan nilai total di dasbor diperbarui secara instan.
+UC5, AD-05, SD-01, REQ-F.01, WF-07.2
+Sesuai dengan hasil yang diharapkan.
+Lulus
+Perhitungan akurat.
+4
+Melihat Dasbor & Riwayat
+1. Login sebagai Pengguna Terdaftar.
+2. Amati halaman Dasbor.
+Dasbor menampilkan total emisi bulanan, grafik lingkaran, dan grafik tren historis dengan data yang benar.
+UC6, REQ-F.05, REQ-F.06, REQ-F.07, WF-07.1
+Sesuai dengan hasil yang diharapkan.
+Lulus
+Visualisasi data jelas.
+5
+Admin: Tambah Faktor Emisi Baru
+1. Login sebagai Administrator.
+2. Masuk ke menu "Kelola Faktor Emisi".
+3. Klik "Tambah Baru", isi form, dan simpan.
+Data faktor emisi baru berhasil tersimpan dan langsung muncul di daftar tabel.
+UC10, AD-11, REQ-F.09, WF-11.2
+Sesuai dengan hasil yang diharapkan.
+Lulus
+-
+6
+Admin: Ubah Faktor Emisi
+1. Login sebagai Administrator.
+2. Pilih salah satu data dan klik "Ubah".
+3. Ubah nilai pada form dan simpan.
+Perubahan data berhasil tersimpan dan nilai yang telah diperbarui tampil dengan benar di daftar tabel.
+UC10, SD-03, REQ-F.10, WF-16
+Sesuai dengan hasil yang diharapkan.
+Lulus
+-
+7
+Admin: Hapus Faktor Emisi
+1. Login sebagai Administrator.
+2. Pilih salah satu data dan klik "Hapus".
+3. Konfirmasi penghapusan pada dialog yang muncul.
+Data tersebut berhasil dihapus dan hilang dari daftar tabel.
+UC10, REQ-F.11, WF-03
+Sesuai dengan hasil yang diharapkan.
+Lulus
+-
+
+
+
+
+C. Ringkasan Hasil UAT
+Keterangan
+Jumlah
+Total Skenario Diuji
+7
+Jumlah Lulus
+7
+Jumlah Gagal
+0
+
+D. Kesimpulan dan Rekomendasi
+Berdasarkan hasil pengujian penerimaan pengguna (UAT) yang telah dilaksanakan, semua skenario uji yang mewakili kebutuhan fungsional utama dari sistem EcoTrack telah berhasil dipenuhi dan berjalan sesuai dengan hasil yang diharapkan. Dengan demikian, sistem dinyatakan diterima oleh pengguna.
+Catatan tambahan: Sistem berjalan stabil dan alur kerja untuk pengguna terdaftar maupun administrator sudah intuitif. Tidak ada isu kritikal yang ditemukan selama sesi pengujian.
+E. Persetujuan
+Pihak
+Nama
+Tanda Tangan
+Tanggal
+Pengguna / User
+
+Reta
+
+
+
+.....................
+17 Oktober 2025
+Tim Pengembang
+Ageng Project Manager
+
+
+
+.....................
+17 Oktober 2025
+Admin 
+Marsha
+
+
+
+.....................
+17 Oktober 2025
+
+
+
+

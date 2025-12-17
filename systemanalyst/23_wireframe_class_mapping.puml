@@ -1,0 +1,188 @@
+@startuml Wireframe_Class_Mapping
+!theme plain
+title Mapping Wireframe ke Class Diagram - Hubungan UI dengan Domain Model
+
+package "Wireframes (UI Layer)" {
+  rectangle "WF-01\nDashboard Utama" as WF01 #LightBlue
+  rectangle "WF-02\nKalkulator Karbon" as WF02 #LightGreen
+  rectangle "WF-03\nHalaman Rekomendasi" as WF03 #LightYellow
+  rectangle "WF-04\nRencana Aksi" as WF04 #LightPink
+  rectangle "WF-05\nSharing Media Sosial" as WF05 #LightCyan
+  rectangle "WF-06\nProfil Pengguna" as WF06 #LightGray
+  rectangle "WF-07\nLaporan & Analytics" as WF07 #LightSalmon
+}
+
+package "Domain Classes" {
+  class User {
+    +id: String
+    +email: String
+    +name: String
+    +ecoPoints: Integer
+    --
+    +getTotalEmissions(): Double
+    +getMonthlyEmissions(): Double
+  }
+  
+  class UserProfile {
+    +userId: String
+    +location: String
+    +householdSize: Integer
+    +preferences: JSON
+    --
+    +updatePreferences(): Boolean
+  }
+  
+  class EmissionActivity {
+    +id: String
+    +userId: String
+    +category: ActivityCategory
+    +amount: Double
+    +emissionValue: Double
+    +activityDate: Date
+    --
+    +calculateEmission(): Double
+  }
+  
+  class EmissionFactor {
+    +id: String
+    +category: ActivityCategory
+    +factorValue: Double
+    +unit: String
+    --
+    +isValidForDate(): Boolean
+  }
+  
+  class Recommendation {
+    +id: String
+    +userId: String
+    +title: String
+    +difficulty: DifficultyLevel
+    +estimatedReduction: Double
+    --
+    +markAsImplemented(): Boolean
+  }
+  
+  class TodoItem {
+    +id: String
+    +userId: String
+    +recommendationId: String
+    +status: TodoStatus
+    +targetDate: Date
+    --
+    +markAsCompleted(): Boolean
+  }
+  
+  class Achievement {
+    +id: String
+    +name: String
+    +description: String
+    +points: Integer
+    --
+    +checkCriteria(): Boolean
+  }
+  
+  class UserAchievement {
+    +userId: String
+    +achievementId: String
+    +earnedAt: Date
+    --
+    +getDisplayData(): Object
+  }
+  
+  class ShareContent {
+    +id: String
+    +userId: String
+    +type: ShareType
+    +contentData: JSON
+    +imageUrl: String
+    --
+    +generateImage(): String
+  }
+}
+
+package "Controller Classes" {
+  class CarbonController {
+    +calculateEmission(): Response
+    +getActivities(): Response
+  }
+  
+  class RecommendationController {
+    +getRecommendations(): Response
+    +generateNewRecommendations(): Response
+  }
+  
+  class TodoController {
+    +createTodo(): Response
+    +getTodos(): Response
+    +updateTodoStatus(): Response
+  }
+  
+  class ShareController {
+    +generateShareImage(): Response
+    +shareToSocial(): Response
+  }
+  
+  class ProfileController {
+    +getProfile(): Response
+    +updateProfile(): Response
+  }
+}
+
+' Wireframe to Domain Class Mappings
+WF01 --> User : "Displays user info,\neco points, level"
+WF01 --> EmissionActivity : "Shows recent activities,\ntoday's summary"
+WF01 --> Achievement : "Shows badges,\nachievements"
+WF01 --> UserAchievement : "Shows earned badges,\nprogress"
+
+WF02 --> EmissionActivity : "CRUD operations,\ninput forms"
+WF02 --> EmissionFactor : "Uses for calculations,\nvalidation"
+WF02 --> User : "Shows user targets,\nprogress"
+
+WF03 --> Recommendation : "Displays AI recommendations,\ndifficulty levels"
+WF03 --> User : "Shows user emission patterns,\nanalysis"
+
+WF04 --> TodoItem : "CRUD todo operations,\nstatus management"
+WF04 --> Recommendation : "Links todos to\nrecommendations"
+WF04 --> User : "Shows user progress,\nstatistics"
+
+WF05 --> ShareContent : "Generate share images,\ntrack sharing"
+WF05 --> User : "User stats for sharing,\nachievements"
+WF05 --> Achievement : "Share achievement badges"
+
+WF06 --> User : "Profile management,\nbasic info"
+WF06 --> UserProfile : "Household info,\npreferences"
+WF06 --> UserAchievement : "Display earned badges"
+WF06 --> Achievement : "Show available badges"
+
+WF07 --> EmissionActivity : "Historical data,\nanalytics"
+WF07 --> User : "User statistics,\ncomparisons"
+
+' Wireframe to Controller Mappings
+WF01 --> CarbonController : "Get dashboard data"
+WF02 --> CarbonController : "Calculate & save emissions"
+WF03 --> RecommendationController : "Get AI recommendations"
+WF04 --> TodoController : "Manage todo items"
+WF05 --> ShareController : "Generate & share content"
+WF06 --> ProfileController : "Profile management"
+WF07 --> CarbonController : "Analytics & reports"
+
+' Domain Class Relationships
+User ||--|| UserProfile
+User ||--o{ EmissionActivity
+User ||--o{ Recommendation
+User ||--o{ TodoItem
+User ||--o{ UserAchievement
+User ||--o{ ShareContent
+EmissionActivity }o--|| EmissionFactor
+Recommendation ||--o{ TodoItem
+Achievement ||--o{ UserAchievement
+
+note bottom
+Mapping ini menunjukkan:
+1. Setiap wireframe menggunakan class domain yang spesifik
+2. Controller sebagai penghubung antara UI dan domain
+3. Konsistensi antara UI design dan data model
+4. Traceability dari requirement ke implementation
+end note
+
+@enduml

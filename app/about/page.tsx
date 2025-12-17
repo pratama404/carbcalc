@@ -1,169 +1,103 @@
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import { Target, Heart, Globe, Users, Award, Zap } from 'lucide-react'
+'use client'
+
+import { motion } from 'framer-motion'
+import { Users, Target, Globe, Heart } from 'lucide-react'
+import Image from 'next/image'
 
 export default function AboutPage() {
-  const values = [
-    {
-      icon: Target,
-      title: 'Mission-Driven',
-      description: 'Empowering individuals and organizations to take meaningful climate action through accessible tools and education.'
-    },
-    {
-      icon: Heart,
-      title: 'Passionate',
-      description: 'We are deeply committed to environmental sustainability and believe in the power of collective action.'
-    },
-    {
-      icon: Globe,
-      title: 'Global Impact',
-      description: 'Working towards a sustainable future for our planet through innovative technology and community engagement.'
-    }
-  ]
-
-  const team = [
-    {
-      name: 'Dr.Eng Ageng',
-      role: 'CEO & Founder',
-      bio: 'Environmental scientist with 15+ years experience in climate research and sustainability.',
-      avatar: '👩‍🔬'
-    },
-    {
-      name: 'Putra',
-      role: 'CTO',
-      bio: 'Tech entrepreneur passionate about using technology to solve environmental challenges.',
-      avatar: '👨‍💻'
-    },
-    {
-      name: 'Pratama',
-      role: 'Head of Sustainability',
-      bio: 'Climate activist and policy expert focused on corporate sustainability initiatives.',
-      avatar: '👩‍🌾'
-    }
-  ]
-
   return (
-    <div className="min-h-screen bg-white">
-      <Header />
-      
-      <main>
-        {/* Hero Section */}
-        <section className="bg-gradient-to-br from-green-50 to-blue-50 py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-6">About CarbCalc</h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              We're on a mission to make carbon tracking accessible, accurate, and actionable for everyone. 
-              Join us in creating a more sustainable future.
+    <div className="min-h-screen pt-24 pb-20">
+      {/* Hero Section */}
+      <section className="container mx-auto px-4 mb-24">
+        <div className="max-w-4xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <span className="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-bold mb-6">
+              <Users className="w-4 h-4 mr-2" />
+              Our Story
+            </span>
+            <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+              Empowering the Next Generation of <span className="text-green-600">Eco-Leaders</span>
+            </h1>
+            <p className="text-xl text-gray-600 leading-relaxed max-w-2xl mx-auto">
+              CarbCalc was born from a simple idea: that students have the power to change the world, one calculation at a time.
             </p>
-          </div>
-        </section>
+          </motion.div>
+        </div>
+      </section>
 
-        {/* Mission & Vision */}
-        <section className="py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Mission</h2>
-                <p className="text-lg text-gray-600 mb-6">
-                  To democratize carbon footprint tracking and empower individuals, families, and businesses 
-                  to make informed decisions about their environmental impact.
-                </p>
-                <p className="text-lg text-gray-600">
-                  We believe that by making carbon tracking simple, accurate, and engaging, we can inspire 
-                  millions of people to take meaningful climate action.
-                </p>
+      {/* Mission & Vision Grid */}
+      <section className="container mx-auto px-4 mb-24">
+        <div className="grid md:grid-cols-3 gap-8">
+          {[
+            {
+              icon: Target,
+              title: "Our Mission",
+              desc: "To provide accessible, data-driven tools that help students understand and reduce their carbon footprint.",
+              color: "bg-green-100 text-green-700"
+            },
+            {
+              icon: Globe,
+              title: "Global Vision",
+              desc: "A world where every individual decision is informed by its environmental impact, leading to a sustainable future.",
+              color: "bg-blue-100 text-blue-700"
+            },
+            {
+              icon: Heart,
+              title: "Community First",
+              desc: "Building a supportive network of eco-conscious students who inspire and hold each other accountable.",
+              color: "bg-red-100 text-red-700"
+            }
+          ].map((item, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+              viewport={{ once: true }}
+              className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 hover:shadow-xl transition-all"
+            >
+              <div className={`w-14 h-14 ${item.color} rounded-2xl flex items-center justify-center mb-6`}>
+                <item.icon className="w-7 h-7" />
               </div>
-              <div className="bg-green-100 p-8 rounded-2xl">
-                <div className="text-center">
-                  <Globe className="w-24 h-24 text-green-600 mx-auto mb-6" />
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4">Our Vision</h3>
-                  <p className="text-gray-700">
-                    A world where every person has the tools and knowledge to live sustainably 
-                    and contribute to a healthier planet.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">{item.title}</h3>
+              <p className="text-gray-600 leading-relaxed">{item.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
 
-        {/* Values */}
-        <section className="py-20 bg-gray-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Values</h2>
-              <p className="text-xl text-gray-600">The principles that guide everything we do</p>
-            </div>
-            
-            <div className="grid md:grid-cols-3 gap-8">
-              {values.map((value, index) => {
-                const Icon = value.icon
-                return (
-                  <div key={index} className="bg-white p-8 rounded-xl shadow-sm text-center">
-                    <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <Icon className="w-8 h-8 text-green-600" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">{value.title}</h3>
-                    <p className="text-gray-600">{value.description}</p>
-                  </div>
-                )
-              })}
-            </div>
+      {/* Stats Section */}
+      <section className="bg-gray-900 text-white py-24 mb-24 relative overflow-hidden rounded-[3rem] mx-4">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-green-500 opacity-20 blur-[100px] rounded-full"></div>
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            {[
+              { num: "50k+", label: "Daily Calculations" },
+              { num: "120", label: "University Partners" },
+              { num: "5k", label: "Tons CO₂ Saved" },
+              { num: "24/7", label: "Real-time Monitors" }
+            ].map((stat, i) => (
+              <div key={i}>
+                <div className="text-4xl lg:text-5xl font-bold text-green-400 mb-2">{stat.num}</div>
+                <div className="text-gray-400 font-medium">{stat.label}</div>
+              </div>
+            ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Team */}
-        <section className="py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Meet Our Team</h2>
-              <p className="text-xl text-gray-600">Passionate experts working to combat climate change</p>
-            </div>
-            
-            <div className="grid md:grid-cols-3 gap-8">
-              {team.map((member, index) => (
-                <div key={index} className="bg-white p-8 rounded-xl shadow-sm text-center">
-                  <div className="text-6xl mb-4">{member.avatar}</div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{member.name}</h3>
-                  <div className="text-green-600 font-medium mb-4">{member.role}</div>
-                  <p className="text-gray-600">{member.bio}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Stats */}
-        <section className="py-20 bg-green-600">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-white mb-4">Our Impact</h2>
-              <p className="text-xl text-green-100">Making a difference together</p>
-            </div>
-            
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-white">
-              <div>
-                <div className="text-4xl font-bold mb-2">2.5M+</div>
-                <div className="text-green-100">kg CO₂ Offset</div>
-              </div>
-              <div>
-                <div className="text-4xl font-bold mb-2">50K+</div>
-                <div className="text-green-100">Active Users</div>
-              </div>
-              <div>
-                <div className="text-4xl font-bold mb-2">15K+</div>
-                <div className="text-green-100">Trees Planted</div>
-              </div>
-              <div>
-                <div className="text-4xl font-bold mb-2">100+</div>
-                <div className="text-green-100">Partners</div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <Footer />
+      {/* Team CTA */}
+      <section className="container mx-auto px-4 text-center">
+        <h2 className="text-3xl font-bold text-gray-900 mb-8">Join the Movement</h2>
+        <p className="text-gray-600 mb-8 max-w-xl mx-auto">We are always looking for passionate students to join our ambassador program.</p>
+        <button className="px-8 py-3 bg-gray-900 text-white rounded-xl font-bold hover:bg-gray-800 transition-colors">
+          Contact Us
+        </button>
+      </section>
     </div>
   )
 }

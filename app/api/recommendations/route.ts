@@ -21,22 +21,22 @@ async function tryMongoDB() {
 export async function POST(request: NextRequest) {
   try {
     const { userId } = await request.json()
-    
+
     const mongo = await tryMongoDB()
     let recentEntries: any[] = []
-    
+
     if (mongo && !useLocal) {
       // Get recent carbon data from MongoDB
       recentEntries = await mongo.CarbonEntry.find({
         userId: userId || 'anonymous'
       })
-      .sort({ createdAt: -1 })
-      .limit(7) // Last 7 days
+        .sort({ createdAt: -1 })
+        .limit(7) // Last 7 days
     } else {
       // Get recent carbon data from local storage
       recentEntries = localDB.carbonEntries.find({ userId: userId || 'anonymous' }).slice(0, 7)
     }
-    
+
     if (recentEntries.length === 0) {
       // Return default recommendations if no data
       const defaultRecommendations = [
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
           difficulty: "easy"
         }
       ]
-      
+
       return NextResponse.json({
         success: true,
         data: {
@@ -68,23 +68,23 @@ export async function POST(request: NextRequest) {
         }
       })
     }
-    
+
     // Calculate averages and trends
     const avgData = {
-      totalCO2: recentEntries.reduce((sum, entry) => sum + entry.totalCO2, 0) / recentEntries.length,
+      totalCO2: recentEntries.reduce((sum, entry) => sum + (entry.totalCO2 || 0), 0) / recentEntries.length,
       breakdown: {
-        transportation: recentEntries.reduce((sum, entry) => sum + entry.breakdown.transportation, 0) / recentEntries.length,
-        energy: recentEntries.reduce((sum, entry) => sum + entry.breakdown.energy, 0) / recentEntries.length,
-        food: recentEntries.reduce((sum, entry) => sum + entry.breakdown.food, 0) / recentEntries.length,
-        waste: recentEntries.reduce((sum, entry) => sum + entry.breakdown.waste, 0) / recentEntries.length
+        transportation: recentEntries.reduce((sum, entry) => sum + (entry.breakdown?.transportation || 0), 0) / recentEntries.length,
+        energy: recentEntries.reduce((sum, entry) => sum + (entry.breakdown?.energy || 0), 0) / recentEntries.length,
+        food: recentEntries.reduce((sum, entry) => sum + (entry.breakdown?.food || 0), 0) / recentEntries.length,
+        waste: recentEntries.reduce((sum, entry) => sum + (entry.breakdown?.waste || 0), 0) / recentEntries.length
       },
-      trend: recentEntries.length > 1 ? 
-        (recentEntries[0].totalCO2 - recentEntries[recentEntries.length - 1].totalCO2) / recentEntries.length : 0
+      trend: recentEntries.length > 1 ?
+        ((recentEntries[0]?.totalCO2 || 0) - (recentEntries[recentEntries.length - 1]?.totalCO2 || 0)) / recentEntries.length : 0
     }
-    
+
     // Get AI recommendations
     const recommendations = await getAIRecommendations(avgData)
-    
+
     return NextResponse.json({
       success: true,
       data: {
@@ -93,10 +93,39 @@ export async function POST(request: NextRequest) {
       }
     })
   } catch (error) {
-    console.error('Recommendations error:', error)
-    return NextResponse.json(
-      { success: false, error: 'Failed to generate recommendations' },
-      { status: 500 }
-    )
+    console.error('Recommendations error (using fallback):', error)
+
+    // Fallback recommendations when AI fails
+    const fallbackRecommendations = [
+      {
+        title: "Start Composting",
+        description: "Reduce waste and methane emissions by composting organic scraps",
+        impact: "15-20 kg CO2/month",
+        difficulty: "medium",
+        icon: "♻️"
+      },
+      {
+        title: "Unplug Idle Electronics",
+        description: "Save 'vampire energy' by unplugging devices not in use",
+        impact: "5-10 kg CO2/month",
+        difficulty: "easy",
+        icon: "🔌"
+      },
+      {
+        title: "Cold Water Wash",
+        description: "Wash clothes in cold water to save water heating energy",
+        impact: "3-5 kg CO2/load",
+        difficulty: "easy",
+        icon: "🧺"
+      }
+    ]
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        recommendations: fallbackRecommendations,
+        analysis: { message: "AI services temporarily unavailable, showing general tips" }
+      }
+    })
   }
 }

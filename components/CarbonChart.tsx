@@ -29,9 +29,9 @@ export default function CarbonChart({ data, historicalData }: Props) {
   const getInsights = () => {
     const total = data.total
     const avgDaily = 16.4 // Global average daily CO2 per person
-    const categories = Object.entries(data.breakdown).sort(([,a], [,b]) => b - a)
+    const categories = Object.entries(data.breakdown).sort(([, a], [, b]) => b - a)
     const highestCategory = categories[0]
-    const trend = historicalData && historicalData.length > 1 ? 
+    const trend = historicalData && historicalData.length > 1 ?
       data.total - historicalData[historicalData.length - 2]?.totalCO2 : 0
 
     return {
@@ -109,14 +109,14 @@ export default function CarbonChart({ data, historicalData }: Props) {
         ],
         backgroundColor: [
           'rgba(239, 68, 68, 0.8)',
-          'rgba(245, 158, 11, 0.8)', 
+          'rgba(245, 158, 11, 0.8)',
           'rgba(34, 197, 94, 0.8)',
           'rgba(59, 130, 246, 0.8)'
         ],
         borderColor: [
           'rgba(239, 68, 68, 1)',
           'rgba(245, 158, 11, 1)',
-          'rgba(34, 197, 94, 1)', 
+          'rgba(34, 197, 94, 1)',
           'rgba(59, 130, 246, 1)'
         ],
         borderWidth: 2,
@@ -162,7 +162,7 @@ export default function CarbonChart({ data, historicalData }: Props) {
       },
       tooltip: {
         callbacks: {
-          label: function(context: any) {
+          label: function (context: any) {
             const label = context.label || ''
             const value = context.parsed
             const percentage = ((value / data.total) * 100).toFixed(1)
@@ -186,7 +186,7 @@ export default function CarbonChart({ data, historicalData }: Props) {
   }
 
   const lineChartData = historicalData ? {
-    labels: historicalData.slice(-7).map(entry => 
+    labels: historicalData.slice(-7).map(entry =>
       new Date(entry.createdAt).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
     ),
     datasets: [
@@ -268,22 +268,20 @@ export default function CarbonChart({ data, historicalData }: Props) {
       {/* Main Results Header */}
       <div className="bg-gradient-to-br from-green-50 to-blue-50 p-6 sm:p-8 rounded-xl border">
         <div className="text-center mb-6">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4">Today's Carbon Footprint</h2>
-          
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4">Today&apos;s Carbon Footprint</h2>
+
           {/* Main CO2 Display */}
           <div className="relative inline-block">
-            <div className={`text-4xl sm:text-6xl font-bold mb-2 ${
-              insights.comparison === 'below' ? 'text-green-600' : 
-              insights.comparison === 'above' ? 'text-red-500' : 'text-yellow-500'
-            }`}>
+            <div className={`text-4xl sm:text-6xl font-bold mb-2 ${insights.comparison === 'below' ? 'text-green-600' :
+                insights.comparison === 'above' ? 'text-red-500' : 'text-yellow-500'
+              }`}>
               {data.total.toFixed(1)} <span className="text-lg sm:text-2xl">kg CO₂</span>
             </div>
-            
+
             {/* Comparison Badge */}
-            <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-              insights.comparison === 'below' ? 'bg-green-100 text-green-700' :
-              insights.comparison === 'above' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'
-            }`}>
+            <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${insights.comparison === 'below' ? 'bg-green-100 text-green-700' :
+                insights.comparison === 'above' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'
+              }`}>
               {insights.comparison === 'below' ? (
                 <><TrendingDown className="w-4 h-4 mr-1" /> {insights.percentage.toFixed(1)}% below average</>
               ) : insights.comparison === 'above' ? (
@@ -292,7 +290,7 @@ export default function CarbonChart({ data, historicalData }: Props) {
                 <>Right on average!</>
               )}
             </div>
-            
+
             {/* Insights Button */}
             <button
               onClick={() => setShowInsights(true)}
@@ -302,7 +300,7 @@ export default function CarbonChart({ data, historicalData }: Props) {
               <Lightbulb className="w-4 h-4" />
             </button>
           </div>
-          
+
           <p className="text-gray-600 mt-4 max-w-2xl mx-auto">
             Global average is {insights.avgDaily} kg CO₂ per person per day
           </p>
@@ -329,21 +327,20 @@ export default function CarbonChart({ data, historicalData }: Props) {
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">Category Impact</h3>
           {Object.entries(data.breakdown)
-            .sort(([,a], [,b]) => b - a)
+            .sort(([, a], [, b]) => b - a)
             .map(([category, value], index) => {
               const categoryInfo = getCategoryInsights(category, value)
               const percentage = ((value / data.total) * 100)
               const isHighest = index === 0
-              
+
               return (
-                <div 
-                  key={category} 
-                  className={`p-4 rounded-lg border-l-4 cursor-pointer hover:shadow-md transition-all ${
-                    category === 'transportation' ? 'border-red-500 bg-red-50' :
-                    category === 'energy' ? 'border-yellow-500 bg-yellow-50' :
-                    category === 'food' ? 'border-green-500 bg-green-50' :
-                    'border-blue-500 bg-blue-50'
-                  } ${isHighest ? 'ring-2 ring-orange-200' : ''}`}
+                <div
+                  key={category}
+                  className={`p-4 rounded-lg border-l-4 cursor-pointer hover:shadow-md transition-all ${category === 'transportation' ? 'border-red-500 bg-red-50' :
+                      category === 'energy' ? 'border-yellow-500 bg-yellow-50' :
+                        category === 'food' ? 'border-green-500 bg-green-50' :
+                          'border-blue-500 bg-blue-50'
+                    } ${isHighest ? 'ring-2 ring-orange-200' : ''}`}
                   onClick={() => setSelectedCategory(category)}
                 >
                   <div className="flex items-center justify-between">
@@ -359,9 +356,8 @@ export default function CarbonChart({ data, historicalData }: Props) {
                     </div>
                     <div className="text-right">
                       <div className="font-bold text-lg">{value.toFixed(1)} kg</div>
-                      <div className={`text-xs ${
-                        value > (categoryInfo?.benchmark || 0) ? 'text-red-600' : 'text-green-600'
-                      }`}>
+                      <div className={`text-xs ${value > (categoryInfo?.benchmark || 0) ? 'text-red-600' : 'text-green-600'
+                        }`}>
                         {value > (categoryInfo?.benchmark || 0) ? 'Above' : 'Below'} avg
                       </div>
                     </div>
@@ -379,9 +375,8 @@ export default function CarbonChart({ data, historicalData }: Props) {
             <h3 className="text-lg font-semibold">7-Day Trend vs Global Average</h3>
             <div className="flex items-center space-x-2">
               {insights.trend !== 0 && (
-                <div className={`flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                  insights.trendDirection === 'down' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                }`}>
+                <div className={`flex items-center px-2 py-1 rounded-full text-xs font-medium ${insights.trendDirection === 'down' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                  }`}>
                   {insights.trendDirection === 'down' ? (
                     <><TrendingDown className="w-3 h-3 mr-1" /> -{Math.abs(insights.trend).toFixed(1)} kg</>
                   ) : (
@@ -411,14 +406,13 @@ export default function CarbonChart({ data, historicalData }: Props) {
                   <X className="w-6 h-6" />
                 </button>
               </div>
-              
+
               <div className="space-y-6">
                 {/* Overall Assessment */}
-                <div className={`p-4 rounded-lg ${
-                  insights.comparison === 'below' ? 'bg-green-50 border border-green-200' :
-                  insights.comparison === 'above' ? 'bg-red-50 border border-red-200' :
-                  'bg-yellow-50 border border-yellow-200'
-                }`}>
+                <div className={`p-4 rounded-lg ${insights.comparison === 'below' ? 'bg-green-50 border border-green-200' :
+                    insights.comparison === 'above' ? 'bg-red-50 border border-red-200' :
+                      'bg-yellow-50 border border-yellow-200'
+                  }`}>
                   <h4 className="font-semibold mb-2 flex items-center">
                     {insights.comparison === 'below' ? (
                       <><Target className="w-5 h-5 mr-2 text-green-600" /> Great Job!</>
@@ -429,11 +423,11 @@ export default function CarbonChart({ data, historicalData }: Props) {
                     )}
                   </h4>
                   <p className="text-sm text-gray-700">
-                    {insights.comparison === 'below' ? 
+                    {insights.comparison === 'below' ?
                       `You're doing excellent! Your footprint is ${insights.percentage.toFixed(1)}% below the global average.` :
-                    insights.comparison === 'above' ?
-                      `Your footprint is ${insights.percentage.toFixed(1)}% above average. Small changes can make a big difference!` :
-                      'You\'re right on the global average. Every small action counts towards improvement!'}
+                      insights.comparison === 'above' ?
+                        `Your footprint is ${insights.percentage.toFixed(1)}% above average. Small changes can make a big difference!` :
+                        'You\'re right on the global average. Every small action counts towards improvement!'}
                   </p>
                 </div>
 
@@ -460,9 +454,8 @@ export default function CarbonChart({ data, historicalData }: Props) {
 
                 {/* Trend Analysis */}
                 {insights.trend !== 0 && (
-                  <div className={`p-4 rounded-lg ${
-                    insights.trendDirection === 'down' ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'
-                  }`}>
+                  <div className={`p-4 rounded-lg ${insights.trendDirection === 'down' ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'
+                    }`}>
                     <h4 className="font-semibold mb-2 flex items-center">
                       {insights.trendDirection === 'down' ? (
                         <><TrendingDown className="w-5 h-5 mr-2 text-green-600" /> Positive Trend!</>
@@ -497,7 +490,7 @@ export default function CarbonChart({ data, historicalData }: Props) {
                   <X className="w-6 h-6" />
                 </button>
               </div>
-              
+
               <div className="space-y-4">
                 <div className="p-3 bg-blue-50 rounded-lg">
                   <h4 className="font-semibold text-blue-900 mb-1">Your Impact</h4>

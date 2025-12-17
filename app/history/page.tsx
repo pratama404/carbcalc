@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft, Calendar, TrendingDown, TrendingUp, BarChart3 } from 'lucide-react'
@@ -16,16 +16,7 @@ function HistoryContent() {
 
   const userId = session?.user?.email || 'demo-user'
 
-  useEffect(() => {
-    if (status === 'loading') return
-    if (!session) {
-      router.push('/auth/signin')
-      return
-    }
-    fetchHistoricalData()
-  }, [session, status, router])
-
-  const fetchHistoricalData = async () => {
+  const fetchHistoricalData = useCallback(async () => {
     try {
       const response = await fetch(`/api/carbon?userId=${userId}&days=90`)
       const result = await response.json()
@@ -40,7 +31,16 @@ function HistoryContent() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [userId])
+
+  useEffect(() => {
+    if (status === 'loading') return
+    if (!session) {
+      router.push('/auth/signin')
+      return
+    }
+    fetchHistoricalData()
+  }, [session, status, router, fetchHistoricalData])
 
   if (status === 'loading' || loading) {
     return (
@@ -86,11 +86,10 @@ function HistoryContent() {
                     <div
                       key={entry._id}
                       onClick={() => setSelectedEntry(entry)}
-                      className={`p-4 rounded-lg cursor-pointer transition-colors ${
-                        selectedEntry?._id === entry._id
-                          ? 'bg-green-100 border-2 border-green-500'
-                          : 'bg-gray-50 hover:bg-gray-100 border-2 border-transparent'
-                      }`}
+                      className={`p-4 rounded-lg cursor-pointer transition-colors ${selectedEntry?._id === entry._id
+                        ? 'bg-green-100 border-2 border-green-500'
+                        : 'bg-gray-50 hover:bg-gray-100 border-2 border-transparent'
+                        }`}
                     >
                       <div className="flex justify-between items-center">
                         <div>
@@ -116,7 +115,7 @@ function HistoryContent() {
 
             <div className="lg:col-span-2">
               {selectedEntry && (
-                <CarbonChart 
+                <CarbonChart
                   data={{
                     total: selectedEntry.totalCO2,
                     breakdown: selectedEntry.breakdown

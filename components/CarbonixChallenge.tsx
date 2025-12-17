@@ -1,7 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
+import { useSession } from 'next-auth/react'
 import { Camera, Upload, TreePine, Recycle, Bus, Bike, Zap, Trash2, Award, Clock, CheckCircle, XCircle } from 'lucide-react'
+import { useToast } from '@/context/ToastContext'
 
 interface Challenge {
   _id: string
@@ -14,7 +17,7 @@ interface Challenge {
   createdAt: string
 }
 
-const CHALLENGE_TYPES = {
+const CHALLENGE_TYPES: Record<string, { icon: any, color: string, bg: string }> = {
   tree_planting: { icon: TreePine, color: 'text-green-600', bg: 'bg-green-50' },
   waste_donation: { icon: Trash2, color: 'text-blue-600', bg: 'bg-blue-50' },
   recycling: { icon: Recycle, color: 'text-purple-600', bg: 'bg-purple-50' },
@@ -23,7 +26,15 @@ const CHALLENGE_TYPES = {
   energy_saving: { icon: Zap, color: 'text-yellow-600', bg: 'bg-yellow-50' }
 }
 
-export default function CarbonixChallenge() {
+interface Props {
+  userId?: string
+}
+
+export default function CarbonixChallenge({ userId: propUserId }: Props) {
+  const { data: session } = useSession()
+  const { addToast } = useToast()
+  const userId = propUserId || session?.user?.email || ''
+
   const [challenges, setChallenges] = useState<Challenge[]>([])
   const [activeTab, setActiveTab] = useState<'available' | 'my-challenges'>('available')
   const [showSubmitForm, setShowSubmitForm] = useState(false)
@@ -35,6 +46,12 @@ export default function CarbonixChallenge() {
   })
   const [loading, setLoading] = useState(false)
   const [uploading, setUploading] = useState(false)
+
+  useEffect(() => {
+    if (userId) {
+      fetchChallenges(userId)
+    }
+  }, [userId])
 
   const availableChallenges = [
     {
@@ -87,9 +104,9 @@ export default function CarbonixChallenge() {
     }
   ]
 
-  const fetchChallenges = async () => {
+  const fetchChallenges = async (userId: string) => {
     try {
-      const response = await fetch('/api/challenges?userId=demo-user&userRole=user')
+      const response = await fetch(`/api/challenges?userId=${userId}&userRole=user`)
       const result = await response.json()
       if (result.success) {
         setChallenges(result.data)
@@ -128,7 +145,7 @@ export default function CarbonixChallenge() {
       }))
     } catch (error) {
       console.error('Upload failed:', error)
-      alert('Failed to upload images. Please try again.')
+      addToast('Failed to upload images. Please try again.', 'error')
     } finally {
       setUploading(false)
     }
@@ -142,7 +159,7 @@ export default function CarbonixChallenge() {
   }
 
   const submitChallenge = async () => {
-    if (!selectedChallenge || !evidence.description) return
+    if (!selectedChallenge || !evidence.description || !userId) return
 
     setLoading(true)
     try {
@@ -152,7 +169,7 @@ export default function CarbonixChallenge() {
         body: JSON.stringify({
           type: selectedChallenge,
           evidence,
-          userId: 'demo-user'
+          userId
         })
       })
 
@@ -161,20 +178,17 @@ export default function CarbonixChallenge() {
         setShowSubmitForm(false)
         setSelectedChallenge('')
         setEvidence({ photos: [], description: '', location: '' })
-        fetchChallenges()
-        alert('Challenge submitted successfully! It will be reviewed by our team.')
+        if (userId) fetchChallenges(userId)
+        addToast('Challenge submitted successfully! It will be reviewed by our team.', 'success')
       }
     } catch (error) {
       console.error('Failed to submit challenge:', error)
-      alert('Failed to submit challenge. Please try again.')
+      addToast('Failed to submit challenge. Please try again.', 'error')
     } finally {
       setLoading(false)
     }
   }
 
-  useEffect(() => {
-    fetchChallenges()
-  }, [])
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -194,21 +208,19 @@ export default function CarbonixChallenge() {
         <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
           <button
             onClick={() => setActiveTab('available')}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-              activeTab === 'available'
-                ? 'bg-white text-gray-900 shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === 'available'
+              ? 'bg-white text-gray-900 shadow-sm'
+              : 'text-gray-600 hover:text-gray-900'
+              }`}
           >
             Available Challenges
           </button>
           <button
             onClick={() => setActiveTab('my-challenges')}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-              activeTab === 'my-challenges'
-                ? 'bg-white text-gray-900 shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === 'my-challenges'
+              ? 'bg-white text-gray-900 shadow-sm'
+              : 'text-gray-600 hover:text-gray-900'
+              }`}
           >
             My Challenges
           </button>
@@ -223,14 +235,14 @@ export default function CarbonixChallenge() {
             const bgColor = CHALLENGE_TYPES[challenge.type as keyof typeof CHALLENGE_TYPES].bg
 
             return (
-              <div key={challenge.type} className="bg-white p-6 rounded-xl shadow-sm border hover:shadow-md transition-shadow">
+              <div key={challenge.type} className="bg-white p-6 rounded-xl shadow-sm border card-hover">
                 <div className={`w-12 h-12 rounded-lg ${bgColor} flex items-center justify-center mb-4`}>
                   <ChallengeIcon className={`w-6 h-6 ${iconColor}`} />
                 </div>
-                
+
                 <h3 className="text-lg font-semibold mb-2">{challenge.title}</h3>
                 <p className="text-gray-600 text-sm mb-4">{challenge.description}</p>
-                
+
                 <div className="flex justify-between items-center mb-4">
                   <div className="text-sm">
                     <span className="text-green-600 font-semibold">{challenge.carbonImpact} kg CO₂</span>
@@ -241,13 +253,12 @@ export default function CarbonixChallenge() {
                     <span className="text-sm font-semibold">{challenge.ecoPoints} points</span>
                   </div>
                 </div>
-                
+
                 <div className="flex justify-between items-center">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    challenge.difficulty === 'Easy' ? 'bg-green-100 text-green-700' :
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${challenge.difficulty === 'Easy' ? 'bg-green-100 text-green-700' :
                     challenge.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-700' :
-                    'bg-red-100 text-red-700'
-                  }`}>
+                      'bg-red-100 text-red-700'
+                    }`}>
                     {challenge.difficulty}
                   </span>
                   <button
@@ -255,7 +266,7 @@ export default function CarbonixChallenge() {
                       setSelectedChallenge(challenge.type)
                       setShowSubmitForm(true)
                     }}
-                    className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700"
+                    className="btn-primary text-white px-4 py-2 rounded-lg text-sm shadow-md"
                   >
                     Take Challenge
                   </button>
@@ -280,7 +291,7 @@ export default function CarbonixChallenge() {
               const iconColor = CHALLENGE_TYPES[challenge.type as keyof typeof CHALLENGE_TYPES].color
 
               return (
-                <div key={challenge._id} className="bg-white p-6 rounded-xl shadow-sm border">
+                <div key={challenge._id} className="bg-white p-6 rounded-xl shadow-sm border card-hover">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center">
                       <ChallengeIcon className={`w-6 h-6 ${iconColor} mr-3`} />
@@ -313,7 +324,7 @@ export default function CarbonixChallenge() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl p-6 max-w-md w-full">
             <h3 className="text-lg font-semibold mb-4">Submit Challenge Evidence</h3>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-2">Description *</label>
@@ -325,7 +336,7 @@ export default function CarbonixChallenge() {
                   placeholder="Describe what you did and how it helps the environment..."
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium mb-2">Location</label>
                 <input
@@ -336,10 +347,10 @@ export default function CarbonixChallenge() {
                   placeholder="Where did this take place?"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium mb-2">Photos (Optional)</label>
-                
+
                 {/* Photo Upload Area */}
                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
                   <input
@@ -369,16 +380,19 @@ export default function CarbonixChallenge() {
                     )}
                   </label>
                 </div>
-                
+
                 {/* Uploaded Photos Preview */}
                 {evidence.photos.length > 0 && (
                   <div className="mt-4 grid grid-cols-2 gap-3">
                     {evidence.photos.map((photo, index) => (
                       <div key={index} className="relative group">
-                        <img
+                        <Image
                           src={photo}
                           alt={`Evidence ${index + 1}`}
+                          width={400}
+                          height={300}
                           className="w-full h-24 object-cover rounded-lg border"
+                          unoptimized
                         />
                         <button
                           onClick={() => removePhoto(index)}
@@ -392,7 +406,7 @@ export default function CarbonixChallenge() {
                 )}
               </div>
             </div>
-            
+
             <div className="flex space-x-3 mt-6">
               <button
                 onClick={() => setShowSubmitForm(false)}
@@ -403,7 +417,7 @@ export default function CarbonixChallenge() {
               <button
                 onClick={submitChallenge}
                 disabled={loading || uploading || !evidence.description}
-                className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
+                className="flex-1 px-4 py-2 btn-primary text-white rounded-lg disabled:opacity-50 shadow-md"
               >
                 {loading ? 'Submitting...' : uploading ? 'Uploading...' : 'Submit'}
               </button>

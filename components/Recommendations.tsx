@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Lightbulb, Plus, CheckCircle } from 'lucide-react'
 
 interface Recommendation {
@@ -19,7 +19,7 @@ export default function Recommendations({ userId, onAddTodo }: Props) {
   const [recommendations, setRecommendations] = useState<Recommendation[]>([])
   const [loading, setLoading] = useState(false)
 
-  const fetchRecommendations = async () => {
+  const fetchRecommendations = useCallback(async () => {
     setLoading(true)
     try {
       const response = await fetch('/api/recommendations', {
@@ -27,7 +27,7 @@ export default function Recommendations({ userId, onAddTodo }: Props) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId })
       })
-      
+
       const result = await response.json()
       if (result.success) {
         setRecommendations(result.data.recommendations)
@@ -37,11 +37,11 @@ export default function Recommendations({ userId, onAddTodo }: Props) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [userId])
 
   useEffect(() => {
     fetchRecommendations()
-  }, [userId])
+  }, [fetchRecommendations])
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
@@ -96,9 +96,9 @@ export default function Recommendations({ userId, onAddTodo }: Props) {
                 </button>
               </div>
             </div>
-            
+
             <p className="text-gray-600 text-sm mb-2">{rec.description}</p>
-            
+
             <div className="flex items-center text-sm text-green-600">
               <CheckCircle className="w-4 h-4 mr-1" />
               <span>Potential impact: {rec.impact}</span>

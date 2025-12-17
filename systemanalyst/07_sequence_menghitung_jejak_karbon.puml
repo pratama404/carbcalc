@@ -1,0 +1,67 @@
+@startuml Sequence_Menghitung_Jejak_Karbon
+!theme plain
+title Sequence Diagram - UC-03: Menghitung Jejak Karbon
+
+actor "Pengguna" as User
+participant "WF-02\nKalkulator UI" as UI
+participant "CarbonController" as Controller
+participant "CarbonService" as Service
+participant "EmissionFactorRepo" as FactorRepo
+participant "ActivityRepo" as ActivityRepo
+participant "Database" as DB
+
+User -> UI: SQ-03.01: pilihKategoriAktivitas(kategori)
+activate UI
+UI -> UI: SQ-03.02: tampilkanFormInput(kategori)
+UI --> User: SQ-03.03: form input aktivitas
+
+User -> UI: SQ-03.04: submitDataAktivitas(dataAktivitas)
+UI -> Controller: SQ-03.05: hitungJejakKarbon(dataAktivitas)
+activate Controller
+
+Controller -> Service: SQ-03.06: kalkulasiEmisi(dataAktivitas)
+activate Service
+
+Service -> FactorRepo: SQ-03.07: getFaktorEmisi(kategori, jenisAktivitas)
+activate FactorRepo
+FactorRepo -> DB: SQ-03.08: SELECT faktor_emisi WHERE kategori=? AND jenis=?
+activate DB
+DB --> FactorRepo: SQ-03.09: faktorEmisiData
+deactivate DB
+FactorRepo --> Service: SQ-03.10: faktorEmisi
+deactivate FactorRepo
+
+Service -> Service: SQ-03.11: totalEmisi = dataAktivitas.jumlah * faktorEmisi.nilai
+Service --> Controller: SQ-03.12: hasilKalkulasi
+deactivate Service
+
+Controller -> ActivityRepo: SQ-03.13: simpanDataAktivitas(dataAktivitas, totalEmisi)
+activate ActivityRepo
+ActivityRepo -> DB: SQ-03.14: INSERT INTO aktivitas_emisi VALUES(...)
+activate DB
+DB --> ActivityRepo: SQ-03.15: success
+deactivate DB
+ActivityRepo --> Controller: SQ-03.16: dataTersimpan
+deactivate ActivityRepo
+
+Controller -> Controller: SQ-03.17: updateStatistikPengguna()
+Controller -> Controller: SQ-03.18: cekAchievementBaru()
+
+Controller --> UI: SQ-03.19: responseHasil(totalEmisi, dataTersimpan)
+deactivate Controller
+
+UI -> UI: SQ-03.20: updateDashboard()
+note right: Konsisten dengan WF-01: Dashboard
+
+UI -> UI: SQ-03.21: tampilkanNotifikasi("Data berhasil disimpan")
+UI --> User: SQ-03.22: hasilJejakKarbon
+deactivate UI
+
+note over User, DB
+Sequence ini konsisten dengan:
+- Activity AC-03.11 sampai AC-03.19
+- Wireframe WF-02: Kalkulator Karbon
+- Use Case UC-03: Menghitung Jejak Karbon
+end note
+
+@enduml

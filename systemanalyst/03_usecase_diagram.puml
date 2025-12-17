@@ -1,0 +1,158 @@
+@startuml UseCase_CarbCalc_System
+!theme plain
+skinparam usecase {
+    BackgroundColor LightBlue
+    BorderColor DarkBlue
+}
+
+left to right direction
+
+actor "Pengguna" as User #LightGreen
+actor "Administrator" as Admin #Orange  
+actor "Peneliti" as Researcher #Yellow
+actor "Sistem AI" as AI #LightPink
+
+rectangle "Carbon Calculator System" {
+  
+  package "Authentication" {
+    usecase "UC-01\nMengelola Autentikasi" as UC01
+    usecase "UC-01.1\nMelakukan Login" as UC011
+    usecase "UC-01.2\nMelakukan Registrasi" as UC012
+    usecase "UC-01.3\nMereset Password" as UC013
+  }
+  
+  package "Profile Management" {
+    usecase "UC-02\nMengelola Profil" as UC02
+    usecase "UC-02.1\nMelihat Profil" as UC021
+    usecase "UC-02.2\nMengubah Profil" as UC022
+    usecase "UC-02.3\nMengelola Achievement" as UC023
+  }
+  
+  package "Carbon Calculation" {
+    usecase "UC-03\nMenghitung Jejak Karbon" as UC03
+    usecase "UC-03.1\nMenginput Data Transportasi" as UC031
+    usecase "UC-03.2\nMenginput Data Energi" as UC032
+    usecase "UC-03.3\nMenginput Data Makanan" as UC033
+    usecase "UC-03.4\nMenginput Data Limbah" as UC034
+  }
+  
+  package "Data Management" {
+    usecase "UC-04\nMengelola Data Aktivitas" as UC04
+    usecase "UC-04.1\nMenambah Data Aktivitas" as UC041
+    usecase "UC-04.2\nMelihat Data Aktivitas" as UC042
+    usecase "UC-04.3\nMengubah Data Aktivitas" as UC043
+    usecase "UC-04.4\nMenghapus Data Aktivitas" as UC044
+  }
+  
+  package "Visualization" {
+    usecase "UC-05\nMelihat Visualisasi Data" as UC05
+    usecase "UC-05.1\nMelihat Dashboard" as UC051
+    usecase "UC-05.2\nMelihat Chart Emisi" as UC052
+    usecase "UC-05.3\nMenggenerate Laporan" as UC053
+  }
+  
+  package "AI Recommendations" {
+    usecase "UC-06\nMengelola Rekomendasi" as UC06
+    usecase "UC-06.1\nMenggenerate Rekomendasi AI" as UC061
+    usecase "UC-06.2\nMelihat Rekomendasi" as UC062
+    usecase "UC-06.3\nMenandai Rekomendasi Selesai" as UC063
+  }
+  
+  package "Action Planning" {
+    usecase "UC-07\nMengelola Rencana Aksi" as UC07
+    usecase "UC-07.1\nMembuat Todo dari Rekomendasi" as UC071
+    usecase "UC-07.2\nMenandai Todo Selesai" as UC072
+    usecase "UC-07.3\nMenghapus Todo" as UC073
+  }
+  
+  package "Social Sharing" {
+    usecase "UC-08\nMengelola Berbagi Media Sosial" as UC08
+    usecase "UC-08.1\nMenggenerate Share Image" as UC081
+    usecase "UC-08.2\nMembagikan ke Twitter" as UC082
+    usecase "UC-08.3\nMembagikan ke Instagram" as UC083
+  }
+  
+  package "System Administration" {
+    usecase "UC-09\nMengelola Sistem" as UC09
+    usecase "UC-09.1\nMengelola Pengguna" as UC091
+    usecase "UC-09.2\nMengelola Faktor Emisi" as UC092
+    usecase "UC-09.3\nMelihat Log Sistem" as UC093
+  }
+  
+  package "Research Access" {
+    usecase "UC-10\nMengakses Data Penelitian" as UC10
+    usecase "UC-10.1\nMelihat Data Agregat" as UC101
+    usecase "UC-10.2\nMengekspor Data Riset" as UC102
+  }
+}
+
+' Actor relationships
+User --> UC01
+User --> UC02
+User --> UC03
+User --> UC04
+User --> UC05
+User --> UC06
+User --> UC07
+User --> UC08
+
+Admin --> UC09
+Admin --> UC01
+
+Researcher --> UC10
+Researcher --> UC01
+
+AI --> UC06
+
+' Include relationships
+UC01 ..> UC011 : <<include>>
+UC01 ..> UC012 : <<include>>
+UC01 ..> UC013 : <<include>>
+
+UC02 ..> UC021 : <<include>>
+UC02 ..> UC022 : <<include>>
+UC02 ..> UC023 : <<include>>
+
+UC03 ..> UC031 : <<include>>
+UC03 ..> UC032 : <<include>>
+UC03 ..> UC033 : <<include>>
+UC03 ..> UC034 : <<include>>
+
+UC04 ..> UC041 : <<include>>
+UC04 ..> UC042 : <<include>>
+UC04 ..> UC043 : <<include>>
+UC04 ..> UC044 : <<include>>
+
+UC05 ..> UC051 : <<include>>
+UC05 ..> UC052 : <<include>>
+UC05 ..> UC053 : <<include>>
+
+UC06 ..> UC061 : <<include>>
+UC06 ..> UC062 : <<include>>
+UC06 ..> UC063 : <<include>>
+
+UC07 ..> UC071 : <<include>>
+UC07 ..> UC072 : <<include>>
+UC07 ..> UC073 : <<include>>
+
+UC08 ..> UC081 : <<include>>
+UC08 ..> UC082 : <<include>>
+UC08 ..> UC083 : <<include>>
+
+UC09 ..> UC091 : <<include>>
+UC09 ..> UC092 : <<include>>
+UC09 ..> UC093 : <<include>>
+
+UC10 ..> UC101 : <<include>>
+UC10 ..> UC102 : <<include>>
+
+' Extend relationships
+UC06 ..> UC07 : <<extend>>
+UC05 ..> UC08 : <<extend>>
+UC03 ..> UC04 : <<extend>>
+
+' Generalization
+UC011 <|-- UC012 : generalization
+UC091 <|-- UC092 : generalization
+
+@enduml

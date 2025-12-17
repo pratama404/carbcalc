@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { MongoClient } from 'mongodb'
+import dbConnect from '@/lib/mongodb'
+import User from '@/models/User'
 import bcrypt from 'bcryptjs'
-
-const client = new MongoClient(process.env.MONGODB_URI!)
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,27 +11,41 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    await client.connect()
-    const users = client.db().collection('users')
+    if (password.length < 6) {
+      return NextResponse.json({ error: 'Password must be at least 6 characters' }, { status: 400 })
+    }
+
+    await dbConnect()
     
-    const existingUser = await users.findOne({ email })
+    const existingUser = await User.findOne({ email })
     if (existingUser) {
       return NextResponse.json({ error: 'User already exists' }, { status: 400 })
     }
 
-    const hashedPassword = bcrypt.hashSync(password, 12)
+    const hashedPassword = await bcrypt.hash(password, 12)
     
-    await users.insertOne({
+    const user = new User({
       name,
       email,
       password: hashedPassword,
-      createdAt: new Date()
+      role: 'user'
     })
 
-    return NextResponse.json({ message: 'User created successfully' })
-  } catch (error) {
+    await user.save()
+
+    return NextResponse.json({ 
+      message: 'User created successfully',
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email
+      }
+    })
+  } catch (error: any) {
+    console.error('Registration error:', error)
+    if (error.code === 11000) {
+      return NextResponse.json({ error: 'Email already exists' }, { status: 400 })
+    }
     return NextResponse.json({ error: 'Registration failed' }, { status: 500 })
-  } finally {
-    await client.close()
   }
 }

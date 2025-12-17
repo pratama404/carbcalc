@@ -1,0 +1,122 @@
+@startuml WF-05_Sharing_Media_Sosial
+!theme plain
+title WF-05: Sharing Media Sosial - UC-08 (Mengelola Berbagi Media Sosial)
+
+salt
+{
+  {* CarbCalc | John Doe | (3) }
+  {
+    [Dashboard] | [Calculator] | [Reports] | [Social] | [Settings]
+  }
+  --
+  Share Your Impact - UC-08
+  --
+  {
+    {
+      SHARE TEMPLATES
+      
+      [🌟 Daily Summary]
+      [📊 Monthly Report]  
+      [🏆 Achievement Badge]
+      [👤 Profile Card]
+      [🎯 Milestone]
+      
+      CUSTOMIZE:
+      Background: [Green ^]
+      Style: [Modern ^]
+      Font: [Poppins ^]
+      
+      ✅ Show statistics
+      ✅ Show badge
+      ✅ Show message
+      ❌ Show location
+    } | {
+      PREVIEW
+      
+      {
+        🌱 My Carbon Impact
+        
+        Today: 8.2 kg CO2e
+        This Month: 245 kg
+        Saved: 67 kg CO2e
+        
+        🏆 Eco Warrior Level 3
+        
+        #CarbonFootprint
+        #SustainableLiving
+        
+        Join me at CarbCalc.app
+      }
+    }
+  }
+  --
+  PERSONAL MESSAGE (Optional) - UC-08.1
+  {
+    Successfully reduced my carbon footprint by 15% this month! 🌱
+    Small changes can make a big difference for our planet 🌍
+    
+    #ClimateAction #SustainableLifestyle #CarbonNeutral
+  }
+  --
+  SHARE TO: - UC-08.2, UC-08.3
+  {
+    [🐦 Twitter/X] [📷 Instagram] [📘 Facebook] [💼 LinkedIn]
+    [💾 Download PNG] [📋 Copy Link] [📧 Email] [💬 WhatsApp]
+  }
+  --
+  SHARING HISTORY - UC-08.4
+  {
+    | Date    | Platform  | Template      | Engagement       |
+    | Dec 12  | Twitter   | Daily Summary | 👍 15  🔄 8  💬 3 |
+    | Dec 10  | Instagram | Achievement   | 👍 23  💬 7       |
+    | Dec 8   | LinkedIn  | Monthly       | 👍 31  🔄 12 💬 5 |
+    | Dec 5   | Twitter   | Milestone     | 👍 8   🔄 4  💬 2 |
+  }
+  --
+  {
+    {
+      SHARING ACHIEVEMENTS
+      Total Shares: 47
+      Platforms: 4 active
+      Avg Engagement: 12.3
+      
+      Badge Earned:
+      🌟 "Social Influencer"
+      📢 "Climate Advocate"
+      
+      [🏅 View All Badges]
+    } | {
+      SOCIAL IMPACT
+      Followers Inspired: 156
+      Estimated CO2 Saved: 89kg
+      Community Rank: #23
+      
+      Monthly Growth:
+      Followers: +12 (+8%)
+      Engagement: +15%
+      
+      [👥 View Community]
+    }
+  }
+  --
+  SHARING TIPS
+  • Best posting time: Tue-Thu, 10:00-14:00
+  • Use trending hashtags: #ClimateAction #Sustainability
+  • Tag friends to increase engagement
+  • Consistent sharing 2-3x/week for optimal growth
+  
+  [📚 Full Guide] [🎯 Set Posting Reminders]
+  --
+  [🔄 Refresh Preview] [💾 Save Template] [📊 Analytics]
+}
+
+note bottom
+Wireframe ini mendukung:
+- UC-08.1: Generate Share Image
+- UC-08.2: Share ke Twitter
+- UC-08.3: Share ke Instagram  
+- AC-36 sampai AC-43: Social sharing flow
+- Class: ShareContent, User, SocialMediaService
+end note
+
+@enduml

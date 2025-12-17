@@ -1,6 +1,6 @@
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { TreePine, Zap, Recycle, Calendar, Users, Target } from 'lucide-react'
+import { TreePine, Zap, Recycle, Users, Target, Calendar } from 'lucide-react'
 
 export default function CampaignsPage() {
   const campaigns = [
@@ -37,78 +37,70 @@ export default function CampaignsPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen flex flex-col bg-gray-50">
       <Header />
-      
-      <main>
-        {/* Hero Section */}
-        <section className="bg-gradient-to-br from-green-50 to-blue-50 py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-6">Climate Action Campaigns</h1>
+      <main className="flex-grow bg-gradient-to-br from-green-50 to-blue-50 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">Climate Action Campaigns</h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Join our global community in taking meaningful action against climate change. Every contribution counts!
             </p>
           </div>
-        </section>
 
-        {/* Campaigns Grid */}
-        <section className="py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {campaigns.map((campaign, index) => {
-                const Icon = campaign.icon
-                return (
-                  <div key={index} className="bg-white p-8 rounded-xl shadow-sm border hover:shadow-md transition-shadow">
-                    <div className={`w-16 h-16 rounded-lg bg-${campaign.color}-100 flex items-center justify-center mb-6`}>
-                      <Icon className={`w-8 h-8 text-${campaign.color}-600`} />
-                    </div>
-                    
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-xl font-semibold text-gray-900">{campaign.title}</h3>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        campaign.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'
-                      }`}>
-                        {campaign.status}
-                      </span>
-                    </div>
-                    
-                    <p className="text-gray-600 mb-6">{campaign.description}</p>
-                    
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between text-sm">
-                        <div className="flex items-center text-gray-500">
-                          <Users className="w-4 h-4 mr-2" />
-                          {campaign.participants} participants
-                        </div>
-                        <div className="flex items-center text-gray-500">
-                          <Target className="w-4 h-4 mr-2" />
-                          {campaign.target}
-                        </div>
-                      </div>
-                      
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div 
-                          className={`bg-${campaign.color}-600 h-2 rounded-full transition-all duration-300`}
-                          style={{ width: `${campaign.progress}%` }}
-                        ></div>
-                      </div>
-                      
-                      <div className="text-sm text-gray-600 text-center">
-                        {campaign.progress}% Complete
-                      </div>
-                      
-                      <button className={`w-full bg-${campaign.color}-600 text-white py-3 rounded-lg hover:bg-${campaign.color}-700 font-medium`}>
-                        Join Campaign
-                      </button>
-                    </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {campaigns.map((campaign, index) => {
+              const Icon = campaign.icon
+              return (
+                <div key={index} className={`bg-white p-8 rounded-xl shadow-lg border-2 border-transparent hover:border-${campaign.color}-500 transition-all hover:-translate-y-1`}>
+                  <div className={`w-16 h-16 rounded-2xl bg-${campaign.color}-100 flex items-center justify-center mb-6`}>
+                    <Icon className={`w-8 h-8 text-${campaign.color}-600`} />
                   </div>
-                )
-              })}
-            </div>
-          </div>
-        </section>
-      </main>
 
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-xl font-bold text-gray-900">{campaign.title}</h3>
+                    <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${campaign.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'
+                      }`}>
+                      {campaign.status}
+                    </span>
+                  </div>
+
+                  <p className="text-gray-600 mb-6 leading-relaxed">{campaign.description}</p>
+
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between text-sm font-medium">
+                      <div className="flex items-center text-gray-500">
+                        <Users className="w-4 h-4 mr-2" />
+                        {campaign.participants}
+                      </div>
+                      <div className="flex items-center text-gray-500">
+                        <Target className="w-4 h-4 mr-2" />
+                        {campaign.target}
+                      </div>
+                    </div>
+
+                    <div className="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
+                      <div
+                        className={`bg-${campaign.color}-600 h-full rounded-full transition-all duration-1000 ease-out`}
+                        style={{ width: `${campaign.progress}%` }}
+                      ></div>
+                    </div>
+
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="text-gray-600">{campaign.progress}% Complete</span>
+                      <span className={`text-${campaign.color}-600 font-bold hidden group-hover:block`}>Join Now &rarr;</span>
+                    </div>
+
+                    <button className={`w-full bg-${campaign.color}-600 text-white py-3 rounded-lg hover:bg-${campaign.color}-700 font-bold shadow-md transition-shadow`}>
+                      Join Campaign
+                    </button>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </main>
       <Footer />
     </div>
   )

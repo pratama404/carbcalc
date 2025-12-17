@@ -1,0 +1,109 @@
+@startuml Sequence_Mengelola_Rekomendasi
+!theme plain
+title Sequence Diagram - UC-06: Mengelola Rekomendasi AI
+
+actor "Pengguna" as User
+participant "WF-03\nRekomendasi UI" as UI
+participant "RecommendationController" as Controller
+participant "AIService" as AIService
+participant "GeminiAPI" as Gemini
+participant "UserProfileRepo" as ProfileRepo
+participant "ActivityRepo" as ActivityRepo
+participant "RecommendationRepo" as RecRepo
+participant "Database" as DB
+
+User -> UI: SQ-06.01: klikTombolRekomendasi()
+activate UI
+
+UI -> Controller: SQ-06.02: getRekomendasi(userId)
+activate Controller
+
+Controller -> ProfileRepo: SQ-06.03: getUserProfile(userId)
+activate ProfileRepo
+ProfileRepo -> DB: SQ-06.04: SELECT * FROM user_profiles WHERE user_id=?
+activate DB
+DB --> ProfileRepo: SQ-06.05: profileData
+deactivate DB
+ProfileRepo --> Controller: SQ-06.06: profileData
+deactivate ProfileRepo
+
+Controller -> ActivityRepo: SQ-06.07: getRecentActivities(userId, 30days)
+activate ActivityRepo
+ActivityRepo -> DB: SQ-06.08: SELECT * FROM aktivitas_emisi WHERE user_id=? AND date >= ?
+activate DB
+DB --> ActivityRepo: SQ-06.09: activitiesData
+deactivate DB
+ActivityRepo --> Controller: SQ-06.10: activitiesData
+deactivate ActivityRepo
+
+Controller -> AIService: SQ-06.11: generateRecommendations(profileData, activitiesData)
+activate AIService
+
+AIService -> Gemini: SQ-06.12: analyzeEmissionPattern(userData)
+activate Gemini
+Gemini --> AIService: SQ-06.13: analysisResult
+deactivate Gemini
+
+AIService -> Gemini: SQ-06.14: generatePersonalizedTips(analysisResult)
+activate Gemini
+Gemini --> AIService: SQ-06.15: recommendationsList
+deactivate Gemini
+
+AIService -> AIService: SQ-06.16: formatRecommendations(recommendationsList)
+AIService --> Controller: SQ-06.17: formattedRecommendations
+deactivate AIService
+
+Controller -> RecRepo: SQ-06.18: saveRecommendations(formattedRecommendations)
+activate RecRepo
+RecRepo -> DB: SQ-06.19: INSERT INTO recommendations VALUES(...)
+activate DB
+DB --> RecRepo: SQ-06.20: success
+deactivate DB
+RecRepo --> Controller: SQ-06.21: savedRecommendations
+deactivate RecRepo
+
+Controller --> UI: SQ-06.22: rekomendasiData
+deactivate Controller
+
+UI -> UI: SQ-06.23: tampilkanRekomendasi(rekomendasiData)
+note right: Konsisten dengan WF-03: Halaman Rekomendasi
+
+UI --> User: SQ-06.24: daftarRekomendasi
+deactivate UI
+
+== User Memilih Rekomendasi untuk Dijadikan Todo ==
+
+User -> UI: SQ-06.25: pilihRekomendasi(recommendationId)
+activate UI
+
+UI -> Controller: SQ-06.26: createTodoFromRecommendation(recommendationId)
+activate Controller
+
+Controller -> RecRepo: SQ-06.27: getRecommendation(recommendationId)
+activate RecRepo
+RecRepo -> DB: SQ-06.28: SELECT * FROM recommendations WHERE id=?
+activate DB
+DB --> RecRepo: SQ-06.29: recommendationData
+deactivate DB
+RecRepo --> Controller: SQ-06.30: recommendationData
+deactivate RecRepo
+
+Controller -> Controller: SQ-06.31: createTodoItem(recommendationData)
+Controller --> UI: SQ-06.32: todoCreated
+deactivate Controller
+
+UI -> UI: SQ-06.33: redirectToTodoPage()
+note right: Konsisten dengan WF-04: Halaman Todo
+
+UI --> User: SQ-06.34: konfirmasiTodoTerbuat
+deactivate UI
+
+note over User, DB
+Sequence ini konsisten dengan:
+- Activity AC-25 sampai AC-34
+- Wireframe WF-03: Rekomendasi → WF-04: Todo
+- Use Case UC-06: Mengelola Rekomendasi
+- Use Case UC-07.1: Membuat Todo dari Rekomendasi
+end note
+
+@enduml

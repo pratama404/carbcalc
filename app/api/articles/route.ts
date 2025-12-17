@@ -41,10 +41,11 @@ export async function GET(request: NextRequest) {
     const articles = await Article.find(query)
       .sort({ publishedAt: -1, createdAt: -1 })
       .select('-content') // Exclude full content for list view
+      .limit(50) // Limit results
 
     return NextResponse.json({
       success: true,
-      data: articles
+      data: articles || []
     })
   } catch (error) {
     console.error('Articles fetch error:', error)

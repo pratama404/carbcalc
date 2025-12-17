@@ -1,0 +1,63 @@
+@startuml Proses_Bisnis_TO_BE
+!theme plain
+title Proses Bisnis TO-BE - CarbCalc Automated System
+
+|Pengguna|
+start
+:Buka aplikasi CarbCalc;
+:Login otomatis dengan session;
+
+|CarbCalc System|
+:Tampilkan dashboard personal dengan data real-time;
+
+|Pengguna|
+:Input aktivitas melalui form user-friendly;
+note right: 1-2 menit input per aktivitas
+
+|CarbCalc System|
+:Validasi data otomatis;
+
+|Database|
+:Ambil faktor emisi terkini;
+
+|CarbCalc System|
+:Hitung jejak karbon otomatis;
+:Simpan data terintegrasi;
+:Update dashboard real-time;
+
+|AI Service|
+:Analisis pola emisi pengguna;
+:Generate rekomendasi personal;
+
+|CarbCalc System|
+:Tampilkan rekomendasi dengan prioritas;
+
+|Pengguna|
+if (Terima rekomendasi?) then (ya)
+  :Buat rencana aksi otomatis;
+  
+  |CarbCalc System|
+  :Set reminder dan tracking;
+  :Gamifikasi dengan poin/badge;
+else (tidak)
+  :Lanjut ke aktivitas lain;
+endif
+
+if (Ingin berbagi?) then (ya)
+  |CarbCalc System|
+  :Generate infografis otomatis;
+  :Share ke media sosial dengan 1 klik;
+else (tidak)
+  :Lihat analytics personal;
+endif
+
+|CarbCalc System|
+:Update progress tracking;
+:Kirim notifikasi motivasi;
+
+|Pengguna|
+:Lihat insight dan trend di dashboard;
+
+stop
+
+@enduml

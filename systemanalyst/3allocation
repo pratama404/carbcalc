@@ -1,0 +1,192 @@
+Catatan Awal: Terdapat permintaan untuk menggambarkan proses bisnis dan use case diagram sistem perpustakaan di awal deskripsi tugas. Namun, karena proyek yang sedang dikerjakan secara konsisten sejak Kertas Kerja 1 adalah Aplikasi Kalkulator Jejak Karbon "EcoTrack", maka seluruh pengerjaan Kertas Kerja 3 ini akan difokuskan pada proyek EcoTrack agar relevan dan berkesinambungan.
+Kertas Kerja 3: Melakukan Klasifikasi dan Alokasi Kebutuhan Perangkat Lunak
+Nama Proyek: Aplikasi Kalkulator Jejak Karbon "EcoTrack"
+Activity Diagram Proses Bisnis To-Be
+Berikut adalah Activity Diagram untuk salah satu proses bisnis utama, yaitu "Proses Perhitungan Jejak Karbon".
+Proses: Menghitung Jejak Karbon dari Aktivitas Pengguna Aktor: Pengguna, Sistem EcoTrack
+
+@startuml
+title Activity Diagram: Proses Perhitungan Emisi (Adaptasi)
+
+|Pengguna Terdaftar|
+start
+:Memilih Kategori Emisi (e.g., Transportasi);
+:Mengisi data & menekan 'Simpan';
+
+|Sistem EcoTrack|
+:Menerima & Memvalidasi Data;
+
+if (Perhitungan Pertama Bulan Ini?) then (Ya)
+    :Menetapkan baseline & memberi tips awal;
+else (Tidak)
+    :Membandingkan dengan data sebelumnya;
+endif
+
+:Menampilkan Hasil di Dasbor;
+
+|Pengguna Terdaftar|
+:Melihat pembaruan dasbor;
+stop
+
+@enduml
+
+Klasifikasi Kebutuhan Perangkat Lunak
+Kebutuhan Fungsional (Functional Requirements) 📝
+Ini adalah fitur-fitur spesifik yang harus bisa dilakukan oleh sistem, menjawab pertanyaan "Apa yang sistem lakukan?".
+Manajemen Akun Pengguna
+FUN-01: Sistem harus dapat melakukan pendaftaran pengguna baru menggunakan email dan kata sandi.
+FUN-02: Sistem harus dapat melakukan autentikasi (login) pengguna yang sudah terdaftar.
+FUN-03: Pengguna harus dapat melihat dan mengubah data profil dasar mereka (nama, lokasi).
+FUN-04: Pengguna harus dapat melakukan reset kata sandi melalui tautan yang dikirim ke email.
+Perhitungan Jejak Karbon (Transaksi Inti)
+FUN-05: Sistem harus menyediakan formulir input untuk minimal empat kategori emisi: Konsumsi Listrik, Transportasi, Pola Makan, dan Produksi Sampah.
+FUN-06: Sistem harus dapat menghitung total emisi CO₂e secara otomatis setelah pengguna memasukkan data aktivitas.
+FUN-07: Sistem harus dapat menyimpan setiap entri perhitungan ke dalam riwayat aktivitas pengguna.
+Pelaporan dan Visualisasi
+FUN-08: Sistem harus menampilkan dasbor utama yang merangkum total jejak karbon pengguna.
+FUN-09: Dasbor harus menyajikan rincian emisi per kategori dalam bentuk visual yang mudah dipahami (misalnya, diagram lingkaran).
+FUN-10: Sistem harus dapat menampilkan riwayat jejak karbon pengguna dari waktu ke waktu dalam bentuk grafik tren.
+Administrasi Sistem (Pengelolaan Data)
+FUN-11: Administrator harus memiliki antarmuka khusus untuk mengelola (Create, Read, Update, Delete) data master faktor emisi.
+FUN-12: Administrator harus dapat melihat daftar pengguna terdaftar dan menonaktifkan akun jika perlu.
+Kebutuhan Non-Fungsional (Non-Functional Requirements) ✨
+Ini adalah kriteria kualitas yang mendefinisikan bagaimana sistem seharusnya bekerja, menjawab pertanyaan "Seberapa baik sistem bekerja?".
+Kinerja (Performance)
+NON-01: Waktu respons untuk proses kalkulasi dan pembaruan dasbor tidak boleh lebih dari 3 detik.
+NON-02: Aplikasi harus mampu menangani setidaknya 100 pengguna bersamaan tanpa penurunan kinerja yang signifikan.
+Keamanan (Security)
+NON-03: Semua kata sandi pengguna harus dienkripsi (hashed) saat disimpan di database.
+NON-04: Komunikasi antara aplikasi dan server harus dienkripsi menggunakan HTTPS.
+Kegunaan (Usability)
+NON-05: Antarmuka pengguna harus intuitif dan mudah digunakan oleh pengguna awam tanpa memerlukan panduan khusus.
+NON-06: Aplikasi harus memiliki desain responsif yang dapat beradaptasi dengan baik di perangkat desktop maupun seluler.
+Keandalan (Reliability)
+NON-07: Sistem harus memiliki ketersediaan layanan (uptime) minimal 99.5% per bulan.
+Use Case Diagram
+Diagram ini memenuhi semua ketentuan yang diminta: 3 aktor (Pengguna, Pengguna Terdaftar, Administrator), 8 use case, use case transaksi (Menghitung Jejak Karbon), use case mengelola data (Mengelola Faktor Emisi), generalisasi aktor (Pengguna Terdaftar adalah turunan Pengguna), serta hubungan include dan extend.
+
+
+@startuml
+left to right direction
+title Use Case Diagram Sistem EcoTrack
+
+actor Pengguna
+actor "Pengguna Terdaftar" as PenggunaTerdaftar
+actor Administrator
+
+rectangle "Sistem EcoTrack" {
+  usecase "Melihat Informasi Karbon" as UC1
+  usecase "Mendaftar Akun" as UC2
+  usecase "Login" as UC3
+  
+  usecase "Menghitung Jejak Karbon" as UC4
+  usecase "Melihat Riwayat & Dasbor" as UC5
+  usecase "Mengatur Target Pribadi" as UC_Target
+
+  usecase "Mengelola Faktor Emisi" as UC6
+  usecase "Mengelola Pengguna" as UC7
+}
+
+Pengguna --> UC1
+Pengguna --> UC2
+Pengguna --> UC3
+
+PenggunaTerdaftar --> UC4
+PenggunaTerdaftar --> UC5
+
+Administrator --> UC6
+Administrator --> UC7
+
+UC4 .> (UC3) : <<include>>
+UC5 .> (UC3) : <<include>>
+
+(UC4) .> (UC_Target) : <<extend>>
+
+Pengguna <|-- PenggunaTerdaftar
+@enduml
+
+
+Penjelasan Diagram:
+Aktor:
+Pengguna: Siapa saja yang mengakses aplikasi tanpa login.
+Pengguna Terdaftar: Pengguna yang sudah memiliki akun dan login. Ini adalah generalisasi dari Aktor Pengguna (seorang Pengguna Terdaftar adalah juga seorang Pengguna).
+Administrator: Pengguna dengan hak akses khusus untuk mengelola data master sistem.
+Use Case:
+Melihat Informasi Karbon: Melihat artikel atau info umum (untuk semua Pengguna).
+Mendaftar Akun: Membuat akun baru (untuk Pengguna belum terdaftar).
+Login: Masuk ke sistem.
+Menghitung Jejak Karbon: Use case transaksi inti dimana pengguna memasukkan data aktivitas.
+Melihat Riwayat Perhitungan: Melihat data historis perhitungan.
+Mengelola Faktor Emisi: Use case mengelola data oleh Administrator.
+Mengelola Akun Pengguna: Melihat atau menonaktifkan akun pengguna oleh Administrator.
+Mengatur Target Pengurangan: Fitur opsional untuk menetapkan goal pribadi.
+Hubungan:
+Generalisasi: Pengguna Terdaftar adalah spesialisasi dari Pengguna.
+Include: Menghitung Jejak Karbon dan Melihat Riwayat harus selalu didahului oleh Login. Oleh karena itu, keduanya meng-include use case Login.
+Extend: Mengatur Target Pengurangan adalah fungsionalitas opsional yang bisa dilakukan saat menghitung jejak karbon. Hubungan extend menunjukkan bahwa use case ini tidak wajib dijalankan.
+
+Use Case Description
+Berikut adalah deskripsi untuk use case transaksi "Menghitung Jejak Karbon".
+Komponen
+Deskripsi
+Nama Usecase
+Menghitung Jejak Karbon
+Aktor
+Pengguna Terdaftar
+Deskripsi
+Use case ini memungkinkan Pengguna Terdaftar untuk memasukkan data aktivitas mereka (konsumsi listrik, jarak tempuh, dll.) ke dalam sistem. Sistem kemudian akan mengkalkulasi emisi karbon yang dihasilkan dan memperbarui dasbor pengguna.
+Trigger
+Pengguna Terdaftar memilih menu atau tombol "Hitung Karbon" atau "Tambah Aktivitas" dari dasbor.
+Hubungan
+Asosiasi: Pengguna Terdaftar Include: <<include>> Login Extend: <<extend>> Mengatur Target Pengurangan
+Pre-Condition
+1. Aktor telah berhasil login ke dalam sistem. 2. Sistem telah memuat data faktor emisi yang valid dari database.
+Normal Flow of Event
+1. Aktor memilih kategori emisi yang ingin dihitung (misal: Transportasi). 2. Sistem menampilkan formulir input yang sesuai untuk kategori tersebut. 
+3. Aktor memasukkan data aktivitas yang relevan (misal: jenis kendaraan, jarak tempuh). 
+4. Aktor menekan tombol "Simpan" atau "Hitung". 
+5. Sistem memvalidasi data yang dimasukkan. 
+6. Sistem mengambil faktor emisi yang sesuai dari database. 
+7. Sistem melakukan kalkulasi: Emisi = Data Aktivitas x Faktor Emisi. 
+8. Sistem menyimpan hasil perhitungan ke dalam riwayat akun Aktor. 
+9. Sistem memperbarui data agregat (total emisi) di dasbor Aktor. 
+10. Sistem menampilkan notifikasi sukses dan dasbor yang telah diperbarui kepada Aktor.
+Exceptional Flow
+5a. Data yang dimasukkan tidak valid (misal: bukan angka, di luar rentang wajar). 
+1. Sistem akan menampilkan pesan error yang jelas di dekat kolom input yang salah. 
+2. Sistem tetap berada di halaman formulir, memungkinkan Aktor untuk memperbaiki input. 
+6a. Faktor emisi untuk data yang dimasukkan tidak ditemukan di database. 
+1. Sistem akan menampilkan pesan error umum ("Gagal memproses data, silakan coba lagi"). 
+2. Sistem mencatat (log) kegagalan ini di latar belakang untuk diperiksa oleh Administrator.
+Post-Condition
+1. Data perhitungan baru telah tersimpan di riwayat Aktor. 2. Dasbor Aktor telah diperbarui untuk merefleksikan total jejak karbon yang baru.
+
+
+
+
+Use Case Description
+Sesuai permintaan, berikut adalah deskripsi detail untuk salah satu use case utama, yaitu Mengelola Faktor Emisi (jenis: mengelola data).
+Komponen
+Deskripsi
+Nama Usecase
+Mengelola Faktor Emisi
+Aktor
+Administrator
+Deskripsi
+Use case ini memungkinkan Administrator untuk melakukan operasi CRUD (Create, Read, Update, Delete) pada data master faktor emisi yang menjadi dasar semua perhitungan di dalam sistem. Menjaga data ini tetap akurat dan terbaru adalah hal yang krusial.
+Trigger
+Administrator memilih menu "Manajemen Data" > "Faktor Emisi" setelah login ke panel admin.
+Hubungan
+Asosiasi: Administrator Include: <<include>> Login Extend: - Generalisasi: -
+Pre-Condition
+1. Aktor telah berhasil login ke sistem dengan hak akses sebagai Administrator. 2. Halaman panel admin telah dimuat dengan benar.
+Normal Flow of Event
+1. Aktor mengakses halaman manajemen faktor emisi. 2. Sistem menampilkan daftar semua faktor emisi yang ada dalam bentuk tabel, beserta opsi untuk "Tambah Baru", "Ubah", dan "Hapus". 3. (Subflow 1: Menambah Data) Aktor menekan tombol "Tambah Baru". 4. Sistem menampilkan formulir untuk mengisi detail faktor emisi baru (nama, nilai, satuan, sumber data). 5. Aktor mengisi formulir dan menekan "Simpan". 6. Sistem memvalidasi data dan menyimpannya ke database. 7. Sistem menampilkan pesan sukses dan memperbarui tabel.
+SubFlow
+Subflow 2: Mengubah Data 1. Aktor menekan tombol "Ubah" pada salah satu baris data. 2. Sistem menampilkan formulir yang sudah terisi dengan data yang ada. 3. Aktor mengubah data yang diperlukan dan menekan "Simpan Perubahan". 4. Sistem memvalidasi dan memperbarui data di database. 5. Sistem menampilkan pesan sukses dan kembali ke tabel.
+Exceptional Flow
+6a. Data Input Tidak Valid 1. Jika Aktor memasukkan data yang tidak sesuai format (misal: teks di kolom nilai numerik). 2. Sistem akan menolak penyimpanan. 3. Sistem akan menampilkan kembali formulir dengan menyorot kolom yang salah dan memberikan pesan error (contoh: "Nilai faktor harus berupa angka"). Lainnya: Penghapusan Data 1. Aktor menekan tombol "Hapus" pada salah satu baris data. 2. Sistem akan menampilkan dialog konfirmasi: "Apakah Anda yakin ingin menghapus data ini?". 3. Jika Aktor memilih "Ya", sistem akan menghapus data dari database dan memperbarui tabel.
+Post-Condition
+1. Data master faktor emisi di dalam database telah diperbarui (ditambah, diubah, atau dihapus). 2. Semua perhitungan baru di seluruh sistem akan menggunakan data faktor emisi yang terbaru.
+
+

@@ -1,0 +1,527 @@
+
+
+Software Requirements Specification
+for
+Apps Carbon Track
+Version 1.0 approved
+Prepared by Ageng
+UINSA
+16 October 2025
+
+Table of Contents
+1. Introduction	1
+1.1 Purpose	1
+1.2 Document Conventions	1
+1.3 Intended Audience and Reading Suggestions	2
+1.4 Product Scope	3
+1.5 References	4
+2. Overall Description	5
+2.1 Product Perspective	5
+2.2 Product Functions	6
+2.3 User Classes and Characteristics	8
+2.4 Operating Environment	10
+2.5 Design and Implementation Constraints	11
+2.6 User Documentation	13
+2.7 Assumptions and Dependencies	14
+3. External Interface Requirements	15
+3.1 User Interfaces	15
+3.2 Hardware Interfaces	16
+3.3 Software Interfaces	17
+3.4 Communications Interfaces	18
+4. System Features	19
+4.1 System Feature 1	19
+4.2 System Feature 2 (and so on)	20
+9. Other Nonfunctional Requirements	23
+9.1 Performance Requirements	23
+9.2 Safety Requirements	23
+9.3 Security Requirements	23
+9.4 Software Quality Attributes	23
+9.5 Business Rules	23
+15. Other Requirements	25
+
+
+Revision History
+Name
+Date
+Reason For Changes
+Version
+Ageng Putra Pratama
+16 Oktober 2025
+Pembuatan Dokumen Awal
+1.0
+Ageng Putra Pratama
+17 Oktober 2025
+Menambahkan dokumentasi pada dokumen
+1.1
+
+
+
+
+Introduction
+Purpose 
+Dokumen SRS  ini secara resmi mendefinisikan seluruh kebutuhan fungsional dan non-fungsional untuk pengembangan Aplikasi Kalkulator Jejak Karbon "EcoTrack" versi 1.1. Anggaplah dokumen ini sebagai cetak biru (blueprint) arsitektur dan kontrak bersama yang memastikan semua pihak yang terlibat dalam proyek memiliki pemahaman yang sama, detail, dan terpadu mengenai produk akhir yang akan dihasilkan.
+Ruang lingkup yang dibahas dalam dokumen ini mencakup keseluruhan sistem EcoTrack, yang terdiri dari:
+Aplikasi utama yang berhadapan langsung dengan pengguna (untuk kalkulasi dan pelacakan jejak karbon).
+Panel administratif (untuk pengelolaan data master, pengguna, dan konten).
+Secara spesifik, dokumen ini bertujuan untuk:
+Menjadi Panduan bagi Tim Pengembang: Menyediakan detail teknis yang jelas mengenai fitur, alur kerja, aturan bisnis, dan batasan yang harus diimplementasikan. Ini berfungsi untuk mengurangi ambiguitas, meminimalkan risiko salah interpretasi, dan mencegah potensi pengerjaan ulang yang tidak perlu.
+Menetapkan Batasan Proyek untuk Manajer Proyek dan Klien: Mendefinisikan ruang lingkup proyek (scope) secara tegas untuk mengendalikan scope creep (pembengkakan ruang lingkup yang tidak direncanakan). Dokumen ini menjadi dasar yang kokoh untuk perencanaan jadwal, alokasi sumber daya, dan pengukuran progres proyek.
+Menjadi Dasar Pengujian untuk Tim Penjaminan Kualitas (QA): Berfungsi sebagai kriteria acuan absolut dalam pembuatan skenario pengujian (test cases). Setiap kebutuhan yang tertulis di sini akan diverifikasi dan divalidasi untuk memastikan sistem berjalan sesuai spesifikasi.
+Memberikan Kejelasan dan Jaminan bagi Klien: Memastikan bahwa produk akhir yang akan diterima sesuai dengan visi, ekspektasi, dan tujuan bisnis yang telah disepakati bersama di awal. Dokumen ini adalah jaminan tertulis dari apa yang akan "diselesaikan" dan "diserahkan" di akhir proyek.
+
+Document Conventions
+Untuk menjaga konsistensi dan kemudahan pembacaan, dokumen SKPL ini disusun mengikuti beberapa standar dan konvensi tipografi yang telah ditetapkan. Setiap kebutuhan yang didefinisikan akan memiliki kode identifikasi unik untuk mempermudah pelacakan dan referensi silang, serta tingkat prioritas untuk memandu proses pengembangan.
+
+
+Konvensi
+Contoh
+Deskripsi
+Kode Kebutuhan Fungsional
+REQ-F.01
+Format unik untuk semua kebutuhan yang berkaitan dengan "apa" yang sistem lakukan.
+Kode Kebutuhan Non-Fungsional
+REQ-NF.01
+Format unik untuk semua kebutuhan yang berkaitan dengan "seberapa baik" sistem bekerja.
+Prioritas Tinggi
+[Tinggi]
+Menandakan fitur wajib yang harus ada pada rilis awal produk.
+Prioritas Sedang
+[Sedang]
+Menandakan fitur penting yang dapat dipertimbangkan untuk rilis berikutnya jika ada kendala.
+Prioritas Rendah
+[Rendah]
+Menandakan fitur tambahan yang dapat diimplementasikan jika waktu dan sumber daya memungkinkan.
+Penyorotan Teks
+Teks Tebal
+Digunakan untuk menyorot istilah kunci dan kode identifikasi.
+Penekanan Khusus
+Teks Miring
+Digunakan untuk catatan atau penekanan khusus pada suatu penjelasan.
+Terminologi Teknis
+nama_tabel
+Digunakan untuk menulis nama-nama teknis seperti nama tabel database atau endpoint API.
+
+
+Penting untuk dicatat bahwa prioritas tidak diwariskan; setiap kebutuhan, termasuk sub-kebutuhan, akan memiliki tingkat prioritasnya sendiri yang ditetapkan secara eksplisit untuk memberikan kejelasan maksimal dalam perencanaan.
+
+Untuk menjaga konsistensi dan kemudahan pembacaan, dokumen SKPL ini disusun mengikuti beberapa standar dan konvensi tipografi yang telah ditetapkan. Setiap kebutuhan yang didefinisikan akan memiliki kode identifikasi unik untuk mempermudah pelacakan dan referensi silang. Kebutuhan fungsional akan menggunakan format REQ-F.XX (contoh: REQ-F.01), sedangkan kebutuhan non-fungsional akan menggunakan format REQ-NF.XX (contoh: REQ-NF.01). Setiap kebutuhan juga akan disertai dengan tingkat prioritas yang ditulis dalam kurung siku: [Tinggi], [Sedang], atau [Rendah]. Prioritas [Tinggi] menandakan fitur wajib yang harus ada pada rilis awal produk, [Sedang] menandakan fitur penting yang dapat dipertimbangkan untuk rilis berikutnya jika ada kendala, dan [Rendah] adalah fitur tambahan yang dapat diimplementasikan jika waktu dan sumber daya memungkinkan. Penting untuk dicatat bahwa prioritas tidak diwariskan; setiap kebutuhan, termasuk sub-kebutuhan, akan memiliki tingkat prioritasnya sendiri yang ditetapkan secara eksplisit. Secara tipografi, teks yang dicetak tebal digunakan untuk menyorot istilah kunci dan kode identifikasi, sedangkan teks yang dicetak miring digunakan untuk catatan atau penekanan khusus. Nama-nama teknis seperti nama_tabel_database atau API_endpoint akan ditulis dalam format monospace
+
+
+Intended Audience and Reading Suggestions
+<Jelaskan berbagai jenis pembaca yang ditujukan untuk dokumen tersebut, seperti pengembang, manajer proyek, staf pemasaran, pengguna, penguji, dan penulis dokumentasi. Jelaskan apa yang terkandung dalam SRS ini dan bagaimana pengaturannya. Sarankan urutan untuk membaca dokumen, dimulai dengan bagian ikhtisar dan lanjutkan melalui bagian yang paling relevan dengan setiap jenis pembaca.>
+
+Klien dan Manajer Proyek Disarankan untuk memulai dengan membaca Bagian 1 (Pendahuluan) dan Bagian 2 (Deskripsi Keseluruhan) secara menyeluruh. Bagian ini akan memastikan visi, tujuan, ruang lingkup, dan target pengguna proyek telah selaras dengan ekspektasi bisnis. Selanjutnya, lakukan tinjauan tingkat tinggi pada Bagian 4 (Fitur Sistem) untuk memahami fungsionalitas utama yang akan diterima sebagai hasil akhir proyek.
+Tim Desainer UI/UX Alur pembacaan yang ideal adalah memulai dari Bagian 2.3 (Kelas dan Karakteristik Pengguna) untuk memahami secara mendalam persona pengguna yang menjadi target desain. Kemudian, fokus pada Bagian 3.1 (Antarmuka Pengguna) untuk memahami panduan dan batasan desain, serta Bagian 4 (Fitur Sistem) untuk memetakan alur pengguna (user flow) yang perlu dirancang. Lampiran B, khususnya bagian Wireframe, adalah acuan visual utama yang harus dirujuk dan dikembangkan lebih lanjut.
+Tim Pengembang (Developer) Dianjurkan untuk membaca seluruh dokumen untuk pemahaman konteks yang utuh. Mulailah dengan Bagian 2 untuk mendapatkan gambaran besar. Setelah itu, Bagian 3, 4, dan 5 adalah panduan teknis utama Anda yang harus dipelajari secara mendalam, karena berisi semua spesifikasi yang harus diimplementasikan. Lampiran B, yang berisi Diagram Kelas, ERD, dan Diagram Urutan, akan menjadi cetak biru langsung untuk penulisan kode dan perancangan struktur basis data.
+Tim Penjaminan Kualitas (QA) / Penguji Mulailah dengan pemahaman umum dari Bagian 2. Fokus utama Anda adalah Bagian 4 (Fitur Sistem) dan Bagian 5 (Kebutuhan Non-Fungsional). Setiap kebutuhan yang memiliki kode identifikasi (contoh: REQ-F.01) harus dianggap sebagai item yang dapat dan wajib diuji. Gunakan daftar kebutuhan ini sebagai dasar untuk merancang semua skenario, kasus uji (test cases), dan kriteria keberhasilan pengujian.
+Penulis Dokumentasi Teknis & Bantuan Pengguna Fokus pada Bagian 2.3 (Karakteristik Pengguna) untuk memahami audiens dari dokumentasi yang akan dibuat, serta Bagian 4 (Fitur Sistem) untuk menguraikan setiap fungsi secara detail dalam panduan pengguna atau materi bantuan (on-line help).
+
+Product Scope
+Bagian ini memberikan deskripsi singkat mengenai perangkat lunak EcoTrack, tujuan utamanya, serta manfaat dan sasaran yang ingin dicapai.
+Deskripsi dan Tujuan Perangkat Lunak EcoTrack adalah sebuah platform digital yang dirancang dengan tujuan utama untuk memberdayakan individu agar dapat memahami dan mengambil tindakan nyata terhadap jejak karbon pribadi mereka. Perangkat lunak ini berfungsi sebagai asisten lingkungan personal, menerjemahkan data aktivitas sehari-hari yang kompleks—seperti konsumsi energi dan pola transportasi—menjadi sebuah laporan dampak lingkungan yang sederhana, visual, dan mudah dipahami. Fungsi intinya adalah menghitung, melacak, dan memberikan rekomendasi untuk mengurangi jejak karbon melalui antarmuka aplikasi yang menarik dan edukatif.
+Manfaat Utama bagi Pengguna
+Memberikan Kejelasan atas Dampak: Mengubah angka-angka rumit pada tagihan listrik atau catatan perjalanan menjadi satu skor dampak lingkungan yang jelas dan terukur, sehingga pengguna tahu persis posisi mereka.
+Mengarahkan pada Aksi yang Terarah: Tidak hanya memberitahu "masalah", tetapi juga memberikan rekomendasi solusi yang praktis, relevan, dan dipersonalisasi sesuai dengan sumber emisi terbesar pengguna.
+Menjaga Motivasi Jangka Panjang: Melalui fitur pelacakan progres historis dan elemen gamifikasi (seperti lencana pencapaian), proses perubahan gaya hidup menjadi sebuah perjalanan yang menyenangkan, terukur, dan memuaskan.
+Sasaran Proyek (untuk Versi 1.1) Secara terukur, pengembangan versi awal aplikasi ini memiliki sasaran-sasaran berikut:
+Mengimplementasikan fungsionalitas kalkulator jejak karbon yang akurat untuk minimal empat kategori emisi utama (Transportasi, Konsumsi Listrik, Pola Makan, dan Produksi Sampah).
+Mengembangkan dasbor pengguna yang interaktif dan mampu memvisualisasikan data (total emisi, rincian per kategori, dan tren historis) secara efektif.
+Membangun mesin rekomendasi dasar yang dapat memberikan minimal tiga tips relevan berdasarkan kategori emisi tertinggi pengguna.
+Mencapai target akuisisi 1.000 pengguna aktif dalam enam bulan pertama setelah peluncuran.
+Tujuan Strategis Jangka Panjang Proyek EcoTrack selaras dengan tujuan strategis yang lebih besar, yaitu:
+Edukasi Publik: Meningkatkan literasi iklim dan kesadaran lingkungan di kalangan masyarakat urban di Indonesia
+Pembangunan Komunitas: Menciptakan platform bagi komunitas digital peduli lingkungan yang suportif dan menjadi yang terbesar di Indonesia.
+Kontribusi Data: Menjadi sumber data agregat anonim yang berharga untuk mendukung penelitian akademik dan membantu perumusan kebijakan pemerintah terkait isu-isu lingkungan.
+References
+Dokumen ini merujuk pada beberapa standar industri, dokumen proyek internal, dan sumber data eksternal berikut. Informasi detail disediakan agar pembaca dapat mengakses dokumen rujukan jika diperlukan untuk pemahaman yang lebih mendalam.
+[1] Standar Penyusunan SKPL
+Judul: IEEE Recommended Practice for Software Requirements Specifications (IEEE Std 830-1998)
+Penulis: Institute of Electrical and Electronics Engineers (IEEE)
+Tanggal: 20 Oktober 1998
+Sumber: Dokumen standar industri yang dapat diakses melalui portal IEEE Xplore. Standar ini digunakan sebagai kerangka dasar untuk struktur dan konten dokumen SKPL ini.
+[2] Dokumen Referensi Analisis & Desain (Contoh)
+Judul: Dokumen Studi Kasus: Sistem Informasi Perpustakaan
+Penulis: Tim Analis Sistem (Contoh)
+Tanggal: 15 Oktober 2025
+Sumber: Dokumen internal proyek (Sistem Perpustakaan - Revisi.pdf , Sistem Perpustakaan - Proses Bisnis-Usecase Desc - Usecase Diagram-Activity Diagram-UI.pdf ). Dokumen ini digunakan sebagai referensi utama untuk format, gaya, dan tingkat kedetailan analisis, diagram, serta wireframe.
+[3] Dokumen Visi dan Ruang Lingkup Proyek
+Judul: EcoTrack - Dokumen Visi dan Ruang Lingkup, v1.0
+Penulis: Manajer Proyek
+Tanggal: 1 Oktober 2025
+Lokasi: Repositori dokumen internal proyek. Dokumen ini berisi justifikasi bisnis, visi jangka panjang, dan batasan ruang lingkup awal untuk proyek EcoTrack.
+[4] Sumber Data Utama Faktor Emisi
+Judul: IPCC Emission Factor Database (EFDB)
+Sumber: https://www.ipcc-nggip.iges.or.jp/EFDB/
+Keterangan: Basis data global yang menjadi acuan utama untuk nilai-nilai faktor emisi berbagai sektor.
+Judul: Sistem Inventarisasi Gas Rumah Kaca Nasional (SIGN-SMART)
+Sumber: http://signsmart.menlhk.go.id/
+Keterangan: Portal resmi dari Kementerian Lingkungan Hidup dan Kehutanan (KLHK) RI yang menjadi sumber data utama untuk faktor emisi yang relevan dengan konteks Indonesia.
+[5] Model Analisis Internal
+Judul: Model Analisis Proyek EcoTrack
+Lokasi: Lampiran B dalam dokumen ini.
+Keterangan: Berisi semua model visual yang relevan seperti Diagram Use Case, Diagram Kelas, ERD, Diagram Urutan, Diagram Aktivitas, dan Wireframe yang menjadi dasar spesifikasi fungsional.
+Overall Description
+Product Perspective
+Konteks dan Latar Belakang EcoTrack lahir dari meningkatnya kesadaran dan kepedulian publik, baik secara global maupun di Indonesia, terhadap isu perubahan iklim. Banyak individu ingin berkontribusi dalam mengurangi dampak lingkungan, namun seringkali terhalang oleh kurangnya pemahaman dan tidak adanya alat yang praktis untuk mengukur jejak karbon pribadi mereka. EcoTrack dikembangkan sebagai jawaban langsung atas kebutuhan ini: sebuah platform digital yang mudah diakses dan bertujuan untuk menjembatani kesenjangan antara niat baik individu dengan aksi nyata yang terukur.
+Posisi Produk Aplikasi EcoTrack dirancang sebagai produk baru yang sepenuhnya mandiri (a new, self-contained product). Ini berarti EcoTrack tidak menggantikan sistem yang sudah ada dan tidak memiliki ketergantungan fungsional pada perangkat lunak eksternal lainnya untuk menjalankan fitur-fitur intinya. Seluruh proses, mulai dari input data oleh pengguna, kalkulasi, hingga penyajian laporan, dikelola secara internal oleh sistem EcoTrack. Meskipun demikian, arsitekturnya dirancang secara modular untuk memungkinkan potensi integrasi dengan pihak ketiga di masa depan melalui API, meskipun hal tersebut berada di luar ruang lingkup versi 1.1 ini.
+Diagram Konteks Sistem Diagram berikut mengilustrasikan posisi EcoTrack dalam ekosistemnya, menunjukkan interaksi utama dengan para pengguna dan sumber data eksternal.
+
+Diagram Konteks Sistem di atas mengilustrasikan posisi aplikasi EcoTrack dalam ekosistem operasionalnya, memetakan interaksi utama antara sistem dengan para pengguna dan entitas eksternal. Di pusat diagram, Sistem EcoTrack digambarkan sebagai unit mandiri yang terdiri dari tiga komponen inti: Aplikasi Web & Seluler sebagai antarmuka pengguna, API Server sebagai otak pemrosesan logika bisnis, dan Database EcoTrack sebagai pusat penyimpanan data. Sistem ini berinteraksi dengan tiga jenis aktor utama: Pengguna (Umum & Terdaftar) yang merupakan pengguna akhir dan berinteraksi dengan sistem untuk mengakses dan memasukkan data; Administrator yang memiliki akses untuk mengelola sistem secara keseluruhan; dan Peneliti yang dapat mengakses laporan agregat dari sistem. Selain itu, diagram ini menyoroti ketergantungan penting sistem pada Sumber Data Eksternal seperti IPCC dan KLHK. Penting untuk dicatat bahwa interaksi ini tidak otomatis; sebaliknya, Administrator secara manual merujuk pada sumber-sumber ini untuk melakukan pembaruan data faktor emisi di dalam sistem, memastikan bahwa data yang digunakan untuk kalkulasi tetap akurat dan valid.
+Product Functions
+Secara garis besar, EcoTrack dirancang untuk menjalankan beberapa kelompok fungsi utama yang saling berhubungan untuk menciptakan sebuah ekosistem pelacakan jejak karbon yang lengkap. Fungsi-fungsi ini dapat dikelompokkan berdasarkan tujuannya, mulai dari interaksi inti pengguna, fitur pendukung, hingga fungsi administratif. Diagram berikut mengilustrasikan hubungan antar kelompok fungsionalitas utama dalam sistem.
+Diagram Fungsional Utama
+Deskripsi Fungsionalitas Utama
+Berikut adalah ringkasan dari fungsi-fungsi utama yang akan disediakan oleh aplikasi EcoTrack:
+Manajemen Akun Pengguna: Menyediakan kemampuan bagi pengguna untuk membuat dan mengelola identitas digital mereka di dalam sistem. Ini mencakup proses pendaftaran akun baru, proses login yang aman, dan kemampuan untuk memperbarui data profil pribadi.
+Input dan Kalkulasi Jejak Karbon: Ini adalah fungsi mesin utama aplikasi. Sistem akan menyediakan formulir yang sederhana dan terpandu bagi pengguna untuk memasukkan data aktivitas mereka (misalnya, jumlah kWh listrik atau kilometer perjalanan). Data ini kemudian akan diproses secara otomatis oleh sistem untuk menghasilkan nilai emisi CO₂e yang akurat.
+Dasbor dan Visualisasi Data: Setelah perhitungan, sistem akan menampilkan hasilnya dalam sebuah dasbor interaktif. Fungsi ini memungkinkan pengguna untuk melihat total jejak karbon mereka, rincian emisi per kategori dalam bentuk grafik yang mudah dipahami, serta melacak tren historis dari aktivitas mereka dari waktu ke waktu.
+Rekomendasi Personalisasi: Sistem akan menganalisis data pengguna secara cerdas untuk memberikan tips dan saran yang relevan guna membantu mereka mengurangi jejak karbon. Rekomendasi akan diprioritaskan berdasarkan kategori emisi tertinggi dari pengguna tersebut, sehingga lebih efektif.
+Gamifikasi: Untuk menjaga keterlibatan dan motivasi pengguna dalam jangka panjang, sistem akan menerapkan elemen gamifikasi. Ini termasuk memberikan lencana (badges) atau penghargaan virtual atas pencapaian tertentu (misalnya, berhasil mengurangi emisi selama 3 bulan berturut-turut).
+Manajemen Data (untuk Admin): Menyediakan antarmuka khusus di belakang layar bagi Administrator. Fungsi ini memungkinkan admin untuk mengelola (menambah, mengubah, menghapus) data master yang krusial bagi akurasi sistem, terutama data faktor emisi yang menjadi dasar semua perhitungan.
+Pelaporan Agregat (untuk Peneliti): Menyediakan akses terbatas bagi peran Peneliti untuk melihat dan mengekspor data statistik agregat yang sepenuhnya anonim. Fungsi ini bertujuan untuk mendukung riset dan analisis tren perilaku ramah lingkungan di masyarakat, tanpa mengorbankan privasi pengguna.
+User Classes and Characteristics
+Bagian ini mengidentifikasi berbagai kelompok pengguna yang akan berinteraksi dengan produk EcoTrack. Setiap kelas pengguna dibedakan berdasarkan tujuan, frekuensi penggunaan, keahlian teknis, dan hak aksesnya. Memahami karakteristik ini sangat penting untuk memastikan desain dan fungsionalitas aplikasi dapat memenuhi kebutuhan spesifik setiap kelompok secara efektif.
+Prioritas Pengguna:
+Primer: Pengguna Terdaftar (audiens utama yang menjadi target inti dari keberhasilan produk).
+Sekunder: Pengguna Umum (calon pengguna yang perlu diyakinkan) dan Administrator (penting untuk operasional sistem).
+Tersier: Peneliti Lingkungan (pengguna dengan kebutuhan spesifik yang mendukung visi jangka panjang produk).
+Tabel berikut menyajikan rincian untuk setiap kelas pengguna:
+
+Karakteristik
+Pengguna Umum (Persona: "Rina, Si Penasaran")
+Pengguna Terdaftar (Persona: "Budi, Si Berkomitmen")
+Administrator (Persona: "Citra, Si Penjaga Sistem")
+Peneliti Lingkungan (Persona: "Dr. Santoso, Si Analis")
+Deskripsi & Tujuan
+Individu yang baru mendengar tentang isu jejak karbon. Tujuannya adalah untuk mencari informasi dasar dan mencoba fitur kalkulator tanpa komitmen untuk melihat apakah aplikasi ini cocok untuknya.
+Individu yang secara sadar ingin melacak dan mengurangi dampak lingkungannya. Tujuannya adalah rutin memasukkan data, memantau progres dari waktu ke waktu, dan mendapatkan wawasan untuk perbaikan.
+Staf teknis internal yang bertanggung jawab atas kesehatan dan akurasi sistem. Tujuannya adalah untuk memastikan data referensi (faktor emisi) selalu mutakhir dan mengelola operasional sistem.
+Akademisi atau anggota NGO yang membutuhkan data untuk riset. Tujuannya adalah untuk menganalisis tren perilaku lingkungan di masyarakat secara agregat dan anonim.
+Frekuensi Penggunaan
+Jarang: Mungkin hanya 1-2 kali saat pertama kali menemukan aplikasi.
+Rutin: Idealnya mingguan atau bulanan untuk memasukkan data aktivitas baru dan memantau dasbor.
+Sesuai Kebutuhan: Mungkin beberapa kali dalam sebulan untuk pembaruan data atau saat ada masalah teknis.
+Periodik: Mungkin sebulan atau seperempat tahun sekali untuk mengunduh data statistik untuk laporan atau penelitian.
+Fitur yang Digunakan
+- Melihat Artikel Edukasi
+- Mencoba Kalkulator Demo
+- Mendaftar Akun
+- Semua fitur Pengguna Umum
+- Menghitung Jejak Karbon
+- Melihat Dasbor & Riwayat
+- Mengatur Target Pribadi
+- Mengubah Profil & Password
+- Semua fitur Pengguna Terdaftar
+- Mengelola Faktor Emisi
+- Mengelola Pengguna
+- Mengelola Konten Edukasi
+- Fitur dasar Pengguna Terdaftar
+- Melihat Laporan Agregat Anonim
+- Mengekspor Data Statistik
+Tingkat Keahlian Teknis
+Pemula: Tidak familiar dengan istilah teknis lingkungan. Membutuhkan antarmuka yang sangat sederhana dan jelas.
+Dasar hingga Menengah: Mengerti cara menggunakan aplikasi web/seluler pada umumnya. Tidak memerlukan panduan teknis yang mendalam.
+Ahli: Memahami struktur basis data dan pentingnya integritas data. Familiar dengan antarmuka panel admin.
+Ahli: Memiliki kemampuan analisis data yang tinggi. Mampu mengolah data mentah (misal: format CSV) menggunakan perangkat lunak statistik.
+Tingkat Hak Akses
+Publik (Tidak Terotentikasi): Hanya dapat mengakses halaman-halaman yang bersifat umum.
+Pengguna (Terotentikasi): Dapat mengakses dan memanipulasi data pribadinya sendiri, tetapi tidak bisa melihat data pengguna lain.
+Admin (Hak Akses Penuh): Dapat melihat dan memodifikasi data master sistem dan data pengguna.
+Peneliti (Akses Terbatas): Dapat melihat data agregat yang sudah dianonimkan, tetapi sama sekali tidak bisa melihat data individu.
+
+
+Operating Environment
+Bagian ini merinci lingkungan teknis di mana perangkat lunak EcoTrack akan beroperasi, baik dari sisi pengguna akhir (klien) maupun dari sisi infrastruktur (server). Spesifikasi ini bertujuan untuk memastikan kompatibilitas, stabilitas, dan kinerja aplikasi.
+Lingkungan Sisi Klien (Client-Side)
+Ini adalah lingkungan pada perangkat yang digunakan langsung oleh pengguna.
+Perangkat Keras (Hardware): Tidak ada persyaratan perangkat keras spesifik. Aplikasi dirancang untuk dapat berjalan di berbagai perangkat modern, termasuk PC, laptop, tablet, dan ponsel pintar yang mampu menjalankan browser web yang didukung.
+Sistem Operasi (Operating System): Aplikasi dijamin dapat berjalan dengan baik pada sistem operasi versi minimum berikut atau yang lebih baru:
+Microsoft Windows 10
+Apple macOS 11 (Big Sur)
+Google Android 9 (Pie)
+Apple iOS 14 
+Perangkat Lunak Peramban (Browser): Kinerja dan tampilan optimal dijamin pada dua versi mayor terakhir dari peramban web modern berikut:
+Google Chrome
+Mozilla Firefox
+Apple Safari
+Microsoft Edge
+Lingkungan Sisi Server (Server-Side)
+Ini adalah lingkungan di mana logika bisnis, pemrosesan data, dan basis data aplikasi akan dijalankan dan dikelola.
+Platform Perangkat Keras (Hardware): Sistem akan di-deploy pada platform komputasi awan (cloud computing,  Google Cloud, atau Virtual Private Server (VPS). Spesifikasi awal yang direkomendasikan adalah:
+CPU: 2 vCPU
+RAM: 4 GB
+Penyimpanan: 50 GB SSD Arsitektur harus dirancang agar dapat diskalakan (scalable) secara horizontal maupun vertikal sesuai dengan pertumbuhan jumlah pengguna.
+Sistem Operasi (Operating System): Sistem operasi yang akan digunakan adalah Linux. Distribusi yang direkomendasikan adalah Ubuntu Server 22.04 LTS atau versi LTS (Long-Term Support) stabil yang lebih baru.
+Tumpukan Perangkat Lunak (Software Stack):
+Web Server: Nginx akan digunakan sebagai reverse proxy untuk menangani permintaan masuk dan menyajikan aset statis. Opsi lain saat membuat mvp menggunakan Vercel autoscale serverless
+Runtime Environment: Node.js versi 18.x (LTS) atau versi LTS yang lebih baru.
+Basis Data: Mongodb v8.0 atau versi stabil yang lebih baru.
+Dependensi Penting Lainnya: Redis dapat digunakan untuk manajemen sesi (session management) dan caching untuk meningkatkan kinerja.
+Design and Implementation Constraints
+Bagian ini merinci batasan-batasan, baik yang bersifat teknis maupun non-teknis, yang akan memengaruhi dan membatasi pilihan tim pengembang selama proses desain dan implementasi. Batasan-batasan ini bersifat wajib dan harus dipatuhi untuk memastikan produk selaras dengan tujuan, kebijakan, dan standar yang telah ditetapkan.
+[C-01] Kebijakan Regulasi - Kepatuhan UU Pelindungan Data Pribadi (PDP)
+	Batasan: Perangkat lunak harus dirancang dan diimplementasikan sesuai dengan semua ketentuan dalam Undang-Undang No. 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP) yang berlaku di Indonesia.
+	Rasional: Untuk memastikan kepatuhan hukum, melindungi privasi fundamental pengguna, dan membangun kepercayaan publik terhadap aplikasi EcoTrack. Kepatuhan ini mencakup, namun tidak terbatas pada, mekanisme persetujuan (consent) yang jelas, enkripsi data pribadi, dan implementasi hak-hak pemilik data (seperti hak untuk menghapus data).
+[C-02] Pilihan Teknologi yang Ditetapkan (Mandated Technologies)
+	Batasan: Sisi server (backend) harus dikembangkan menggunakan platform Node.js (versi LTS). Basis data yang digunakan harus Mongodb (versi stabil terbaru). Sisi klien (frontend) harus dibangun menggunakan kerangka kerja JavaScript modern React, Next.js.
+	Rasional: Untuk menstandardisasi tumpukan teknologi (tech stack) proyek, memanfaatkan keahlian yang sudah ada di dalam tim, memastikan dukungan jangka panjang (LTS), serta mempermudah proses pemeliharaan dan perekrutan di masa depan.
+[C-03] Persyaratan Bahasa dan Internasionalisasi
+	Batasan: Semua teks yang dihadapi pengguna (label, pesan, konten) untuk rilis awal wajib menggunakan Bahasa Indonesia. Namun, arsitektur sistem harus dirancang sejak awal untuk mendukung multibahasa (internationalization atau i18n) di masa depan.
+	Rasional: Untuk melayani target pasar utama pada rilis awal, yaitu Indonesia. Persyaratan arsitektur i18n bertujuan untuk memastikan skalabilitas produk ke pasar regional atau global di masa depan dapat dilakukan secara efisien tanpa perlu perombakan besar pada kode.
+[C-04] Desain Antarmuka Responsif
+	Batasan: Antarmuka pengguna (UI) harus mengadopsi pendekatan desain web responsif. Tampilan dan fungsionalitas harus tetap optimal pada tiga kategori ukuran layar utama: ponsel (< 768px), tablet (768px - 1024px), dan desktop (> 1024px).
+	Rasional: Untuk memberikan pengalaman pengguna (UX) yang konsisten dan berkualitas tinggi, terlepas dari perangkat apa pun yang digunakan pengguna untuk mengakses aplikasi.
+[C-05] Standar Keamanan Komunikasi
+	Batasan: Seluruh komunikasi data antara aplikasi klien (peramban) dan server wajib dienkripsi menggunakan protokol HTTPS (TLS 1.2 atau lebih tinggi).
+	Rasional: Untuk melindungi kerahasiaan dan integritas data pengguna saat transit, mencegah serangan eavesdropping dan man-in-the-middle, serta memenuhi standar keamanan web modern.
+[C-06] Standar Pemrograman dan Kontrol Versi
+	Batasan: Tim pengembang harus mengikuti panduan gaya penulisan kode (coding style guide) yang disepakati bersama (misalnya, Airbnb JavaScript Style Guide). Seluruh kode sumber wajib dikelola dalam repositori Git dan mengikuti model percabangan (branching model) standar seperti Git Flow.
+	Rasional: Untuk menjamin kualitas, keterbacaan, dan konsistensi kode. Ini sangat penting untuk mempermudah kolaborasi tim, proses code review, dan pemeliharaan perangkat lunak dalam jangka panjang.
+User Documentation
+Untuk memastikan pengguna dapat memanfaatkan semua fitur EcoTrack secara maksimal dan mandiri, serangkaian komponen dokumentasi akan disediakan. Semua dokumentasi akan disajikan dalam Bahasa Indonesia dan terintegrasi langsung di dalam aplikasi untuk kemudahan akses, sehingga pengguna tidak perlu meninggalkan aplikasi untuk mencari bantuan.
+Komponen dokumentasi yang akan dikembangkan dan disertakan bersama perangkat lunak meliputi:
+Pusat Bantuan Terintegrasi (Integrated Help Center)
+	Deskripsi: Sebuah bagian khusus di dalam aplikasi yang dapat diakses dari menu utama. Pusat Bantuan ini akan berfungsi sebagai portal utama untuk semua materi dokumentasi, dilengkapi dengan fungsi pencarian untuk memungkinkan pengguna menemukan topik yang relevan dengan cepat.
+	Format: Kumpulan artikel berbasis web (HTML) yang dikategorikan berdasarkan fitur (misalnya, Dasbor, Perhitungan, Profil).
+Panduan Langkah-demi-Langkah (Step-by-Step Tutorials)
+	Deskripsi: Serangkaian tutorial terpandu yang dirancang untuk pengguna baru atau untuk menjelaskan alur kerja fitur yang kompleks. Contoh topik tutorial meliputi: "Cara Menghitung Jejak Karbon Pertama Anda" dan "Membaca Dasbor dan Memahami Progres Anda".
+	Format: Artikel di dalam Pusat Bantuan yang menggabungkan teks, gambar tangkapan layar (screenshots) dengan anotasi, dan kemungkinan video singkat atau GIF.
+Halaman Pertanyaan Umum (FAQ)
+	Deskripsi: Sebuah daftar pertanyaan yang paling sering diajukan oleh pengguna beserta jawaban yang jelas dan ringkas. FAQ akan mencakup pertanyaan fungsional ("Bagaimana cara saya mengubah data yang salah?") dan konseptual ("Mengapa nilai faktor emisi bisa berbeda-beda?").
+	Format: Halaman khusus di dalam Pusat Bantuan dengan fitur pencarian dan pengelompokan pertanyaan berdasarkan kategori.
+Bantuan Kontekstual (Contextual Help)
+	Deskripsi: Untuk memberikan bantuan proaktif, ikon bantuan kecil (misalnya, <?>) atau tooltips akan ditempatkan di sebelah istilah, label, atau kolom isian yang mungkin membingungkan pengguna. Saat ikon ini diklik atau disentuh, sebuah kotak info singkat akan muncul memberikan penjelasan.
+	Format: Pop-up teks singkat yang terintegrasi langsung di dalam antarmuka pengguna.
+Catatan Rilis ("Apa yang Baru")
+	Deskripsi: Sebuah log atau catatan yang dapat diakses pengguna untuk melihat riwayat pembaruan aplikasi. Ini akan menginformasikan tentang penambahan fitur baru, perbaikan bug, atau perubahan penting lainnya di setiap versi baru.
+	Format: Halaman di dalam aplikasi, biasanya dapat diakses dari menu Pengaturan atau Profil.
+
+Assumptions and Dependencies
+Bagian ini mengidentifikasi faktor-faktor asumsi (hal-hal yang kita yakini benar) dan ketergantungan (faktor eksternal yang kita andalkan) yang dapat memengaruhi persyaratan, jadwal, atau keberhasilan proyek. Memahami poin-poin ini sangat penting untuk perencanaan dan manajemen risiko yang efektif.
+Asumsi
+[A-01] Konektivitas dan Perangkat Pengguna
+Asumsi: Kami mengasumsikan bahwa target pengguna memiliki akses ke koneksi internet yang stabil dan perangkat (ponsel pintar atau komputer) yang memadai untuk menjalankan peramban web modern.
+Implikasi: Jika sebagian besar target pengguna memiliki koneksi yang buruk atau perangkat yang usang, pengalaman pengguna dapat terdegradasi secara signifikan, yang berpotensi mengurangi tingkat adopsi dan retensi pengguna.
+[A-02] Literasi Digital Pengguna
+Asumsi: Kami mengasumsikan bahwa pengguna memiliki tingkat literasi digital dasar, seperti memahami cara menavigasi situs web, mengisi formulir, dan menginterpretasikan grafik sederhana.
+Implikasi: Jika asumsi ini salah, aplikasi mungkin perlu menyertakan panduan orientasi (onboarding) yang lebih ekstensif atau tutorial interaktif, yang dapat menambah ruang lingkup pekerjaan.
+[A-03] Ketersediaan Sumber Daya Tim
+Asumsi: Kami mengasumsikan bahwa anggota tim kunci (manajer proyek, pengembang utama, desainer UI/UX) yang dialokasikan untuk proyek ini akan tersedia sesuai dengan jadwal yang telah direncanakan.
+Implikasi: Ketidaksediaan sumber daya kunci karena alasan tak terduga (sakit, proyek lain, dll.) dapat menyebabkan keterlambatan yang signifikan pada jadwal proyek.
+Ketergantungan
+[D-01] Validitas dan Ketersediaan Data Faktor Emisi
+	Ketergantungan: Akurasi dan kredibilitas inti dari aplikasi EcoTrack sangat bergantung pada ketersediaan, validitas, dan pembaruan data faktor emisi yang dipublikasikan oleh lembaga eksternal yang berwenang (misalnya, KLHK, IPCC).
+	Implikasi: Jika data dari sumber-sumber ini tidak akurat, tidak lagi dipublikasikan, atau formatnya berubah drastis, maka seluruh hasil perhitungan di dalam aplikasi akan kehilangan validitasnya. Diperlukan proses pemantauan dan pembaruan data secara berkala.
+[D-02] Layanan Pihak Ketiga (Third-Party Services)
+	Ketergantungan: Fungsionalitas tertentu dalam aplikasi akan bergantung pada layanan pihak ketiga, seperti layanan pengiriman email (misalnya, SendGrid atau Mailgun) untuk fitur pendaftaran dan reset kata sandi.
+	Implikasi: Gangguan layanan, perubahan kebijakan, atau perubahan struktur harga dari penyedia layanan pihak ketiga ini dapat secara langsung memengaruhi fungsionalitas dan biaya operasional EcoTrack.
+[D-03] Perangkat Lunak Sumber Terbuka (Open Source Software)
+	Ketergantungan: Proses pengembangan akan sangat bergantung pada berbagai pustaka (libraries) dan kerangka kerja (frameworks) sumber terbuka (contoh: Node.js, PostgreSQL, React).
+	Implikasi: Proyek ini terikat pada lisensi, siklus pembaruan, dan potensi kerentanan keamanan (security vulnerabilities) dari perangkat lunak tersebut. Ditemukannya celah keamanan pada salah satu dependensi mungkin memerlukan alokasi waktu pengembangan tambahan untuk segera melakukan penambalan (patching).
+
+External Interface Requirements
+User Interfaces
+Antarmuka pengguna adalah "wajah" dari aplikasi EcoTrack. Desainnya akan menjadi kunci untuk memastikan pengguna mendapatkan pengalaman yang positif, mudah, dan memotivasi.
+Filosofi Desain Desain antarmuka akan berpegang pada prinsip-prinsip berikut:
+Bersih dan Minimalis: Tampilan akan bebas dari kekacauan, hanya menampilkan informasi yang relevan dan penting untuk menghindari kebingungan pengguna.
+Memotivasi dan Positif: Desain visual dan pilihan kata akan bersifat suportif dan memotivasi, bukan menghakimi. Tujuannya adalah untuk mendorong perubahan positif.
+Terpandu dan Intuitif: Pengguna, bahkan yang paling awam sekalipun, harus dapat menggunakan fungsi inti aplikasi tanpa memerlukan pelatihan atau panduan yang panjang.
+Berbasis Data Visual: Informasi kunci, terutama di dasbor, akan disajikan dalam bentuk grafik dan visualisasi yang menarik dan mudah dicerna.
+Standar dan Panduan Antarmuka
+Panduan Gaya (Style Guide): Pengembangan akan merujuk pada "Panduan Gaya Desain Antarmuka EcoTrack" (lihat Referensi [3]) yang mendefinisikan skema warna, tipografi, gaya tombol, dan komponen UI lainnya untuk menjaga konsistensi di seluruh aplikasi.
+Responsivitas: Semua antarmuka harus sepenuhnya responsif dan dioptimalkan untuk tiga breakpoint utama: ponsel, tablet, dan desktop (lihat Batasan Desain [C-04]).
+Elemen Standar:
+Navigasi: Akan ada menu navigasi utama yang konsisten di seluruh halaman untuk akses mudah ke Dasbor, Riwayat, dan Pengaturan.
+Tombol: Tombol aksi utama (misalnya, "Simpan", "Tambah Aktivitas") akan memiliki desain yang seragam dan posisi yang mudah dijangkau.
+Pesan Sistem: Pesan sukses, error, dan peringatan akan ditampilkan dengan cara yang konsisten (misalnya, pop-up notifikasi di sudut kanan atas) dan menggunakan bahasa yang mudah dimengerti.
+Komponen Antarmuka Pengguna Utama Berikut adalah komponen atau layar utama yang memerlukan desain antarmuka pengguna:
+Halaman Publik:
+	Halaman Pendaftaran & Login.
+	Halaman Artikel Edukasi.
+Halaman Pengguna Terdaftar:
+	Dasbor Utama: Tampilan utama setelah login, berisi ringkasan visual jejak karbon.
+	Form Input Aktivitas: Serangkaian formulir untuk memasukkan data (misalnya, form transportasi, form listrik).
+	Halaman Riwayat: Menampilkan daftar dan tren perhitungan masa lalu.
+	Halaman Profil & Pengaturan: Untuk mengelola data diri dan password.
+Panel Administratif:
+	Halaman Login Admin.
+	Dasbor Admin.
+	Halaman Manajemen Data (misalnya, tabel untuk mengelola faktor emisi).
+	Form Tambah/Ubah Data Master. 
+Hardware Interfaces
+Tidak ada antarmuka langsung ke komponen perangkat keras spesifik (seperti sensor, printer, atau perangkat IoT) yang dibutuhkan oleh aplikasi EcoTrack pada versi ini. Sebagai aplikasi berbasis web, interaksi perangkat lunak dengan perangkat keras (seperti prosesor, memori, layar, papan ketik, dan tetikus) sepenuhnya diabstraksi dan dikelola oleh sistem operasi dan perangkat lunak peramban web (web browser) di sisi klien. Perangkat lunak EcoTrack tidak akan mengontrol atau berkomunikasi langsung dengan perangkat keras mana pun. Persyaratan perangkat keras minimum bagi pengguna untuk menjalankan aplikasi ini telah dijabarkan pada Bagian 2.4 (Lingkungan Operasi).
+
+Software Interfaces
+<Jelaskan hubungan antara produk ini dan komponen perangkat lunak spesifik lainnya (nama dan versi), termasuk database, sistem operasi, alat, pustaka, dan komponen komersial terintegrasi. Identifikasi item data atau pesan yang masuk ke sistem dan keluar dan jelaskan tujuan masing-masing. Jelaskan layanan yang dibutuhkan dan sifat komunikasi. Lihat dokumen yang menjelaskan protokol antarmuka pemrograman aplikasi terperinci. Mengidentifikasi data yang akan dibagikan di seluruh komponen perangkat lunak. Jika mekanisme berbagi data harus diimplementasikan dengan cara tertentu (misalnya, penggunaan area data global dalam sistem operasi multitasking), tentukan ini sebagai batasan implementasi.>
+
+Bagian ini merinci interaksi antara aplikasi EcoTrack dengan komponen perangkat lunak lainnya, baik yang bersifat internal dalam arsitektur sistem maupun eksternal.
+Antarmuka Perangkat Lunak Eksternal
+Untuk versi 1.1, aplikasi EcoTrack tidak memiliki antarmuka langsung atau ketergantungan pada aplikasi pihak ketiga eksternal lainnya (misalnya, integrasi media sosial, sistem pembayaran, atau penyedia login eksternal seperti Google/Facebook). Seluruh fungsionalitas dirancang untuk mandiri di dalam ekosistem EcoTrack.
+Antarmuka Perangkat Lunak Internal
+Meskipun mandiri secara eksternal, sistem EcoTrack terdiri dari beberapa komponen internal utama yang saling berinteraksi secara erat melalui antarmuka yang terdefinisi dengan baik:
+Antarmuka Aplikasi ke Basis Data
+Deskripsi: Komponen sisi server (backend), yang berisi semua logika bisnis, akan berkomunikasi secara intensif dengan server basis data Mongodb.
+Tujuan: Untuk melakukan semua operasi data (CRUD - Create, Read, Update, Delete), seperti menyimpan data pengguna baru saat pendaftaran, mencatat setiap aktivitas emisi yang dihitung, mengambil data riwayat untuk ditampilkan di dasbor, dan mengelola data master faktor emisi.
+Mekanisme: Komunikasi akan menggunakan driver basis data standar untuk Node.js (misalnya, pustaka pg atau melalui Object-Relational Mapper seperti Prisma). Interaksi ini terjadi melalui koneksi jaringan aman menggunakan protokol standar PostgreSQL.
+Antarmuka Klien ke Server (API)
+Deskripsi: Aplikasi sisi klien (frontend) yang berjalan di peramban pengguna akan berkomunikasi dengan sisi server (backend) melalui sebuah Application Programming Interface (API). Ini adalah "jembatan" utama antara apa yang dilihat pengguna dan "otak" dari sistem.
+Tujuan: Untuk mengambil data yang akan ditampilkan kepada pengguna (misalnya, data untuk dasbor dan grafik riwayat) dan untuk mengirimkan data baru yang dimasukkan oleh pengguna (misalnya, data dari form tambah aktivitas) untuk diproses dan disimpan oleh server.
+Mekanisme: Antarmuka ini akan dirancang dan diimplementasikan sebagai sebuah RESTful API. Pertukaran data antara klien dan server akan menggunakan format JSON. Spesifikasi detail untuk setiap endpoint API (misalnya, GET /api/dashboard, POST /api/activities) akan didokumentasikan dalam dokumen spesifikasi API terpisah.
+Communications Interfaces
+Bagian ini mendefinisikan protokol, standar, dan format yang akan digunakan untuk semua fungsi komunikasi data yang dilakukan oleh sistem EcoTrack.
+Komunikasi Klien-Server (API)
+Protokol Standar: Interaksi utama antara aplikasi klien (yang berjalan di peramban pengguna) dan sisi server akan menggunakan protokol HTTP/2 over TLS (HTTPS).
+Keamanan dan Enkripsi: Penggunaan HTTPS bersifat wajib untuk seluruh komunikasi. Ini memberikan dua lapisan keamanan krusial:
+Enkripsi: Semua data yang dikirimkan, termasuk data pribadi dan kata sandi, akan dienkripsi untuk melindungi kerahasiaan dan mencegah penyadapan (eavesdropping). Standar enkripsi yang harus didukung adalah TLS 1.2 atau yang lebih tinggi.
+Autentikasi Server: Memastikan bahwa klien terhubung ke server EcoTrack yang sah, melindungi dari serangan man-in-the-middle.
+Format Pesan: Semua pertukaran data melalui API akan menggunakan format JSON (JavaScript Object Notation) karena sifatnya yang ringan dan mudah di-parse oleh teknologi web modern.
+Komunikasi Server-ke-Pengguna (Email)
+Fungsi: Sistem akan mengirimkan email kepada pengguna untuk beberapa fungsi esensial, yaitu:
+	Verifikasi pendaftaran akun baru.
+	Instruksi pengaturan ulang kata sandi (password reset).
+	Notifikasi penting atau ringkasan laporan bulanan (fitur di masa depan).
+Protokol: Pengiriman email akan dilakukan oleh server menggunakan SMTP (Simple Mail Transfer Protocol), baik melalui server SMTP internal maupun melalui layanan API email pihak ketiga (misalnya, SendGrid, Mailgun) untuk memastikan keandalan pengiriman.
+Format Pesan: Email akan diformat dalam HTML untuk memungkinkan penyertaan elemen visual, branding, dan tautan yang mudah digunakan.
+Komunikasi Lainnya
+Untuk rilis versi 1.1, tidak ada kebutuhan untuk antarmuka komunikasi lain seperti FTP (untuk transfer file) atau WebSockets (untuk komunikasi real-time). Seluruh fungsionalitas utama akan dilayani melalui model permintaan-respons standar via HTTPS.
+
+System Features
+System Feature 2 (and so on)
+Bagian ini merinci kebutuhan fungsional perangkat lunak yang diorganisir berdasarkan fitur-fitur utama yang disediakan oleh produk. Setiap fitur diuraikan berdasarkan deskripsi, prioritas, alur interaksi, dan daftar kebutuhan fungsional yang spesifik dan dapat diverifikasi.
+4.1 Fitur 1: Kalkulasi Jejak Karbon
+4.1.1 Deskripsi dan Prioritas
+Fitur ini adalah mesin utama aplikasi EcoTrack. Fitur ini memungkinkan pengguna terdaftar untuk memasukkan data kuantitatif dari berbagai aktivitas sehari-hari mereka, yang kemudian akan dikonversi oleh sistem menjadi nilai jejak karbon (dalam kg CO₂e).
+Prioritas: [Tinggi]
+4.1.2 Urutan Stimulus/Respons
+Stimulus: Pengguna memilih kategori aktivitas (misalnya, 'Transportasi') dan mengirimkan formulir berisi data (misalnya, jenis kendaraan dan jarak tempuh).
+Respons: Sistem memvalidasi input. Jika valid, sistem melakukan kalkulasi, menyimpan hasilnya ke database, dan menampilkan dasbor yang telah diperbarui dengan notifikasi sukses. Jika tidak valid, sistem menampilkan pesan error pada formulir.
+4.1.3 Kebutuhan Fungsional
+REQ-F.01: Input Aktivitas Transportasi
+REQ-F.01.1: Sistem harus menyediakan formulir input untuk kategori Transportasi.
+REQ-F.01.2: Formulir harus berisi pilihan jenis kendaraan (misalnya, Mobil Bensin, Motor, Bus) yang datanya diambil dari tabel faktor_emisi.
+REQ-F.01.3: Formulir harus menerima input jarak tempuh dalam satuan kilometer (km).
+REQ-F.01.4: Input jarak tempuh harus divalidasi sebagai nilai numerik positif.
+REQ-F.02: Input Aktivitas Konsumsi Listrik
+REQ-F.02.1: Sistem harus menyediakan formulir input untuk kategori Konsumsi Listrik.
+REQ-F.02.2: Formulir harus menerima input total konsumsi dalam satuan kilowatt-jam (kWh).
+REQ-F.02.3: Input konsumsi harus divalidasi sebagai nilai numerik positif.
+REQ-F.03: Input Aktivitas Gaya Hidup
+REQ-F.03.1: Sistem harus menyediakan formulir input untuk kategori Gaya Hidup, yang mencakup Pola Makan (misalnya, konsumsi daging).
+REQ-F.03.2: Formulir harus menyediakan pilihan jenis makanan dan frekuensi konsumsi (misalnya, porsi per minggu).
+REQ-F.04: Proses Kalkulasi dan Penyimpanan
+REQ-F.04.1: Setelah menerima input yang valid, sistem harus mengambil nilai_faktor yang sesuai dari tabel faktor_emisi berdasarkan jenis aktivitas yang dipilih.
+REQ-F.04.2: Sistem harus melakukan kalkulasi dengan mengalikan input pengguna dengan nilai_faktor yang sesuai.
+REQ-F.04.3: Hasil perhitungan (nilai emisi dalam kg CO₂e) harus disimpan ke dalam tabel aktivitas_emisi, terhubung dengan user_id dan faktor_id yang relevan.
+
+4.2 Fitur 2: Dasbor dan Visualisasi Data
+4.2.1 Deskripsi dan Prioritas
+Fitur ini berfungsi sebagai "pusat kendali" visual bagi pengguna untuk memantau jejak karbon mereka. Dasbor menyajikan data yang telah dihitung dalam format yang mudah dipahami dan menarik.
+Prioritas: [Tinggi]
+4.2.2 Urutan Stimulus/Respons
+Stimulus: Pengguna berhasil login atau menyelesaikan perhitungan aktivitas baru.
+Respons: Sistem mengambil semua data aktivitas_emisi yang relevan untuk pengguna tersebut, mengagregasinya, dan menampilkannya dalam berbagai komponen visual di halaman dasbor.
+4.2.3 Kebutuhan Fungsional
+REQ-F.05: Ringkasan Total Emisi
+REQ-F.05.1: Dasbor harus menampilkan total akumulasi jejak karbon pengguna untuk periode bulan berjalan.
+REQ-F.05.2: Dasbor harus menampilkan perbandingan ringkas antara total emisi bulan ini dengan bulan sebelumnya (misalnya, "Naik 5%" atau "Turun 10%").
+REQ-F.06: Rincian Emisi per Kategori
+REQ-F.06.1: Sistem harus menampilkan grafik lingkaran (pie chart) yang menunjukkan persentase kontribusi emisi dari setiap kategori (Transportasi, Listrik, dll.) pada bulan berjalan.
+REQ-F.06.2: Saat pengguna mengarahkan kursor ke salah satu bagian grafik, sistem harus menampilkan nilai emisi absolut untuk kategori tersebut.
+REQ-F.07: Tren Historis
+REQ-F.07.1: Sistem harus menampilkan grafik garis (line chart) yang menunjukkan total jejak karbon pengguna per bulan selama 6 bulan terakhir untuk menunjukkan tren.
+REQ-F.07.2: Pengguna harus dapat melihat daftar rinci semua aktivitas yang tercatat saat menggulir ke bawah halaman dasbor.
+4.3 Fitur 3: Manajemen Faktor Emisi (Khusus Admin)
+4.3.1 Deskripsi dan Prioritas
+Fitur ini menyediakan antarmuka khusus bagi Administrator untuk mengelola data master faktor emisi yang menjadi dasar akurasi seluruh perhitungan di aplikasi.
+Prioritas: [Sedang]
+4.3.2 Urutan Stimulus/Respons
+Stimulus: Administrator mengakses panel admin dan memilih menu "Manajemen Faktor Emisi".
+Respons: Sistem menampilkan tabel berisi semua data faktor emisi yang ada di database.
+Stimulus: Administrator melakukan aksi (tambah/ubah/hapus).
+Respons: Sistem memproses permintaan, memperbarui database, dan menyegarkan tampilan tabel.
+4.3.3 Kebutuhan Fungsional
+REQ-F.08: Menampilkan Data Faktor Emisi
+REQ-F.08.1: Sistem harus menampilkan semua data dari tabel faktor_emisi dalam format tabel yang dapat diurutkan.
+REQ-F.08.2: Setiap baris data harus memiliki opsi "Ubah" dan "Hapus".
+REQ-F.09: Menambah Data Faktor Emisi
+REQ-F.09.1: Sistem harus menyediakan tombol "Tambah Baru" yang akan mengarahkan ke form tambah data.
+REQ-F.09.2: Form harus berisi semua kolom yang relevan dari tabel faktor_emisi (nama, nilai, satuan, kategori).
+REQ-F.09.3: Sistem harus melakukan validasi input sebelum menyimpan data baru.
+REQ-F.10: Mengubah Data Faktor Emisi
+REQ-F.10.1: Saat tombol "Ubah" diklik, sistem harus menampilkan form yang sudah terisi dengan data yang ada pada baris tersebut.
+REQ-F.10.2: Setelah disimpan, sistem harus memperbarui data yang sesuai di database.
+REQ-F.11: Menghapus Data Faktor Emisi
+REQ-F.11.1: Sebelum menghapus, sistem harus menampilkan dialog konfirmasi untuk mencegah kesalahan.
+REQ-F.11.2: Jika dikonfirmasi, sistem harus menghapus baris data yang relevan dari database.
+
+Other Nonfunctional Requirements
+Bagian ini merinci kriteria kualitas, batasan kinerja, aturan keamanan, dan prinsip operasional yang harus dipenuhi oleh sistem. Kebutuhan ini mendefinisikan "seberapa baik" sistem harus bekerja, bukan "apa" yang sistem kerjakan.
+Performance Requirements
+[PERF-01] Waktu Muat Halaman Dasbor: Halaman Dasbor utama, termasuk semua data dan grafiknya, harus dimuat sepenuhnya dalam waktu kurang dari 2 detik pada koneksi internet seluler (4G).
+Rasional: Dasbor adalah halaman yang paling sering diakses. Waktu muat yang cepat sangat krusial untuk menjaga retensi dan kepuasan pengguna, terutama pada perangkat seluler.
+[PERF-02] Waktu Respons API: Waktu respons sisi server (API) untuk permintaan kalkulasi dan penyimpanan data aktivitas baru harus berada di bawah 500 milidetik.
+Rasional: Untuk memastikan pengguna mendapatkan umpan balik yang instan setelah mengirimkan data, memberikan kesan bahwa aplikasi bekerja dengan cepat dan responsif.
+[PERF-03] Kapasitas Pengguna Bersamaan: Sistem harus mampu menangani 100 pengguna bersamaan (concurrent users) yang melakukan operasi baca/tulis dengan degradasi waktu respons tidak lebih dari 20% dari kondisi normal (beban rendah).
+Rasional: Untuk memastikan stabilitas sistem saat terjadi lonjakan penggunaan dan untuk mempersiapkan pertumbuhan pengguna di masa depan.
+Safety Requirements
+Perangkat lunak EcoTrack tidak mengontrol perangkat keras fisik apa pun dan tidak beroperasi dalam konteks yang dapat menyebabkan kerugian fisik, kerusakan properti, atau bahaya lingkungan secara langsung. Oleh karena itu, tidak ada kebutuhan keamanan (safety) spesifik yang berlaku untuk aplikasi ini.
+Security Requirements
+[SEC-01] Penyimpanan Kredensial: Semua kata sandi pengguna wajib disimpan dalam format hash menggunakan algoritma modern yang kuat dan di-salt (contoh: Argon2, bcrypt) untuk mencegah kebocoran kredensial jika terjadi pembobolan basis data.
+[SEC-02] Kontrol Akses Berbasis Peran (RBAC): Sistem harus mengimplementasikan Role-Based Access Control (RBAC) yang ketat. Pengguna dengan peran Administrator atau Peneliti harus memiliki hak akses yang terpisah dan terbatas sesuai fungsinya.
+[SEC-03] Perlindungan Terhadap Serangan Umum: Aplikasi harus dilindungi dari kerentanan keamanan web umum yang tercantum dalam OWASP Top 10, termasuk (namun tidak terbatas pada) SQL Injection, Cross-Site Scripting (XSS), dan Cross-Site Request Forgery (CSRF).
+[SEC-04] Keamanan Transmisi Data: Seluruh komunikasi data antara klien dan server wajib dienkripsi menggunakan protokol HTTPS (TLS 1.2 atau lebih tinggi), seperti yang telah disebutkan di Bagian 3.4.
+
+Software Quality Attributes
+[QUAL-01] Kebergunaan (Usability): Seorang pengguna baru harus dapat menyelesaikan alur kerja utama (dari pendaftaran hingga berhasil mencatat aktivitas pertamanya) dalam waktu kurang dari 3 menit tanpa memerlukan bantuan eksternal. Ini akan diverifikasi melalui usability testing.
+[QUAL-02] Keandalan (Reliability): Sistem ditargetkan memiliki ketersediaan layanan (uptime) sebesar 99.5% per bulan, di luar jadwal pemeliharaan yang telah diumumkan minimal 24 jam sebelumnya.
+[QUAL-03] Kemudahan Pemeliharaan (Maintainability): Kode program harus mengikuti standar penulisan kode yang telah disepakati (lihat Batasan [C-06]) dan memiliki cakupan pengujian unit (unit test coverage) minimal 70% untuk semua logika bisnis inti guna mempermudah perbaikan dan pengembangan di masa depan.
+[QUAL-04] Skalabilitas (Scalability): Arsitektur sistem harus dirancang untuk dapat menangani peningkatan beban pengguna sebesar 50% dari tahun ke tahun dengan menambahkan sumber daya server (scaling out), tanpa memerlukan perombakan arsitektur besar.
+Business Rules
+[BR-01]: Setiap perhitungan jejak karbon wajib menggunakan nilai yang valid dari tabel faktor_emisi yang aktif pada saat perhitungan dilakukan.
+[BR-02]: Satu alamat email hanya dapat digunakan untuk mendaftarkan satu akun pengguna.
+[BR-03]: Pengguna hanya dapat melihat dan mengelola data aktivitas_emisi miliknya sendiri. Tidak ada pengguna yang dapat melihat data rinci milik pengguna lain.
+[BR-04]: Peran Administrator adalah satu-satunya peran yang diizinkan untuk melakukan operasi tulis (tambah, ubah, hapus) pada tabel faktor_emisi.
+[BR-05]: Peran Peneliti hanya diizinkan untuk mengakses data agregat yang telah dianonimkan dan tidak boleh memiliki akses ke data personal individu.
+Other Requirements
+Bagian ini mendefinisikan persyaratan lain yang tidak tercakup pada bagian-bagian sebelumnya namun tetap penting untuk keberhasilan proyek.
+6.1 Persyaratan Basis Data
+[DB-01] Integritas Data: Semua hubungan antar tabel dalam basis data harus ditegakkan menggunakan foreign key constraints untuk memastikan integritas referensial. Misalnya, sebuah aktivitas_emisi tidak dapat dibuat tanpa terhubung ke user_id yang valid.
+[DB-02] Pencadangan dan Pemulihan (Backup & Recovery): Harus ada mekanisme pencadangan basis data otomatis yang berjalan setiap hari (daily). Data cadangan harus disimpan di lokasi yang aman dan direplikasi, dengan kebijakan retensi minimal selama 14 hari. Prosedur pemulihan (recovery) harus didokumentasikan dan diuji.
+6.2 Persyaratan Internasionalisasi (i18n)
+[I18N-01] Pemisahan Teks dari Kode: Semua teks yang ditampilkan kepada pengguna (user-facing strings) tidak boleh ditulis langsung di dalam kode (hardcoded). Teks harus disimpan dalam file sumber daya terpisah (misalnya, file JSON per bahasa) untuk memfasilitasi penerjemahan ke bahasa lain di masa depan.
+[I18N-02] Dukungan Pengkodean Karakter: Seluruh sistem, mulai dari basis data hingga antarmuka pengguna, harus menggunakan pengkodean UTF-8 untuk memastikan dukungan terhadap berbagai set karakter internasional.
+6.3 Persyaratan Hukum dan Kepatuhan
+[LEGAL-01] Kebijakan Privasi dan Syarat Layanan: Aplikasi wajib menampilkan dokumen "Kebijakan Privasi" dan "Syarat dan Ketentuan Layanan" yang dapat diakses oleh pengguna. Teks dokumen ini harus jelas dan sesuai dengan UU PDP No. 27 Tahun 2022.
+[LEGAL-02] Hak Cipta: Semua kode sumber asli, desain antarmuka, dan konten edukasi yang dibuat khusus untuk proyek EcoTrack merupakan kekayaan intelektual milik pemilik proyek.
+
+Appendix A: Glossary
+API (Application Programming Interface): Sekumpulan aturan dan protokol yang memungkinkan berbagai komponen perangkat lunak berkomunikasi satu sama lain.
+CO₂e (Ekuivalen Karbon Dioksida): Unit standar yang digunakan untuk mengukur jejak karbon dengan menyetarakan dampak dari berbagai gas rumah kaca ke dalam satu metrik.
+CRUD: Akronim untuk empat operasi dasar basis data: Create (Buat), Read (Baca), Update (Ubah), dan Delete (Hapus).
+Faktor Emisi: Koefisien ilmiah yang digunakan untuk mengkonversi data suatu aktivitas (misal: 1 liter bensin) menjadi emisi gas rumah kaca (misal: 2.3 kg CO₂e).
+IPCC (Intergovernmental Panel on Climate Change): Badan ilmiah Perserikatan Bangsa-Bangsa (PBB) yang menjadi rujukan utama dunia untuk ilmu pengetahuan terkait perubahan iklim.
+Jejak Karbon: Ukuran total emisi gas rumah kaca yang dihasilkan secara langsung maupun tidak langsung oleh suatu aktivitas, individu, atau produk.
+KLHK: Kementerian Lingkungan Hidup dan Kehutanan Republik Indonesia.
+LTS (Long-Term Support): Versi perangkat lunak (misalnya Node.js) yang dijamin akan menerima dukungan dan pembaruan keamanan untuk jangka waktu yang panjang.
+SKPL (Spesifikasi Kebutuhan Perangkat Lunak): Dokumen ini; sebuah dokumen formal yang merinci semua kebutuhan untuk sebuah sistem perangkat lunak.
+UI (User Interface): Tampilan visual dari sebuah aplikasi di mana pengguna berinteraksi.
+UX (User Experience): Keseluruhan pengalaman dan kepuasan yang dirasakan pengguna saat berinteraksi dengan aplikasi.
+Appendix B: Analysis Models
+Dokumen ini didukung oleh serangkaian model analisis visual yang telah dikembangkan selama fase analisis kebutuhan. Model-model ini memberikan representasi grafis dari sistem dan menjadi dasar dari banyak spesifikasi yang tertulis di sini. Model-model tersebut meliputi:
+Diagram Konteks Sistem (Lihat Bagian 2.1)
+Diagram Fungsional Utama (Lihat Bagian 2.2)
+Diagram Use Case (Revisi Final)
+Diagram Kelas Domain (Revisi Final)
+Entity-Relationship Diagram (ERD)
+Diagram Urutan (Sequence Diagram) untuk setiap use case utama
+Diagram Aktivitas (Activity Diagram) untuk setiap use case utama
+Wireframe untuk setiap antarmuka pengguna
+Model dan struktur analisis dalam dokumen ini juga sangat terinspirasi dari metodologi yang disajikan dalam dokumen referensi studi kasus Sistem Perpustakaan - Revisi.pdf.
+Appendix C: To Be Determined List
+Berikut adalah daftar item yang masih memerlukan diskusi, riset, atau keputusan lebih lanjut dan akan diselesaikan pada fase berikutnya dari proyek.
+[TBD-01]: Desain final dan skema warna untuk branding aplikasi EcoTrack.
+[TBD-02]: Mekanisme detail, sistem poin, dan desain visual untuk fitur gamifikasi (lencana/penghargaan).
+[TBD-03]: Pemilihan final penyedia layanan email pihak ketiga yang akan digunakan untuk notifikasi sistem (pendaftaran, reset password).
+[TBD-04]: Strategi teknis dan jadwal untuk proses pembaruan data faktor emisi secara berkala untuk memastikan data tetap mutakhir.
+[TBD-05]: Teks final untuk dokumen "Kebijakan Privasi" dan "Syarat dan Ketentuan Layanan" yang akan ditinjau oleh konsultan hukum.
+

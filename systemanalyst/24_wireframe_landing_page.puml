@@ -1,0 +1,308 @@
+@startuml WF-08_Landing_Page_Creative
+!theme plain
+title WF-08: Creative Landing Page - CarbCalc with Interactive Features
+
+salt
+{
+  {* 🌱 CarbCalc | Features | Pricing | About | [Login] | [Sign Up] }
+  --
+  HERO SECTION with 3D Animation
+  {
+    {
+      **Track Your Carbon Footprint**
+      **Make Real Impact 🌍**
+      
+      Join 10,000+ users reducing their 
+      carbon emissions with AI-powered insights
+      
+      [🚀 Start Free Trial] [▶️ Watch Demo (2:30)]
+      
+      ⭐⭐⭐⭐⭐ 4.9/5 from 2,847 reviews
+    } | {
+      [🌍 3D Earth Animation]
+      [Rotating with CO2 particles]
+      [Interactive hover effects]
+      
+      💨 Real-time CO2 counter
+      🌱 Trees planted: 15,847
+      📊 Total CO2 saved: 2.3M kg
+    }
+  }
+  --
+  INTERACTIVE DASHBOARD PREVIEW with Pop-up Cards
+  {
+    **Live Dashboard Demo** - Click any card to explore ↓
+    
+    {
+      [📊 Today: 8.2kg] | [📅 Month: 245kg] | [🏆 Level 3] | [🎯 Target: 78%]
+      ↓ Click to expand ↓
+    }
+    
+    **Pop-up Card Preview:**
+    {
+      ┌─ 📊 TODAY'S BREAKDOWN ─────────────────┐
+      │ 🚗 Transport: 3.7kg (45%) ↓ 20%      │
+      │ 💡 Energy: 2.5kg (30%) ↓ 15%         │
+      │ 🍽️ Food: 1.6kg (20%) ↑ 5%            │
+      │ 🗑️ Waste: 0.4kg (5%) ↓ 10%           │
+      │                                       │
+      │ [View Detailed Analysis] [Get Tips]   │
+      └───────────────────────────────────────┘
+    }
+  }
+  --
+  FEATURE SHOWCASE with Interactive Tabs
+  {
+    **Why Choose CarbCalc?** 
+    
+    Tabs: [🧮 Calculator] [🤖 AI Insights] [📊 Analytics] [🎯 Action Plans] [🌐 Social]
+    
+    **🧮 Smart Calculator Tab (Active):**
+    {
+      {
+        **4 Categories Tracking**
+        🚗 Transportation
+        💡 Energy Consumption  
+        🍽️ Food & Diet
+        🗑️ Waste Management
+        
+        **Features:**
+        ✅ Real-time calculation
+        ✅ Accurate emission factors
+        ✅ Historical tracking
+        ✅ Goal setting
+      } | {
+        [📱 Calculator Demo GIF]
+        [Shows input → calculation → results]
+        
+        **"Input your daily activities 
+        and get instant CO2 calculations 
+        with personalized insights"**
+        
+        [Try Calculator Demo →]
+      }
+    }
+  }
+  --
+  COMPETITOR COMPARISON TABLE
+  {
+    **CarbCalc vs Others** - See why we're the best choice
+    
+    | Feature | CarbCalc | Competitor A | Competitor B | Competitor C |
+    |---------|----------|--------------|--------------|--------------|
+    | 🤖 AI Recommendations | ✅ Advanced | ❌ None | ⚠️ Basic | ⚠️ Basic |
+    | 📊 Real-time Analytics | ✅ Yes | ✅ Yes | ❌ No | ⚠️ Limited |
+    | 🎯 Action Planning | ✅ Smart Todo | ❌ None | ❌ None | ⚠️ Manual |
+    | 🌐 Social Sharing | ✅ Auto Generate | ❌ None | ⚠️ Basic | ❌ None |
+    | 💰 Pricing | 🆓 Free + Premium | 💰 $19/mo | 💰 $25/mo | 💰 $15/mo |
+    | 📱 Mobile App | ✅ Coming Soon | ✅ Yes | ❌ No | ✅ Yes |
+    | 🎮 Gamification | ✅ Full System | ❌ None | ⚠️ Points Only | ❌ None |
+    
+    [🚀 Start Free Trial] [📊 See Full Comparison]
+  }
+  --
+  VIDEO TUTORIAL SECTION
+  {
+    **Learn CarbCalc in 5 Minutes** 📹
+    
+    {
+      {
+        [▶️ Getting Started (2:30)]
+        [Thumbnail: Dashboard overview]
+        👀 12,847 views
+      } | {
+        [▶️ AI Recommendations (1:45)]  
+        [Thumbnail: AI suggestions]
+        👀 8,234 views
+      } | {
+        [▶️ Action Planning (2:15)]
+        [Thumbnail: Todo management]
+        👀 6,891 views
+      }
+    }
+    
+    {
+      [▶️ Social Sharing (1:30)] | [▶️ Advanced Analytics (3:20)] | [▶️ Mobile Tips (2:00)]
+      👀 5,432 views | 👀 4,123 views | 👀 7,654 views
+    }
+    
+    **🎬 Full Playlist: Complete CarbCalc Mastery (15 videos, 45 min total)**
+    [📺 Watch All Tutorials] [📚 Download PDF Guide]
+  }
+  --
+  TESTIMONIALS with Real Users
+  {
+    **What Our Users Say** ⭐⭐⭐⭐⭐
+    
+    {
+      {
+        👤 **Sarah Chen**
+        Environmental Consultant
+        ⭐⭐⭐⭐⭐
+        
+        "CarbCalc helped me reduce my 
+        carbon footprint by 35% in just 
+        3 months. The AI recommendations 
+        are spot-on!"
+        
+        📊 Saved: 127 kg CO2e
+      } | {
+        👤 **Ahmad Rizki** 
+        Software Engineer
+        ⭐⭐⭐⭐⭐
+        
+        "Love the gamification! Competing 
+        with friends made sustainability 
+        fun. Best eco app ever!"
+        
+        🏆 Level 5 Eco Champion
+      } | {
+        👤 **Maria Santos**
+        Marketing Manager  
+        ⭐⭐⭐⭐⭐
+        
+        "The social sharing feature is 
+        amazing. My posts inspired 20+ 
+        friends to start tracking too!"
+        
+        🌐 20 friends joined
+      }
+    }
+    
+    {
+      👤 **Dr. James Wilson** | 👤 **Lisa Zhang** | 👤 **Carlos Rodriguez**
+      Climate Researcher | Student | Business Owner
+      ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐
+      "Perfect for research data" | "Easy for beginners" | "Great for company goals"
+    }
+    
+    [📝 Read All Reviews] [⭐ Leave Your Review]
+  }
+  --
+  INTERACTIVE FAQ ACCORDION
+  {
+    **Frequently Asked Questions** 🤔
+    
+    ▼ **How accurate are the carbon calculations?** 
+    {
+      Our calculations use IPCC-approved emission factors and are updated 
+      regularly. We achieve 95%+ accuracy compared to professional audits.
+      The system accounts for regional differences and seasonal variations.
+    }
+    
+    ▶ **Is CarbCalc really free to use?**
+    ▶ **How does the AI recommendation system work?**  
+    ▶ **Can I use CarbCalc for my business?**
+    ▶ **What data do you collect and how is it protected?**
+    ▶ **How do I export my data?**
+    ▶ **Is there a mobile app available?**
+    ▶ **Can I integrate CarbCalc with other apps?**
+    
+    [📚 View All FAQs] [💬 Contact Support]
+  }
+  --
+  3D ANIMATED FEATURES SHOWCASE
+  {
+    **Experience CarbCalc in 3D** 🎮
+    
+    {
+      [🌍 Interactive 3D Globe]
+      • Hover to see global CO2 data
+      • Click countries for statistics  
+      • Real-time emission visualization
+      • Particle effects for CO2 flow
+    } | {
+      [📊 3D Chart Animations]
+      • Rotating pie charts
+      • Animated bar growth
+      • Smooth transitions
+      • Interactive data points
+    } | {
+      [🎯 3D Progress Rings]
+      • Animated goal completion
+      • Floating achievement badges
+      • Particle celebration effects
+      • Smooth morphing animations
+    }
+    
+    **Powered by Three.js + WebGL for smooth 60fps animations**
+    [🎮 Try Interactive Demo] [🎨 Customize Animations]
+  }
+  --
+  CALL TO ACTION with Social Proof
+  {
+    **Ready to Make an Impact?** 🚀
+    
+    {
+      **🆓 Start Your Free Journey**
+      
+      ✅ No credit card required
+      ✅ Full access to all features  
+      ✅ 30-day premium trial
+      ✅ Cancel anytime
+      
+      [🚀 Create Free Account]
+      [📱 Download Mobile App]
+      
+      **Trusted by 10,000+ users**
+      [🏢 Company logos: Google, Microsoft, Tesla, etc.]
+    } | {
+      **📊 Join the Movement**
+      
+      🌍 **2.3M kg CO2e** saved collectively
+      🌱 **15,847 trees** planted equivalent  
+      👥 **10,000+** active users
+      🏆 **4.9/5** average rating
+      
+      **Latest Achievement:**
+      "CarbCalc community just hit 
+      1 million kg CO2e saved! 🎉"
+    }
+  }
+  --
+  FOOTER with Resources
+  {
+    {
+      **🌱 CarbCalc**
+      Making sustainability simple
+      
+      📧 hello@carbcalc.com
+      📱 +62-21-1234-5678
+      🌐 Jakarta, Indonesia
+    } | {
+      **Product**
+      [Features] [Pricing] [API]
+      [Mobile App] [Integrations]
+      [Roadmap] [Changelog]
+    } | {
+      **Resources** 
+      [Blog] [Tutorials] [Guides]
+      [Webinars] [Case Studies]
+      [Research] [Downloads]
+    } | {
+      **Support**
+      [Help Center] [Contact]
+      [Community] [Status]
+      [Privacy] [Terms]
+    }
+  }
+  
+  **🌐 Follow Us:** [Twitter] [LinkedIn] [Instagram] [YouTube] [TikTok]
+  
+  © 2024 CarbCalc. All rights reserved. | 🌱 Carbon neutral website
+}
+
+note bottom
+Landing Page Features:
+✅ 3D animations with Three.js
+✅ Interactive dashboard preview with pop-ups
+✅ Competitor comparison table
+✅ Video tutorial section
+✅ Real user testimonials (6 users)
+✅ Interactive FAQ accordion
+✅ Social proof and trust signals
+✅ Mobile-responsive design
+✅ Call-to-action optimization
+end note
+
+@enduml

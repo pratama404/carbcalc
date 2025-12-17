@@ -1,0 +1,101 @@
+@startuml WF-03_Halaman_Rekomendasi
+!theme plain
+title WF-03: Halaman Rekomendasi - UC-06 (Mengelola Rekomendasi)
+
+salt
+{
+  {* CarbCalc | John Doe | (3) }
+  {
+    [Dashboard] | [Calculator] | [Reports] | [Social] | [Settings]
+  }
+  --
+  AI-Powered Recommendations - UC-06
+  --
+  Based on your carbon footprint analysis, here are personalized suggestions:
+  --
+  {
+    Filter: [All ^] [Transportation] [Energy] [Food] [Waste]
+           [Easy] [Medium] [Hard] [Save >10kg/month]
+  }
+  --
+  🚗 TRANSPORTATION (45% of your emissions)
+  --
+  🟢 EASY (2-5 kg CO2e/month) - UC-06.2
+  {
+    🚶 Walk for trips under 2km
+    Save: 4 kg CO2e/month | Cost: Free
+    Time: 5 min/day | Difficulty: ⭐☆☆
+    [✅ Already Done] [📝 Create Plan]
+  }
+  {
+    🚗 Combine errands in one trip  
+    Save: 6 kg CO2e/month | Cost: Free
+    Time: 10 min planning | Difficulty: ⭐☆☆
+    [📝 Create Plan] [ℹ️ Details]
+  }
+  --
+  🟡 MEDIUM (8-15 kg CO2e/month) - UC-06.2
+  {
+    🚌 Use TransJakarta 3x per week
+    Save: 12 kg CO2e/month | Cost: Rp 150k/month
+    Time: +15 min/trip | Difficulty: ⭐⭐☆
+    [📝 Create Plan] [🗺️ View Routes]
+  }
+  --
+  🔴 HARD (20+ kg CO2e/month) - UC-06.2  
+  {
+    ⚡ Switch to hybrid/electric vehicle
+    Save: 45 kg CO2e/month | Cost: Rp 300M+
+    Time: 2-3 months research | Difficulty: ⭐⭐⭐
+    [📝 Create Plan] [💰 Check Financing]
+  }
+  --
+  💡 ENERGY (30% of your emissions)
+  --
+  🟢 EASY (3-6 kg CO2e/month)
+  {
+    💡 Replace 5 bulbs with LED
+    Save: 8 kg CO2e/month | Cost: Rp 200k
+    ROI: 6 months | Difficulty: ⭐☆☆
+    [📝 Create Plan] [🛒 Buy Online]
+  }
+  {
+    🔌 Unplug devices when not in use
+    Save: 5 kg CO2e/month | Cost: Free  
+    Time: 2 min/day | Difficulty: ⭐☆☆
+    [📝 Create Plan] [📱 Set Reminder]
+  }
+  --
+  {
+    {
+      POTENTIAL IMPACT
+      If all implemented:
+      💚 Reduction: 89 kg/month
+      💰 Savings: Rp 450k
+      🏆 Level up to 4
+      📈 120% target achieved
+      [📝 Create Master Plan]
+    } | {
+      PRIORITY RECOMMENDATIONS
+      Based on effort/impact:
+      1. 💡 Switch to LED bulbs
+      2. 🚶 Walk for short trips  
+      3. 🚌 Try TransJakarta
+      4. 🔌 Unplug devices
+      [📋 View All Plans]
+    }
+  }
+  --
+  [🔄 Generate New] [📊 View Action Plans]
+}
+
+note bottom
+Wireframe ini mendukung:
+- UC-06.1: Generate Rekomendasi AI
+- UC-06.2: Lihat Rekomendasi  
+- UC-06.3: Tandai Rekomendasi Selesai
+- SQ-06.11 sampai SQ-06.24: AI recommendation flow
+- Class: Recommendation, User, AIService
+end note
+
+@enduml

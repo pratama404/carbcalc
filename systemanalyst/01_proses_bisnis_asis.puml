@@ -1,0 +1,41 @@
+@startuml Proses_Bisnis_AS_IS
+!theme plain
+title Proses Bisnis AS-IS - Pelacakan Jejak Karbon Manual
+
+|Individu|
+start
+:Bangun pagi dan mulai aktivitas;
+:Mencatat aktivitas harian secara manual di buku/notes;
+note right: Transportasi, konsumsi energi, makanan, limbah
+
+:Kumpulkan data aktivitas selama seminggu;
+
+|Internet|
+:Cari faktor emisi dari berbagai website;
+note right: IPCC, EPA, sumber lainnya tidak konsisten
+
+|Individu|
+:Hitung jejak karbon manual dengan kalkulator sederhana;
+
+|Spreadsheet|
+:Input data ke Excel/Google Sheets;
+:Buat chart sederhana;
+
+|Individu|
+:Analisis hasil sendiri;
+:Cari rekomendasi di internet;
+note right: Tidak personal, general advice
+
+if (Ingin berbagi?) then (ya)
+  :Screenshot spreadsheet;
+  :Post manual ke media sosial;
+else (tidak)
+  :Simpan data pribadi;
+endif
+
+:Ulangi proses setiap hari;
+note right: Proses memakan waktu 30-45 menit/hari
+
+stop
+
+@enduml

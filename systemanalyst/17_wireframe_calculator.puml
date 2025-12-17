@@ -1,0 +1,92 @@
+@startuml WF-02_Kalkulator_Karbon
+!theme plain
+title WF-02: Kalkulator Karbon - UC-03 (Menghitung Jejak Karbon)
+
+salt
+{
+  {* CarbCalc | John Doe | (3) }
+  {
+    [Dashboard] | [Calculator] | [Reports] | [Social] | [Settings]
+  }
+  --
+  Carbon Footprint Calculator
+  --
+  {
+    [Transportation] | [Energy] | [Food] | [Waste]
+  }
+  --
+  Transportation Activities - UC-03.1
+  --
+  {
+    {
+      VEHICLE TYPE
+      [Car ^]
+      
+      FUEL TYPE  
+      [Gasoline ^]
+      
+      PASSENGERS
+      [Slider: 2 people]
+      
+      [+ Add Activity]
+    } | {
+      TRIP DETAILS
+      
+      Distance: [_____15_____] km
+      
+      Fuel Type: [Premium ^]
+      
+      Passengers: [___2___] people
+      
+      Estimated Emission:
+      🔴 3.2 kg CO2e
+    }
+  }
+  --
+  TODAY'S ACTIVITIES - UC-04.2
+  {
+    | Time  | Activity      | Details     | Emission | Actions |
+    | 08:30 | Car to office | 15km,Gas    | 3.2 kg   | [Edit][Delete] |
+    | 12:15 | Lunch         | Beef 200g   | 2.8 kg   | [Edit][Delete] |
+    | 14:00 | Office elec   | 8 kWh       | 0.9 kg   | [Edit][Delete] |
+    | 18:30 | Car home      | 15km,Gas    | 3.2 kg   | [Edit][Delete] |
+  }
+  --
+  {
+    {
+      TODAY'S SUMMARY
+      Total: 10.1 kg CO2e
+      
+      vs Yesterday: +1.5 kg
+      Status: 🟡 Within Limits
+      
+      [Save & Continue]
+    } | {
+      TARGET & PROGRESS
+      Daily Target: 12 kg CO2e
+      Progress: [████████░░] 84%
+      
+      Monthly Target: 300 kg
+      Remaining: 55 kg (18 days)
+      Average: 3.1 kg/day
+    }
+  }
+  --
+  QUICK TIPS
+  • Combine trips to save 20% emissions
+  • Use public transport for trips >10km  
+  • Carpool with colleagues saves 50% emissions
+  [View Full Recommendations]
+  --
+  [Save Data] [Get Recommendations] [View Trends]
+}
+
+note bottom
+Wireframe ini mendukung:
+- UC-03.1 sampai UC-03.4: Input data per kategori
+- UC-04.1 sampai UC-04.4: CRUD aktivitas
+- AC-10 sampai AC-23: Flow kalkulasi
+- Class: EmissionActivity, EmissionFactor
+end note
+
+@enduml

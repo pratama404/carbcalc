@@ -10,7 +10,7 @@ export default function Updates() {
               <span className="text-sm text-gray-500">Dec 2024</span>
             </div>
             <p className="text-gray-600">
-              We've launched our new AI-powered recommendations system that provides 
+              We&apos;ve launched our new AI-powered recommendations system that provides
               personalized suggestions for reducing your carbon footprint.
             </p>
           </div>
@@ -20,7 +20,7 @@ export default function Updates() {
               <span className="text-sm text-gray-500">Nov 2024</span>
             </div>
             <p className="text-gray-600">
-              Our mobile app is now available in beta for iOS and Android users. 
+              Our mobile app is now available in beta for iOS and Android users.
               Track your carbon footprint on the go!
             </p>
           </div>

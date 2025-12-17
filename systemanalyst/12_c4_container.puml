@@ -1,0 +1,36 @@
+@startuml C4_Container_CarbCalc
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+title Container Diagram - Carbon Calculator App
+
+Person(user, "Pengguna")
+Person(admin, "Administrator")
+System_Ext(gemini, "Google Gemini AI")
+System_Ext(social, "Social Media APIs")
+
+System_Boundary(carbcalc, "Carbon Calculator App") {
+    Container(webapp, "Web Application", "Next.js, React, TypeScript", "Antarmuka pengguna untuk semua fitur\n- WF-01: Dashboard\n- WF-02: Kalkulator\n- WF-03: Rekomendasi\n- WF-04: Todo\n- WF-05: Sharing")
+    
+    Container(api, "API Application", "Next.js API Routes", "Menyediakan REST API untuk frontend\n- UC-01 sampai UC-10\n- AC-01 sampai AC-45")
+    
+    Container(db, "Database", "MongoDB", "Menyimpan data pengguna, aktivitas, dan konfigurasi\n- Users, Activities, Recommendations\n- Todos, Achievements, Share Content")
+    
+    Container(cache, "Cache", "Redis", "Cache untuk session dan data sementara\n- Session management\n- Temporary calculations")
+}
+
+Rel(user, webapp, "Menggunakan", "HTTPS")
+Rel(admin, webapp, "Mengelola", "HTTPS")
+Rel(webapp, api, "Memanggil API", "HTTPS/JSON")
+Rel(api, db, "Membaca/menulis data", "MongoDB Protocol")
+Rel(api, cache, "Cache data", "Redis Protocol")
+Rel(api, gemini, "Meminta rekomendasi", "HTTPS/REST")
+Rel(api, social, "Berbagi konten", "HTTPS/REST")
+
+note bottom
+Container ini mendukung:
+- Semua Use Case (UC-01 sampai UC-10)
+- Semua Wireframe (WF-01 sampai WF-07)
+- Semua Activity Flow (AC-01 sampai AC-45)
+end note
+
+@enduml

@@ -1,0 +1,62 @@
+@startuml Data_Flow_Level1_CarbCalc
+!theme plain
+title Data Flow Diagram Level 1 - Functional Decomposition
+
+actor "Pengguna" as user
+actor "Administrator" as admin
+actor "Sistem AI" as ai
+
+circle "1.0\nKelola\nAutentikasi" as auth
+circle "2.0\nHitung Jejak\nKarbon" as calc
+circle "3.0\nKelola\nRekomendasi" as rec
+circle "4.0\nKelola Rencana\nAksi" as todo
+circle "5.0\nGenerate\nLaporan" as report
+circle "6.0\nKelola\nSharing" as share
+
+rectangle "D1 Users" as d1
+rectangle "D2 Activities" as d2
+rectangle "D3 Emission Factors" as d3
+rectangle "D4 Recommendations" as d4
+rectangle "D5 Todos" as d5
+rectangle "D6 Share Content" as d6
+
+' User interactions
+user --> auth : "DF-11: Kredensial Login"
+auth --> user : "DF-12: Token Akses"
+auth --> d1 : "DF-13: Data User"
+
+user --> calc : "DF-14: Data Aktivitas"
+calc --> d2 : "DF-15: Simpan Aktivitas"
+calc --> d3 : "DF-16: Ambil Faktor Emisi"
+calc --> user : "DF-17: Hasil Perhitungan"
+
+calc --> rec : "DF-18: Data Aktivitas untuk Analisis"
+rec --> ai : "DF-19: Request Rekomendasi"
+ai --> rec : "DF-20: AI Response"
+rec --> d4 : "DF-21: Simpan Rekomendasi"
+rec --> user : "DF-22: Daftar Rekomendasi"
+
+user --> todo : "DF-23: Pilih Rekomendasi"
+todo --> d4 : "DF-24: Ambil Rekomendasi"
+todo --> d5 : "DF-25: Simpan Todo"
+todo --> user : "DF-26: Daftar Todo"
+
+report --> d2 : "DF-27: Data Aktivitas"
+report --> user : "DF-28: Laporan PDF/CSV"
+
+share --> d2 : "DF-29: Data Aktivitas"
+share --> d6 : "DF-30: Simpan Share Content"
+share --> user : "DF-31: Gambar Share"
+
+' Admin interactions
+admin --> d3 : "DF-32: Update Faktor Emisi"
+
+note bottom
+Data Flow ini konsisten dengan:
+- Use Case UC-01 sampai UC-10
+- Activity AC-01 sampai AC-45
+- Sequence SQ-01 sampai SQ-34
+- Wireframe WF-01 sampai WF-07
+end note
+
+@enduml

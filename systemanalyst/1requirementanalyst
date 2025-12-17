@@ -1,0 +1,115 @@
+Sistem yang Akan Dibangun
+Nama Proyek: Aplikasi Kalkulator Jejak Karbon "CarbCalc"
+Penjelasan Proyek: CarbCalc adalah aplikasi berbasis web yang dirancang untuk membantu pengguna dan komunitas kecil, dan researcher menghitung, melacak, aktivitas yang menghasilkan jejak carbon dan pada akhirnya mengurangi jejak karbon mereka. Aplikasi ini akan mengkalkulasi emisi gas rumah kaca (GRK) yang dihasilkan dari berbagai aktivitas sehari-hari, seperti transportasi, konsumsi listrik, pola makan, dan kebiasaan sehari sehari. CarbCalc akan memberikan dasbor visual, laporan dalam bentuk pdf, dan rekomendasi praktis yang dipersonalisasi untuk mendorong gaya hidup yang lebih berkelanjutan.
+Tujuan Proyek:
+Meningkatkan Kesadaran: Mengedukasi pengguna tentang dampak aktivitas mereka terhadap lingkungan.
+Menyediakan Alat Ukur: Memberikan platform yang mudah digunakan untuk mengukur jejak karbon secara akurat.
+Mendorong Aksi: Memberikan saran dan tips yang dapat ditindaklanjuti untuk mengurangi emisi karbon.
+Memfasilitasi Pemantauan: Membantu pengguna melacak penggunaan mereka dari waktu ke waktu untuk tetap konsisten dalam menggunakan aplikasi nya.
+Domain Knowledge Sistem: Domain pengetahuan (domain knowledge) utama sistem ini berpusat pada ilmu lingkungan dan analisis data, khususnya dalam metodologi perhitungan jejak karbon. Pemahaman yang diperlukan meliputi:
+Faktor Emisi: Pengetahuan tentang koefisien yang mengkonversi data aktivitas menjadi emisi CO₂ ekuivalen (CO₂e). Contohnya, berapa emisi CO₂e yang dihasilkan per kilometer perjalanan dengan mobil bensin, atau per kilowatt-jam (kWh) konsumsi listrik dari jaringan nasional. Faktor ini biasanya bersumber dari panel antarpemerintah tentang perubahan iklim (IPCC) atau lembaga lingkungan nasional.
+Sumber Emisi: Kemampuan untuk mengkategorikan sumber emisi utama dalam kehidupan sehari-hari, seperti:
+Transportasi: Emisi dari kendaraan pribadi, transportasi umum, dan penerbangan. Aktivitas yang diukur: Jarak yang ditempuh (dalam km) dan jenis kendaraan.Input Pengguna: "Saya naik mobil bensin sejauh 200 km bulan ini."Faktor Emisi yang Digunakan Sistem: kg CO₂e / km. Nilai ini sangat bervariasi:
+Mobil bensin: ~0.21 kg CO₂e/km
+Motor: ~0.11 kg CO₂e/km
+Kereta komuter: ~0.04 kg CO₂e/km
+Bus: ~0.10 kg CO₂e/km
+Energi Rumah Tangga: Emisi dari konsumsi listrik, gas, dan pemanas. Aktivitas yang diukur: Konsumsi listrik (dalam kWh), penggunaan gas elpiji (dalam kg).Input Pengguna: Pengguna memasukkan angka dari tagihan listrik bulanannya (misal: "Pemakaian: 150 kWh") atau berapa tabung gas elpiji yang dihabiskan. Faktor Emisi yang Digunakan Sistem:
+Listrik: kg CO₂e / kWh (spesifik untuk jaringan listrik negara/provinsi tersebut).
+Elpiji: kg CO₂e / kg (misalnya, 1 kg elpiji terbakar menghasilkan ~3 kg CO₂e).
+Pola Makan: Emisi yang terkait dengan produksi berbagai jenis makanan (misalnya, daging sapi vs. sayuran). Aktivitas yang diukur: Jumlah konsumsi berbagai jenis makanan (dalam kg atau porsi per minggu).Input Pengguna: "Saya makan daging sapi 3 porsi seminggu."Faktor Emisi yang Digunakan Sistem: kg CO₂e / kg produk. Emisi ini mencakup seluruh siklus hidup (peternakan, pengolahan, transportasi).
+Daging Sapi: Sangat tinggi, bisa mencapai 27 kg CO₂e per kg daging.
+Ayam: Jauh lebih rendah, sekitar 6.9 kg CO₂e per kg.
+Tahu/Tempe: Sangat rendah, sekitar 2 kg CO₂e per kg.
+Limbah: Emisi dari sampah yang dihasilkan.
+Metodologi Kalkulasi: Memahami formula dasar: Data Aktivitas × Faktor Emisi = Total Emisi.
+Input Pengguna (Data Aktivitas): Pengguna memasukkan total pemakaian listrik bulan Oktober sebesar 150 kWh.
+Data Sistem (Faktor Emisi): Sistem menggunakan faktor emisi untuk jaringan listrik Jawa-Bali-Madura, yaitu 0.773 kg CO₂e/kWh.
+Perhitungan:
+150 kWh×0.773kWhkg CO2​e​=115.95 kg CO2​e
+Hasil: Jejak karbon dari listrik pengguna di bulan Oktober adalah 115.95 kg CO₂e.
+Input Pengguna (Data Aktivitas): Pengguna memasukkan data perjalanan ke kantor selama sebulan menggunakan motor sejauh 400 km.
+Data Sistem (Faktor Emisi): Sistem menggunakan faktor emisi rata-rata untuk sepeda motor, yaitu 0.11 kg CO₂e/km.
+Perhitungan:
+400 km×0.11kmkg CO2​e​=44 kg CO2​e
+Hasil: Jejak karbon dari perjalanan motor pengguna selama sebulan adalah 44 kg CO₂e.
+Referensi: 
+Level Internasional (Rujukan Utama):
+IPCC (Intergovernmental Panel on Climate Change): Ini adalah badan PBB yang menjadi standar emas untuk ilmu iklim. Mereka memiliki Emission Factor Database (EFDB) yang menjadi acuan global.
+GHG Protocol: Menyediakan standar dan panduan yang paling banyak digunakan di dunia untuk perhitungan emisi oleh perusahaan dan pemerintah.
+Level Nasional (Sangat Penting untuk Konteks Lokal):
+Kementerian Lingkungan Hidup dan Kehutanan (KLHK): KLHK melalui situs seperti SIGN-SMART (Sistem Inventarisasi Gas Rumah Kaca Nasional dan Pemantauan, Pelaporan, Verifikasi) merilis laporan inventarisasi GRK nasional yang seringkali mencakup faktor emisi untuk berbagai sektor di Indonesia.
+Kementerian Energi dan Sumber Daya Mineral (ESDM): Secara spesifik merilis data terkait kelistrikan, termasuk faktor emisi jaringan listrik (grid emission factor) per sistem interkoneksi (misal: Jawa-Bali, Sumatera, dll).
+Lembaga Pemerintah Non-Kementerian Lainnya: Seperti BPPT atau BRIN yang mungkin melakukan studi dan merilis data relevan.
+Level Akademik:
+Jurnal Ilmiah dan Penelitian Universitas: studi Life Cycle Assessment (LCA) untuk produk-produk spesifik di Indonesia, yang hasilnya bisa digunakan sebagai faktor emisi.
+
+
+Identifikasi Sumber Kebutuhan
+Stakeholder Sistem dan Goal
+No
+Stakeholder
+Goal terhadap Sistem
+1
+Pengguna Individu/Umum
+- Mengetahui jejak karbon pribadi secara akurat dan mudah. 
+- Mendapatkan tips untuk mengurangi jejak karbon. 
+- Melacak progres pengurangan emisi.
+2
+Ahli Lingkungan
+- Memastikan metodologi dan faktor emisi yang digunakan akurat dan sesuai standar ilmiah. - Menggunakan data anonim untuk riset tren emisi.
+3
+Manajer Proyek
+- Memastikan proyek selesai tepat waktu, sesuai anggaran, dan memenuhi spesifikasi. - Mengelola alur kerja tim pengembang.
+4
+Developer/Tim IT
+- Membangun sistem yang stabil, aman, dan mudah dipelihara. - Memastikan basis data faktor emisi dapat diperbarui dengan mudah.
+5
+Administrator Sistem
+- Mengelola server dan basis data. - Memastikan sistem dapat diakses oleh pengguna tanpa kendala.
+
+
+Business Rule / Aturan yang Berpengaruh
+Perhitungan emisi harus menggunakan faktor emisi yang telah divalidasi dan bersumber dari lembaga yang kredibel (IPCC, Kementerian LHK).
+Pengguna wajib memasukkan data aktivitas dasar (misalnya, jarak tempuh, konsumsi listrik) untuk mendapatkan hasil kalkulasi.
+Sistem harus secara otomatis memperbarui perhitungan ketika pengguna memasukkan data aktivitas baru.
+Setiap rekomendasi yang diberikan harus didasarkan pada kategori emisi tertinggi dari pengguna tersebut.
+Data privasi pengguna harus dijaga kerahasiaannya dan tidak boleh dibagikan tanpa izin.
+Faktor emisi dalam basis data harus ditinjau dan diperbarui secara berkala (setahun sekali) untuk menjaga akurasi.
+Proses Bisnis yang Perlu Digambarkan
+Proses Pendaftaran dan Profiling Pengguna.
+Proses Input Data Aktivitas Harian/Bulanan.
+Proses Kalkulasi Jejak Karbon.
+Proses Pembuatan Laporan dan Visualisasi Data.
+Proses Pemberian Rekomendasi Pengurangan Emisi.
+Lingkungan Operasional Sistem Lingkungan operasional internal di mana sistem ini dikembangkan dan dikelola terdiri dari:
+Karyawan: Tim pengembang (system analyst, programmer, QA), manajer proyek, dan admin sistem.
+Manajemen: Manajer proyek yang mengawasi jadwal dan sumber daya, serta manajemen atas yang menyetujui anggaran.
+Budaya Organisasi: Budaya kerja kolaboratif yang mengedepankan inovasi, akurasi data, dan fokus pada kepuasan pengguna. Komunikasi antar tim dilakukan melalui alat seperti Slack dan manajemen tugas menggunakan Jira.
+Lingkungan Organisasi (Pengguna) Lingkungan di mana pengguna akan menjalankan aplikasi ini adalah:
+Perangkat Keras: Ponsel pintar (Android, iOS), tablet, laptop, dan komputer desktop.
+Perangkat Lunak: Sistem operasi (Windows, macOS, Android, iOS) dan peramban web modern (Google Chrome, Mozilla Firefox, Safari).
+Jaringan: Aplikasi harus dapat berfungsi dengan baik pada berbagai kondisi koneksi internet, dari Wi-Fi hingga data seluler.
+Metodologi Pengembangan
+Metodologi SDLC yang Akan Digunakan: Agile dengan Kerangka Kerja Scrum
+Langkah dan Deliverables:
+Product Backlog Creation:
+Langkah: Product Owner (misalnya, System Analyst) membuat daftar semua fitur yang diinginkan dalam bentuk user stories dan memprioritaskannya.
+Deliverables: Dokumen Product Backlog yang berisi daftar fitur terprioritaskan.
+Sprint Planning:
+Langkah: Tim memilih beberapa user stories dari puncak Product Backlog untuk dikerjakan dalam satu siklus kerja (disebut Sprint, biasanya 2-4 minggu).
+Deliverables: Dokumen Sprint Backlog, yaitu daftar tugas yang akan diselesaikan dalam sprint tersebut.
+Sprint Execution (Daily Scrum):
+Langkah: Tim pengembang bekerja menyelesaikan tugas di Sprint Backlog. Setiap hari diadakan rapat singkat (Daily Scrum) untuk sinkronisasi progres.
+Deliverables: Kode program yang terus bertambah dan berfungsi.
+Sprint Review:
+Langkah: Di akhir Sprint, tim mendemonstrasikan hasil kerja (fitur yang sudah jadi) kepada para stakeholder untuk mendapatkan umpan balik.
+Deliverables: Potentially Shippable Increment (bagian aplikasi yang berfungsi dan siap dirilis).
+Sprint Retrospective:
+Langkah: Tim melakukan evaluasi internal untuk mengidentifikasi apa yang berjalan baik dan apa yang perlu diperbaiki untuk sprint berikutnya.
+Deliverables: Daftar poin aksi untuk perbaikan proses kerja tim.
+Jelaskan Mengapa Anda Memilih Metodologi Tersebut Metodologi Agile Scrum dipilih karena beberapa alasan utama yang sangat sesuai dengan proyek ini:
+Fleksibilitas Tinggi: Proyek perhitungan karbon mungkin memerlukan penyesuaian faktor emisi atau penambahan fitur baru berdasarkan riset terkini atau umpan balik pengguna. Agile memungkinkan perubahan ini diakomodasi dengan mudah di setiap sprint.
+Umpan Balik Cepat: Dengan siklus Sprint Review yang singkat, kami bisa segera mendapatkan masukan dari ahli lingkungan dan calon pengguna untuk memastikan akurasi dan kegunaan aplikasi sejak tahap awal, sehingga mengurangi risiko kegagalan di akhir.
+Fokus pada Nilai: Scrum memprioritaskan pengembangan fitur yang paling bernilai bagi pengguna terlebih dahulu. Artinya, fitur inti seperti kalkulator emisi bisa diluncurkan lebih cepat, sementara fitur tambahan dikembangkan secara bertahap.
+Transparansi: Semua pihak terkait (stakeholder) dapat melihat kemajuan proyek secara transparan di setiap akhir sprint, sehingga membangun kepercayaan dan memastikan semua orang memiliki pemahaman yang sama.
