@@ -7,7 +7,7 @@ import Link from 'next/link'
 import { Leaf, Car, Zap, Utensils, Trash2, Calculator, ArrowRight, BarChart3, Save } from 'lucide-react'
 import { useToast } from '@/context/ToastContext'
 import { Button } from '@/components/ui/Button'
-import Header from '@/components/Header'
+// Header removed (global)
 
 export default function CalculatorPage() {
   const router = useRouter()
@@ -170,8 +170,7 @@ export default function CalculatorPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <Header />
+      {/* Header removed (global) */}
 
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

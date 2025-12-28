@@ -1,11 +1,9 @@
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
+// Header/Footer removed (global)
 import Link from 'next/link'
 
 export default function Businesses() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <Header />
       <main className="flex-grow bg-gradient-to-br from-green-50 to-blue-50 py-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-8 text-center">For Businesses</h1>
@@ -44,7 +42,6 @@ export default function Businesses() {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   )
 }

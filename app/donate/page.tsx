@@ -1,11 +1,9 @@
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
+// Header/Footer removed (global)
 import { Sprout, TreePine, Globe, Heart } from 'lucide-react'
 
 export default function Donate() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <Header />
       <main className="flex-grow bg-gradient-to-br from-green-50 to-blue-50 py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-8 text-center">Make a Donation</h1>
@@ -74,7 +72,6 @@ export default function Donate() {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   )
 }

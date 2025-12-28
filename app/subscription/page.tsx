@@ -1,11 +1,9 @@
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
+// Header/Footer removed (global)
 import { CheckCircle, Zap, Shield, Star } from 'lucide-react'
 
 export default function Subscription() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <Header />
       <main className="flex-grow bg-gradient-to-br from-green-50 to-blue-50 py-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -77,7 +75,6 @@ export default function Subscription() {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   )
 }

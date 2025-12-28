@@ -4,7 +4,7 @@ A comprehensive carbon footprint tracking application built with Next.js, featur
 
 ## 🚀 Live Demo
 
-Visit the live application: [https://your-app-name.vercel.app](https://your-app-name.vercel.app)
+Visit the live application: [carbcalc.vercel.app](https://carbcalc.vercel.app/)
 
 ## Features
 
@@ -185,8 +185,8 @@ MIT License - feel free to use this project for personal or commercial purposes.
 
 For issues or questions:
 - Open a GitHub issue
-- Contact: hello@carbcalc.com
-- Documentation: [Wiki](https://github.com/yourusername/carbcalc/wiki)
+- Contact: agengputrapratama@gmail.com
+- Documentation: [Wiki](https://github.com/pratama404/carbcalc/wiki)
 
 ## Acknowledgments
 

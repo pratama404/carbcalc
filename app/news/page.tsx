@@ -1,5 +1,4 @@
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
+// Header/Footer removed (global)
 import { Calendar, User, Clock, Tag, TrendingUp } from 'lucide-react'
 
 export default function NewsPage() {
@@ -54,8 +53,7 @@ export default function NewsPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header />
-      
+
       <main>
         {/* Hero Section */}
         <section className="bg-gradient-to-br from-green-50 to-blue-50 py-20">
@@ -84,15 +82,15 @@ export default function NewsPage() {
                       {featuredArticle.category}
                     </span>
                   </div>
-                  
+
                   <h2 className="text-3xl font-bold text-gray-900 mb-4">
                     {featuredArticle.title}
                   </h2>
-                  
+
                   <p className="text-lg text-gray-600 mb-6">
                     {featuredArticle.excerpt}
                   </p>
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="flex items-center text-sm text-gray-500 space-x-4">
                       <div className="flex items-center">
@@ -108,7 +106,7 @@ export default function NewsPage() {
                         {featuredArticle.readTime} min read
                       </div>
                     </div>
-                    
+
                     <button className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">
                       Read More
                     </button>
@@ -126,11 +124,10 @@ export default function NewsPage() {
               {categories.map((category, index) => (
                 <button
                   key={index}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    index === 0
-                      ? 'bg-green-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${index === 0
+                    ? 'bg-green-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
                 >
                   {category}
                 </button>
@@ -147,7 +144,7 @@ export default function NewsPage() {
                 <div key={index} className="bg-white rounded-xl shadow-sm border hover:shadow-md transition-shadow">
                   <div className="p-6">
                     <div className="text-4xl mb-4 text-center">{article.image}</div>
-                    
+
                     <div className="flex items-center justify-between mb-3">
                       <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
                         {article.category}
@@ -157,15 +154,15 @@ export default function NewsPage() {
                         Trending
                       </div>
                     </div>
-                    
+
                     <h3 className="text-lg font-semibold text-gray-900 mb-3 line-clamp-2">
                       {article.title}
                     </h3>
-                    
+
                     <p className="text-gray-600 text-sm mb-4 line-clamp-3">
                       {article.excerpt}
                     </p>
-                    
+
                     <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
                       <div className="flex items-center">
                         <User className="w-3 h-3 mr-1" />
@@ -176,7 +173,7 @@ export default function NewsPage() {
                         {article.readTime} min
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-gray-500">
                         {new Date(article.date).toLocaleDateString()}
@@ -213,7 +210,6 @@ export default function NewsPage() {
         </section>
       </main>
 
-      <Footer />
     </div>
   )
 }

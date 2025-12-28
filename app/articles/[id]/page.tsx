@@ -3,8 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
+// Header/Footer removed (global)
 import { ArrowLeft, Calendar, Clock, User, Share2 } from 'lucide-react'
 
 interface Article {
@@ -37,7 +36,7 @@ export default function ArticlePage() {
       setLoading(true)
       const response = await fetch(`/api/articles?id=${id}`)
       const result = await response.json()
-      
+
       if (result.success) {
         setArticle(result.data)
       }
@@ -62,25 +61,25 @@ export default function ArticlePage() {
   if (!article) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
-        <Header />
+
         <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Article not found</h1>
           <Link href="/articles" className="text-green-600 hover:text-green-700">
             ← Back to Articles
           </Link>
         </main>
-        <Footer />
+
       </div>
     )
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
-      <Header />
-      
+      {/* Header removed (global) */}
+
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Link 
-          href="/articles" 
+        <Link
+          href="/articles"
           className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
@@ -100,15 +99,15 @@ export default function ArticlePage() {
                 </span>
               ))}
             </div>
-            
+
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
               {article.title}
             </h1>
-            
+
             {article.excerpt && (
               <p className="text-xl text-gray-600 mb-6">{article.excerpt}</p>
             )}
-            
+
             <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500 pb-6 border-b border-gray-200">
               <div className="flex items-center">
                 <User className="w-4 h-4 mr-2" />
@@ -152,7 +151,7 @@ export default function ArticlePage() {
 
           {/* Content */}
           {article.content ? (
-            <div 
+            <div
               className="prose prose-lg max-w-none"
               dangerouslySetInnerHTML={{ __html: article.content }}
               style={{
@@ -167,8 +166,6 @@ export default function ArticlePage() {
           )}
         </article>
       </main>
-
-      <Footer />
     </div>
   )
 }
